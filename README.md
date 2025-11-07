@@ -47,4 +47,4 @@ samples, guidance on mobile development, and a full API reference.
 
 
 ## Password reset
-![alt text](image-9.png)
+![alt text](image-17.png)
