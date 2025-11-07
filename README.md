@@ -27,6 +27,9 @@ samples, guidance on mobile development, and a full API reference.
 ## Second Onboarding screen
 ![alt text](image-14.png)
 
+## Home page
+![alt text](image-15.png)
+
 
 
 ## The signup page
