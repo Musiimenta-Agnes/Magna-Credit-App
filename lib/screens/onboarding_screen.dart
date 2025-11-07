@@ -19,7 +19,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         // 🌈 Gradient background for a premium look
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF00796B), Color(0xFF48C9B0)], // green to aqua
+            colors: [Colors.green, Colors.green], // green to aqua
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -98,7 +98,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
-                          foregroundColor: const Color.fromARGB(255, 3, 138, 12),
+                          foregroundColor: Colors.green,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -131,7 +131,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
-                              foregroundColor: const Color.fromARGB(255, 3, 138, 12),
+                              foregroundColor: Colors.green,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),

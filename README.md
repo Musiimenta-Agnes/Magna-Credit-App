@@ -22,13 +22,10 @@ samples, guidance on mobile development, and a full API reference.
 ## The mockup sccreens
 
 ## First Onboarding screen
-![alt text](image-10.png)
+![alt text](image-13.png)
 
 ## Second Onboarding screen
-![alt text](image-11.png)
-
-## Third Onboarding Screen
-![alt text](image-12.png)
+![alt text](image-14.png)
 
 
 
