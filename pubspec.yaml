@@ -65,6 +65,11 @@ flutter:
     - assets/pic2.jpg
     - assets/pic3.jpg
     - assets/pic4.jpg
+    - assets/reset_password.jpg
+    - assets/forgot_password.jpg
+    
+    # - assets/loan_image.jpg
+    # - assets/pic5.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
