@@ -40,7 +40,7 @@ samples, guidance on mobile development, and a full API reference.
 ![alt text](image-5.png)
 
 ## Forgot Password
-![alt text](image-7.png)
+![alt text](image-16.png)
 
 ## Verification
 ![alt text](image-8.png)
