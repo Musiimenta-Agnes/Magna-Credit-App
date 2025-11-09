@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'forgot_password_page.dart'; // Forgot password flow
-import 'home_screen.dart'; // Home after login
-import 'signup_screen.dart'; // Register page link
+import 'forgot_password_page.dart';
+import 'home_screen.dart';
+import 'signup_screen.dart';
+import 'profile_page.dart';
+import 'about_screen.dart'; // ✅ Added import for About Page
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,63 +19,125 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
 
   bool _obscurePassword = true;
+  int _selectedIndex = 0;
+
+  // 🔹 Handle Bottom Navigation
+  void _onItemTapped(int index) {
+    setState(() => _selectedIndex = index);
+
+    switch (index) {
+      case 0: // Home
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+        break;
+
+      case 1: // About
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AboutPage()),
+        );
+        break;
+
+      case 2: // Profile
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ProfilePage()),
+        );
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+
+      // 🔹 App Bar
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          "Go Back",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        centerTitle: true,
+      ),
+
+      // 🔹 Main Body
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
           child: Form(
             key: _formKey,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // 🔹 Logo
-                CircleAvatar(
-                  radius: 40,
-                  backgroundImage: const AssetImage('assets/magna_logo.jpeg'),
-                ),
-                const SizedBox(height: 20),
-
-                const Text(
-                  "LOGIN",
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                const Text(
-                  "Login to your account and apply for a loan",
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.blueAccent,
+                // Logo
+                Center(
+                  child: Container(
+                    width: 200,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                      image: const DecorationImage(
+                        image: AssetImage('assets/magna_logo.jpeg'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 25),
 
-                // 🔹 Email
-                _buildTextField(emailController, "Enter Email:",
-                    keyboardType: TextInputType.emailAddress),
+                const Text(
+                  "LOGIN",
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  "Login to your account and apply for a loan",
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 30),
 
+                // Email Field
+                _buildTextField(
+                  emailController,
+                  "Enter Email:",
+                  icon: Icons.email,
+                  keyboardType: TextInputType.emailAddress,
+                ),
                 const SizedBox(height: 15),
 
-                // 🔹 Phone
-                _buildTextField(phoneController, "Enter Phone:",
-                    keyboardType: TextInputType.phone),
-
+                // Phone Field
+                _buildTextField(
+                  phoneController,
+                  "Enter Phone:",
+                  icon: Icons.phone,
+                  keyboardType: TextInputType.phone,
+                ),
                 const SizedBox(height: 15),
 
-                // 🔹 Password
+                // Password Field
                 TextFormField(
                   controller: passwordController,
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
+                    prefixIcon:
+                        const Icon(Icons.lock, color: Colors.blueAccent),
                     hintText: "Enter Password:",
                     filled: true,
-                    fillColor: Colors.grey[100],
+                    fillColor: Colors.white,
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 14, horizontal: 15),
                     enabledBorder: OutlineInputBorder(
@@ -98,17 +162,13 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Please enter your password' : null,
                 ),
 
                 const SizedBox(height: 15),
 
-                // 🔹 Forgot Password link
+                // Forgot Password link
                 Align(
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
@@ -125,45 +185,47 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(
                         color: Colors.blueAccent,
                         fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline,
+                        decoration: TextDecoration.none,
+                        fontSize: 15,
                       ),
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 25),
+                const SizedBox(height: 30),
 
-                // 🔹 Login Button
+                // Login Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _loginUser,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     child: const Text(
                       "Login",
-                      style: TextStyle(fontSize: 16, color: Colors.white),
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
 
-                const SizedBox(height: 25),
+                const SizedBox(height: 30),
 
-                // 🔹 Register Link
+                // Register link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
                       "Don’t have an account? ",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black54,
-                      ),
+                      style: TextStyle(fontSize: 16, color: Colors.black54),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -176,10 +238,10 @@ class _LoginPageState extends State<LoginPage> {
                       child: const Text(
                         "Register",
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 16,
                           color: Colors.blueAccent,
                           fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
+                          decoration: TextDecoration.none,
                         ),
                       ),
                     ),
@@ -190,18 +252,47 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+
+      // 🔹 Bottom Navigation Bar
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blueAccent,
+        unselectedItemColor: Colors.grey,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.info_outline),
+            label: "About",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "Profile",
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hintText,
-      {TextInputType keyboardType = TextInputType.text}) {
+  // 🔸 Text Field Builder
+  Widget _buildTextField(
+    TextEditingController controller,
+    String hintText, {
+    TextInputType keyboardType = TextInputType.text,
+    IconData? icon,
+  }) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
       decoration: InputDecoration(
+        prefixIcon: Icon(icon, color: Colors.blueAccent),
         hintText: hintText,
         filled: true,
-        fillColor: Colors.grey[100],
+        fillColor: Colors.white,
         contentPadding:
             const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
         enabledBorder: OutlineInputBorder(
@@ -213,18 +304,14 @@ class _LoginPageState extends State<LoginPage> {
           borderSide: const BorderSide(color: Colors.blueAccent),
         ),
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please fill in this field';
-        }
-        return null;
-      },
+      validator: (value) =>
+          value == null || value.isEmpty ? 'Please fill in this field' : null,
     );
   }
 
+  // 🔸 Login Logic
   void _loginUser() {
     if (_formKey.currentState!.validate()) {
-      // Simulate successful login
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('✅ Welcome back!'),
@@ -233,7 +320,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
 
-      // Redirect to home after a short delay
       Future.delayed(const Duration(seconds: 2), () {
         Navigator.pushReplacement(
           context,
@@ -243,3 +329,347 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+// import 'package:flutter/material.dart';
+// import 'forgot_password_page.dart';
+// import 'home_screen.dart';
+// import 'signup_screen.dart';
+// import 'profile_page.dart';
+
+// class LoginPage extends StatefulWidget {
+//   const LoginPage({super.key});
+
+//   @override
+//   State<LoginPage> createState() => _LoginPageState();
+// }
+
+// class _LoginPageState extends State<LoginPage> {
+//   final _formKey = GlobalKey<FormState>();
+//   final TextEditingController emailController = TextEditingController();
+//   final TextEditingController phoneController = TextEditingController();
+//   final TextEditingController passwordController = TextEditingController();
+
+//   bool _obscurePassword = true;
+//   int _selectedIndex = 0;
+
+//   // Handle bottom navigation
+//   void _onItemTapped(int index) {
+//     setState(() => _selectedIndex = index);
+
+//     switch (index) {
+//       case 0:
+//         Navigator.pushReplacement(
+//           context,
+//           MaterialPageRoute(builder: (context) => const HomePage()),
+//         );
+//         break;
+//       case 1:
+//         // Placeholder for "History" — can be connected later
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           const SnackBar(
+//             content: Text("History page coming soon"),
+//             backgroundColor: Colors.green,
+//           ),
+//         );
+//         break;
+//       case 2:
+//         Navigator.pushReplacement(
+//           context,
+//           MaterialPageRoute(builder: (context) => const ProfilePage()),
+//         );
+//         break;
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.white,
+
+//       appBar: AppBar(
+//         backgroundColor: Colors.green,
+//         elevation: 0,
+//         leading: IconButton(
+//           icon: const Icon(Icons.arrow_back, color: Colors.white),
+//           onPressed: () => Navigator.pop(context),
+//         ),
+//         title: const Text(
+//           "Go Back",
+//           style: TextStyle(color: Colors.white, fontSize: 20),
+//         ),
+//         centerTitle: true,
+//       ),
+
+//       body: Center(
+//         child: SingleChildScrollView(
+//           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+//           child: Form(
+//             key: _formKey,
+//             child: Column(
+//               children: [
+//                 // 🔹 Company Logo (rectangle)
+//                 Center(
+//                   child: Container(
+//                     width: 200,
+//                     height: 120,
+//                     decoration: BoxDecoration(
+//                       color: Colors.blue.shade100,
+//                       borderRadius: BorderRadius.circular(12),
+//                       image: const DecorationImage(
+//                         image: AssetImage('assets/magna_logo.jpeg'),
+//                         fit: BoxFit.cover,
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//                 const SizedBox(height: 25),
+
+//                 const Text(
+//                   "LOGIN",
+//                   style: TextStyle(
+//                     fontSize: 26,
+//                     fontWeight: FontWeight.bold,
+//                     color: Colors.black87,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 8),
+//                 const Text(
+//                   "Login to your account and apply for a loan",
+//                   style: TextStyle(fontSize: 16, color: Colors.black),
+//                   textAlign: TextAlign.center,
+//                 ),
+//                 const SizedBox(height: 30),
+
+//                 // 🔹 Email Field
+//                 _buildTextField(
+//                   emailController,
+//                   "Enter Email:",
+//                   icon: Icons.email,
+//                   keyboardType: TextInputType.emailAddress,
+//                 ),
+//                 const SizedBox(height: 15),
+
+//                 // 🔹 Phone Field
+//                 _buildTextField(
+//                   phoneController,
+//                   "Enter Phone:",
+//                   icon: Icons.phone,
+//                   keyboardType: TextInputType.phone,
+//                 ),
+//                 const SizedBox(height: 15),
+
+//                 // 🔹 Password Field
+//                 TextFormField(
+//                   controller: passwordController,
+//                   obscureText: _obscurePassword,
+//                   decoration: InputDecoration(
+//                     prefixIcon:
+//                         const Icon(Icons.lock, color: Colors.blueAccent),
+//                     hintText: "Enter Password:",
+//                     filled: true,
+//                     fillColor: Colors.white,
+//                     contentPadding: const EdgeInsets.symmetric(
+//                         vertical: 14, horizontal: 15),
+//                     enabledBorder: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(6),
+//                       borderSide: const BorderSide(color: Colors.black12),
+//                     ),
+//                     focusedBorder: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(6),
+//                       borderSide: const BorderSide(color: Colors.blueAccent),
+//                     ),
+//                     suffixIcon: IconButton(
+//                       icon: Icon(
+//                         _obscurePassword
+//                             ? Icons.visibility_off
+//                             : Icons.visibility,
+//                         color: Colors.grey,
+//                       ),
+//                       onPressed: () {
+//                         setState(() {
+//                           _obscurePassword = !_obscurePassword;
+//                         });
+//                       },
+//                     ),
+//                   ),
+//                   validator: (value) {
+//                     if (value == null || value.isEmpty) {
+//                       return 'Please enter your password';
+//                     }
+//                     return null;
+//                   },
+//                 ),
+
+//                 const SizedBox(height: 15),
+
+//                 // 🔹 Forgot Password link
+//                 Align(
+//                   alignment: Alignment.centerRight,
+//                   child: GestureDetector(
+//                     onTap: () {
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (context) => const ForgotPasswordPage(),
+//                         ),
+//                       );
+//                     },
+//                     child: const Text(
+//                       "Forgot Password?",
+//                       style: TextStyle(
+//                         color: Colors.blueAccent,
+//                         fontWeight: FontWeight.bold,
+//                         decoration: TextDecoration.none,
+//                         fontSize: 15,
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+
+//                 const SizedBox(height: 30),
+
+//                 // 🔹 Login Button
+//                 SizedBox(
+//                   width: double.infinity,
+//                   child: ElevatedButton(
+//                     onPressed: _loginUser,
+//                     style: ElevatedButton.styleFrom(
+//                       backgroundColor: Colors.green,
+//                       padding: const EdgeInsets.symmetric(vertical: 14),
+//                       shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(8),
+//                       ),
+//                     ),
+//                     child: const Text(
+//                       "Login",
+//                       style: TextStyle(
+//                         fontSize: 18,
+//                         color: Colors.white,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+
+//                 const SizedBox(height: 30),
+
+//                 // 🔹 Register Link
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   children: [
+//                     const Text(
+//                       "Don’t have an account? ",
+//                       style: TextStyle(fontSize: 16, color: Colors.black54),
+//                     ),
+//                     GestureDetector(
+//                       onTap: () {
+//                         Navigator.push(
+//                           context,
+//                           MaterialPageRoute(
+//                               builder: (context) => const RegistrationPage()),
+//                         );
+//                       },
+//                       child: const Text(
+//                         "Register",
+//                         style: TextStyle(
+//                           fontSize: 16,
+//                           color: Colors.blueAccent,
+//                           fontWeight: FontWeight.bold,
+//                           decoration: TextDecoration.none,
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+
+//       // 🔹 Bottom Navigation Bar (connected)
+//       bottomNavigationBar: BottomNavigationBar(
+//         backgroundColor: Colors.white,
+//         currentIndex: _selectedIndex,
+//         selectedItemColor: Colors.blueAccent,
+//         unselectedItemColor: Colors.grey,
+//         onTap: _onItemTapped,
+//         items: const [
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.home),
+//             label: "Home",
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.history),
+//             label: "History",
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.person),
+//             label: "Profile",
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   // 🔸 TextField Builder
+//   Widget _buildTextField(TextEditingController controller, String hintText,
+//       {TextInputType keyboardType = TextInputType.text, IconData? icon}) {
+//     return TextFormField(
+//       controller: controller,
+//       keyboardType: keyboardType,
+//       decoration: InputDecoration(
+//         prefixIcon: Icon(icon, color: Colors.blueAccent),
+//         hintText: hintText,
+//         filled: true,
+//         fillColor: Colors.white,
+//         contentPadding:
+//             const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+//         enabledBorder: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(6),
+//           borderSide: const BorderSide(color: Colors.black12),
+//         ),
+//         focusedBorder: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(6),
+//           borderSide: const BorderSide(color: Colors.blueAccent),
+//         ),
+//       ),
+//       validator: (value) {
+//         if (value == null || value.isEmpty) {
+//           return 'Please fill in this field';
+//         }
+//         return null;
+//       },
+//     );
+//   }
+
+//   // 🔸 Login Logic
+//   void _loginUser() {
+//     if (_formKey.currentState!.validate()) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         const SnackBar(
+//           content: Text('✅ Welcome back!'),
+//           backgroundColor: Colors.green,
+//           duration: Duration(seconds: 2),
+//         ),
+//       );
+
+//       Future.delayed(const Duration(seconds: 2), () {
+//         Navigator.pushReplacement(
+//           context,
+//           MaterialPageRoute(builder: (context) => const HomePage()),
+//         );
+//       });
+//     }
+//   }
+// }
+

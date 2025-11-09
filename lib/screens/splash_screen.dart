@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'onboarding_screen.dart';
@@ -18,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    // Fade-in animation for logo
+    // 🔹 Fade-in animation for logo
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -31,11 +32,11 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    // Move to Onboarding after 3 seconds
+    // 🔹 Navigate to Onboarding after 3 seconds
     Timer(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => OnboardingScreen()),
+        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
       );
     });
   }
@@ -49,57 +50,73 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green, // Deep teal green (matches theme)
-      body: Center(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // ✅ Circular Logo
-              Container(
-                height: 110,
-                width: 110,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                  image: const DecorationImage(
-                    image: AssetImage('assets/magna_logo.jpeg'), // your logo
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 25),
-
-              // ✅ Tagline Text
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 40),
-                child: Text(
-                  "Fast, simple, and reliable loans\nright at your fingertips",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                    height: 1.4,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              // ✅ Progress Indicator
-              const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                strokeWidth: 2.5,
-              ),
+      // 🔹 Removed backgroundColor — now using gradient inside a Container
+      body: Container(
+        // ✅ Gradient background for a premium look
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 27, 229, 33),  // Bright green
+              Color(0xFF007BFF),  // Deep blue
             ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+
+        // 🔹 Content centered with fade-in animation
+        child: Center(
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // ✅ Rectangle Logo (with shadow)
+                Container(
+                  height: 109,
+                  width: 220,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(12), // smoother corners
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                    image: const DecorationImage(
+                      image: AssetImage('assets/magna_logo.jpeg'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 25),
+
+                // ✅ Tagline Text
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  child: Text(
+                    "Fast, simple, and reliable loans",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 40),
+
+                // ✅ Progress Indicator
+                const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  strokeWidth: 2.5,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -110,67 +127,3 @@ class _SplashScreenState extends State<SplashScreen>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-// import 'dart:async'; 
-// import 'package:flutter/material.dart'; 
-// import 'onboarding_screen.dart'; 
- 
-// class SplashScreen extends StatefulWidget { 
-//   @override 
-//   _SplashScreenState createState() => _SplashScreenState(); 
-// } 
- 
-// class _SplashScreenState extends State<SplashScreen> { 
-//   @override 
-//   void initState() { 
-//   super.initState(); 
- 
-//     // Move to Onboarding after 3 seconds 
-//     Timer(Duration(seconds: 3), () { 
-//       Navigator.pushReplacement( 
-//         context, 
-//         MaterialPageRoute(builder: (context) => OnboardingScreen()), 
-//       ); 
-//     }); 
-
-   
-
-//   } 
- 
-//   @override 
-//   Widget build(BuildContext context) { 
-//     return Scaffold( 
-//       backgroundColor: Colors.deepPurple, 
-//       body: Center( 
-//         child: Column( 
-//           mainAxisAlignment: MainAxisAlignment.center, 
-//           children: [ 
-//             // App logo or icon 
-//             Image.asset('assets/logo.png', height: 100), 
-//             SizedBox(height: 20), 
-//             Text( 
-//               "Fast, simple, and reliable loans right at your fingertips", 
-//               style: TextStyle( 
-//                 color: Colors.white, 
-//                 fontSize: 24, 
-//                 fontWeight: FontWeight.bold, 
-//               ), 
-//             ), 
-//             SizedBox(height: 40), 
-//             CircularProgressIndicator(color: Colors.white), 
-//           ], 
-//         ), 
-//       ), 
-//     ); 
-//   } 
-// } 

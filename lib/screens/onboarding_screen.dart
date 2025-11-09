@@ -16,10 +16,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        // 🌈 Gradient background for a premium look
+        //  Gradient background for a premium look
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.green, Colors.green], // green to aqua
+            colors: [Color.fromARGB(255, 27, 229, 33), Color(0xFF007BFF)], // green to aqua
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -35,19 +35,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   },
                   children: [
                     buildPage(
-                      image: 'assets/pic2.jpg',
+                      image: 'assets/loan.jpg',
                       title: 'Fast Loan Access',
                       description:
                           'Apply anytime, anywhere — no long queues, no paperwork. Just your phone, your details, and your dreams.',
                     ),
                     buildPage(
-                      image: 'assets/pic1.jpg',
+                      image: 'assets/pic3.jpg',
                       title: 'Magna Credit Limited',
                       description:
                           'Whether for personal needs, business growth, or emergencies — Magna Credit helps you move forward with ease.',
                     ),
                     buildPage(
-                      image: 'assets/pic2.jpg',
+                      image: 'assets/pic1.jpg',
                       title: 'Achieve Your Goals',
                       description:
                           'Turn your plans into action effortlessly. Secure, fast, and reliable financing you can trust.',
@@ -74,8 +74,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       decoration: BoxDecoration(
                         color: _controller.hasClients &&
                                 _controller.page?.round() == index
-                            ? Colors.white
-                            : Colors.white54,
+                            ? Colors.black
+                            : Colors.black,
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
@@ -85,7 +85,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
               // 👇 Bottom navigation (Skip / Next / Get Started)
               Container(
-                height: 65,
+                height: 43,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: isLastPage
                     ? ElevatedButton(
@@ -119,8 +119,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             child: const Text(
                               'Skip',
                               style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 16,
+                                color: Colors.white,
+                                fontSize: 25,
                               ),
                             ),
                           ),
@@ -140,7 +140,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               'Next',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                                fontSize: 18,
+
                               ),
                             ),
                           ),
@@ -166,14 +167,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           // 🖼 Rounded image with shadow
           Container(
-            height: 300,
+            height: 160,
+            width: 220,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black26,
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
+                  blurRadius: 5,
+                  offset: const Offset(0, 4),
                 ),
               ],
               image: DecorationImage(
@@ -182,28 +184,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
 
           // ✨ Title
           Text(
             title,
             style: const TextStyle(
-              fontSize: 26,
+              fontSize: 30,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Colors.black,
               letterSpacing: 0.5,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 12),
 
           // 💬 Description
           Text(
             description,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontSize: 16,
-              color: Colors.white70,
+              fontSize: 20,
+              color: Colors.white,
               height: 1.5,
             ),
           ),
@@ -230,142 +232,3 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import 'package:flutter/material.dart';
-// import 'package:magna_credit_app/screens/home_screen.dart'; 
-// // import 'home_screen.dart'; 
-
-
-// class OnboardingScreen extends StatefulWidget { 
-// @override 
-// _OnboardingScreenState createState() => _OnboardingScreenState(); 
-// } 
-
- 
-// class _OnboardingScreenState extends State<OnboardingScreen> { 
-//   final PageController _controller = PageController(); 
-//   bool isLastPage = false; 
- 
-//   @override 
-//   Widget build(BuildContext context) { 
-//     return Scaffold( 
-//       body: Container( 
-//         padding: EdgeInsets.all(20), 
-//         child: PageView( 
-//           controller: _controller, 
-//           onPageChanged: (index) { 
-//             setState(() => isLastPage = index == 2); 
-//           }, 
-//           children: [ 
-//             buildPage( 
-//               image: 'assets/pic2.jpg', 
-//               title: '', 
-//               description: 'Apply anytime, anywhere — no long queues, no heavy paperwork. Just your phone, your details, and your dreams.', 
-//             ), 
-//             buildPage( 
-//               image: 'assets/pic1.jpg', 
-//               title: 'Magna Credit Limited', 
-//               description: 'Whether it’s personal needs, business expansion, or emergency support — Magna Credit is here to help you move forward', 
-//             ), 
-//             buildPage( 
-//               image: 'assets/pic2.jpg', 
-
- 
-   
- 
-//               title: 'Achieve Your Goals', 
-//               description: 'Turn your plans into action effortlessly.', 
-//             ), 
-//           ], 
-//         ), 
-//       ), 
-//       bottomSheet: isLastPage 
-//           ? TextButton( 
-//               onPressed: () { 
-//                 Navigator.pushReplacement( 
-//                   context, 
-//                   MaterialPageRoute(builder: (_) => HomePage()), 
-//                 ); 
-//               }, 
-//               child: Container( 
-//                 width: double.infinity, 
-//                 height: 60, 
-//                 color: Colors.deepPurple, 
-//                 alignment: Alignment.center, 
-//                 child: Text( 
-//                   'Get Started', 
-//                   style: TextStyle(color: Colors.white, fontSize: 20), 
-//                 ), 
-//               ), 
-//             ) 
-//           : Container( 
-//               height: 60, 
-//               child: Row( 
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween, 
-//                 children: [ 
-
- 
-   
- 
-//                   TextButton( 
-//                     child: Text('Skip'), 
-//                     onPressed: () => _controller.jumpToPage(2), 
-//                   ), 
-//                   Row( 
-//                     children: [ 
-//                       TextButton( 
-//                         child: Text('Next'), 
-//                         onPressed: () => _controller.nextPage( 
-//                           duration: Duration(milliseconds: 500), 
-//                           curve: Curves.easeInOut, 
-//                         ), 
-//                       ), 
-//                     ], 
-//                   ), 
-//                 ], 
-//               ), 
-//             ), 
-//     ); 
-//   } 
- 
-//   Widget buildPage({ 
-//     required String image, 
-//     required String title, 
-//     required String description, 
-//   }) { 
-//     return Column( 
-//       mainAxisAlignment: MainAxisAlignment.center, 
-//       children: [ 
-//         Image.asset(image, height: 300), 
-//         SizedBox(height: 30), 
-
- 
-   
- 
-//         Text( 
-//           title, 
-//           style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold), 
-//         ), 
-//         SizedBox(height: 15), 
-//         Text( 
-//           description, 
-//           textAlign: TextAlign.center, 
-//           style: TextStyle(fontSize: 18, color: Colors.grey[700]), 
-//         ), 
-//       ], 
-//     ); 
-//   } 
-// }

@@ -67,8 +67,9 @@ flutter:
     - assets/pic4.jpg
     - assets/reset_password.jpg
     - assets/forgot_password.jpg
-    
-    # - assets/loan_image.jpg
+    - assets/loan.jpg
+
+
     # - assets/pic5.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
