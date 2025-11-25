@@ -19,7 +19,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         //  Gradient background for a premium look
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color.fromARGB(255, 27, 229, 33), Color(0xFF007BFF)], // green to aqua
+            colors:  [Color.fromARGB(255, 27, 229, 33), Color(0xFF007BFF)], // green to aqua
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),

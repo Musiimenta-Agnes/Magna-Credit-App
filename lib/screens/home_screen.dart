@@ -94,12 +94,14 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Column(
                   children: [
-                    const Text(
-                      "Welcome to Magna Credit",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    Center(
+                      child: const Text(
+                        "Welcome to Magna Credit",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -107,7 +109,7 @@ class _HomePageState extends State<HomePage> {
                       "Fast, easy, and reliable loans at your fingertips!",
                       style: TextStyle(
                         color: Colors.white70,
-                        fontSize: 16,
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
@@ -143,13 +145,13 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 30),
 
-              // 💚 Why Choose Magna
+              //  Why Choose Magna
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "Why Choose Magna",
                   style: TextStyle(
-                    fontSize: 17,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.blueAccent,
                   ),
@@ -179,6 +181,8 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
 
+              
+
               const SizedBox(height: 35),
 
               // 🔹 Loan Process
@@ -203,7 +207,7 @@ class _HomePageState extends State<HomePage> {
                       "Loan Process",
                       style: TextStyle(
                         color: Colors.blueAccent,
-                        fontSize: 16,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -211,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                     Text(
                       "Sign In  ➜  Verification  ➜  Loan Disbursement",
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 16,
                         color: Colors.black87,
                       ),
                       textAlign: TextAlign.center,
@@ -273,7 +277,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: const Text(
                         "Apply Now",
-                        style: TextStyle(fontSize: 15),
+                        style: TextStyle(fontSize: 20),
                       ),
                     ),
                   ],

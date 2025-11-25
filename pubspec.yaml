@@ -68,6 +68,7 @@ flutter:
     - assets/reset_password.jpg
     - assets/forgot_password.jpg
     - assets/loan.jpg
+    # - assets/loan1.png
 
 
     # - assets/pic5.jpg

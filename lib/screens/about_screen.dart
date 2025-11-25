@@ -115,7 +115,7 @@ class _AboutPageState extends State<AboutPage> {
             // 🔹 Contact Info
             _buildCard(
               "Contact Us",
-              "📍 Address: Kampala, Uganda\n📞 Phone: +256 700 123456\n✉️ Email: info@magnacredit.com\n🌐 Website: www.magnacredit.com",
+              " Address: Kampala, Uganda\n📞 Phone: +256 700 123456\n✉️ Email: info@magnacredit.com\n🌐 Website: www.magnacredit.com",
             ),
           ],
         ),
