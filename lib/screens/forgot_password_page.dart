@@ -22,7 +22,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
       // 🔹 UPDATED APP BAR WITH HEADING
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blueAccent,
         elevation: 0,
 
         // 👇 Back arrow icon (unchanged)

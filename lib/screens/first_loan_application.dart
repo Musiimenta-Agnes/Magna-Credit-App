@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:magna_credit_app/screens/about_screen.dart';
-// import 'second_loan_application.dart'; // 🔹 The next form page
+import 'login_screen.dart';   // <-- Back arrow goes here
+import 'about_screen.dart';
 
 class LoanApplicationPage extends StatefulWidget {
   const LoanApplicationPage({super.key});
@@ -12,7 +12,7 @@ class LoanApplicationPage extends StatefulWidget {
 class _LoanApplicationPageState extends State<LoanApplicationPage> {
   final _formKey = GlobalKey<FormState>();
 
-  // 🔹 Text Controllers
+  // Text Controllers
   final TextEditingController nameController = TextEditingController();
   final TextEditingController contactController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -25,158 +25,146 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //  Gradient background
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 27, 229, 33),
-              Color.fromARGB(255, 50, 40, 229),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+      backgroundColor: Colors.white,
+
+      // TOP BAR
+      appBar: AppBar(
+        backgroundColor: Colors.blueAccent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
+          },
         ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
+        title: const Text(
+          "Loan Application",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        centerTitle: true,
+      ),
+
+      // PAGE BODY
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+          child: Form(
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 🔹 Top App Bar Style
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () => Navigator.pop(context),
+                const Text(
+                  "Personal Information",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                const Text(
+                  "Please fill in your details for loan verification. All data is safe and secure.",
+                  style: TextStyle(fontSize: 14, color: Colors.black54),
+                ),
+
+                const SizedBox(height: 25),
+
+                // INPUT FIELDS (Same design as Registration page)
+                _buildTextField(nameController, "Full Name", icon: Icons.person),
+                const SizedBox(height: 15),
+
+                _buildTextField(contactController, "Contact",
+                    icon: Icons.phone, keyboardType: TextInputType.phone),
+                const SizedBox(height: 15),
+
+                _buildTextField(emailController, "Email",
+                    icon: Icons.email, keyboardType: TextInputType.emailAddress),
+                const SizedBox(height: 15),
+
+                _buildTextField(bioInfoController, "Bio Information",
+                    maxLines: 3, icon: Icons.info_outline),
+                const SizedBox(height: 15),
+
+                _buildTextField(locationController, "Location",
+                    icon: Icons.location_on),
+                const SizedBox(height: 15),
+
+                _buildTextField(otherContactController, "Other Contact",
+                    keyboardType: TextInputType.phone, icon: Icons.phone),
+                const SizedBox(height: 15),
+
+                // Gender
+                DropdownButtonFormField<String>(
+                  value: selectedGender,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_pin, color: Colors.blueAccent),
+                    labelText: "Select Gender",
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6),
+                      borderSide: const BorderSide(color: Colors.black12),
                     ),
-                    const Text(
-                      "Loan Application",
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6),
+                      borderSide: const BorderSide(color: Colors.blueAccent),
+                    ),
+                  ),
+                  items: ["Male", "Female", "Other"]
+                      .map((gender) => DropdownMenuItem(
+                            value: gender,
+                            child: Text(gender),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedGender = value;
+                    });
+                  },
+                  validator: (value) =>
+                      value == null ? "Please select gender" : null,
+                ),
+
+                const SizedBox(height: 30),
+
+                // NEXT BUTTON
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AboutPage(),
+                          ),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      "Next",
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-
-                // 🔹 White Card Form
-                Card(
-                  elevation: 6,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // 🔸 Heading
-                          const Text(
-                            "Personal Information",
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            "This information is only used for loan verification. We ensure it is safe.",
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-
-                          // 🔸 Input Fields
-                          buildTextField("Full Name", nameController),
-                          const SizedBox(height: 15),
-                          buildTextField("Contact", contactController,
-                              keyboardType: TextInputType.phone),
-                          const SizedBox(height: 15),
-                          buildTextField("Email", emailController,
-                              keyboardType: TextInputType.emailAddress),
-                          const SizedBox(height: 15),
-                          buildTextField("Bio Info", bioInfoController,
-                              maxLines: 3),
-                          const SizedBox(height: 15),
-                          buildTextField("Location", locationController),
-                          const SizedBox(height: 15),
-                          buildTextField(
-                              "Other Contact", otherContactController,
-                              keyboardType: TextInputType.phone),
-                          const SizedBox(height: 15),
-
-                          // 🔹 Gender Dropdown
-                          DropdownButtonFormField<String>(
-                            value: selectedGender,
-                            decoration: InputDecoration(
-                              labelText: "Gender",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              filled: true,
-                              fillColor: Colors.grey[100],
-                            ),
-                            items: ["Male", "Female", "Other"]
-                                .map((gender) => DropdownMenuItem(
-                                      value: gender,
-                                      child: Text(gender),
-                                    ))
-                                .toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedGender = value;
-                              });
-                            },
-                            validator: (value) =>
-                                value == null ? "Please select your gender" : null,
-                          ),
-                          const SizedBox(height: 25),
-
-                          // 🔹 Next Button
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const AboutPage()),
-                                  );
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              child: const Text(
-                                "Next",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
+
+                const SizedBox(height: 40),
               ],
             ),
           ),
@@ -185,26 +173,272 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
     );
   }
 
-  // 🔹 Custom Text Field Widget
-  Widget buildTextField(String label, TextEditingController controller,
-      {TextInputType keyboardType = TextInputType.text, int maxLines = 1}) {
+  // 🔹 Same styled text field as RegistrationPage
+  Widget _buildTextField(
+    TextEditingController controller,
+    String label, {
+    TextInputType keyboardType = TextInputType.text,
+    IconData? icon,
+    int maxLines = 1,
+  }) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
       maxLines: maxLines,
-      validator: (value) =>
-          value == null || value.isEmpty ? "Please enter $label" : null,
       decoration: InputDecoration(
-        labelText: label,
+        prefixIcon: Icon(icon, color: Colors.blueAccent),
+        hintText: label,
         filled: true,
-        fillColor: Colors.grey[100],
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+        fillColor: Colors.white,
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(6),
+          borderSide: const BorderSide(color: Colors.black12),
         ),
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.green, width: 2),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(6),
+          borderSide: const BorderSide(color: Colors.blueAccent),
         ),
       ),
+      validator: (value) =>
+          value == null || value.isEmpty ? "Please enter $label" : null,
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import 'package:flutter/material.dart';
+// import 'package:magna_credit_app/screens/about_screen.dart';
+// // import 'second_loan_application.dart'; // 🔹 The next form page
+
+// class LoanApplicationPage extends StatefulWidget {
+//   const LoanApplicationPage({super.key});
+
+//   @override
+//   State<LoanApplicationPage> createState() => _LoanApplicationPageState();
+// }
+
+// class _LoanApplicationPageState extends State<LoanApplicationPage> {
+//   final _formKey = GlobalKey<FormState>();
+
+//   // 🔹 Text Controllers
+//   final TextEditingController nameController = TextEditingController();
+//   final TextEditingController contactController = TextEditingController();
+//   final TextEditingController emailController = TextEditingController();
+//   final TextEditingController bioInfoController = TextEditingController();
+//   final TextEditingController locationController = TextEditingController();
+//   final TextEditingController otherContactController = TextEditingController();
+
+//   String? selectedGender;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       //  Gradient background
+//       body: Container(
+//         decoration: const BoxDecoration(
+//           gradient: LinearGradient(
+//             colors: [
+//               Color.fromARGB(255, 27, 229, 33),
+//               Color.fromARGB(255, 50, 40, 229),
+//             ],
+//             begin: Alignment.topLeft,
+//             end: Alignment.bottomRight,
+//           ),
+//         ),
+//         child: SafeArea(
+//           child: SingleChildScrollView(
+//             padding: const EdgeInsets.all(20),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 // 🔹 Top App Bar Style
+//                 Row(
+//                   children: [
+//                     IconButton(
+//                       icon: const Icon(Icons.arrow_back, color: Colors.white),
+//                       onPressed: () => Navigator.pop(context),
+//                     ),
+//                     const Text(
+//                       "Loan Application",
+//                       style: TextStyle(
+//                         color: Colors.white,
+//                         fontSize: 22,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//                 const SizedBox(height: 20),
+
+//                 // 🔹 White Card Form
+//                 Card(
+//                   elevation: 6,
+//                   shape: RoundedRectangleBorder(
+//                     borderRadius: BorderRadius.circular(15),
+//                   ),
+//                   child: Padding(
+//                     padding: const EdgeInsets.all(20),
+//                     child: Form(
+//                       key: _formKey,
+//                       child: Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           // 🔸 Heading
+//                           const Text(
+//                             "Personal Information",
+//                             style: TextStyle(
+//                               fontSize: 22,
+//                               fontWeight: FontWeight.bold,
+//                               color: Colors.green,
+//                             ),
+//                           ),
+//                           const SizedBox(height: 8),
+//                           const Text(
+//                             "This information is only used for loan verification. We ensure it is safe.",
+//                             style: TextStyle(
+//                               color: Colors.grey,
+//                               fontSize: 14,
+//                             ),
+//                           ),
+//                           const SizedBox(height: 20),
+
+//                           // 🔸 Input Fields
+//                           buildTextField("Full Name", nameController),
+//                           const SizedBox(height: 15),
+//                           buildTextField("Contact", contactController,
+//                               keyboardType: TextInputType.phone),
+//                           const SizedBox(height: 15),
+//                           buildTextField("Email", emailController,
+//                               keyboardType: TextInputType.emailAddress),
+//                           const SizedBox(height: 15),
+//                           buildTextField("Bio Info", bioInfoController,
+//                               maxLines: 3),
+//                           const SizedBox(height: 15),
+//                           buildTextField("Location", locationController),
+//                           const SizedBox(height: 15),
+//                           buildTextField(
+//                               "Other Contact", otherContactController,
+//                               keyboardType: TextInputType.phone),
+//                           const SizedBox(height: 15),
+
+//                           // 🔹 Gender Dropdown
+//                           DropdownButtonFormField<String>(
+//                             value: selectedGender,
+//                             decoration: InputDecoration(
+//                               labelText: "Gender",
+//                               border: OutlineInputBorder(
+//                                 borderRadius: BorderRadius.circular(10),
+//                               ),
+//                               filled: true,
+//                               fillColor: Colors.grey[100],
+//                             ),
+//                             items: ["Male", "Female", "Other"]
+//                                 .map((gender) => DropdownMenuItem(
+//                                       value: gender,
+//                                       child: Text(gender),
+//                                     ))
+//                                 .toList(),
+//                             onChanged: (value) {
+//                               setState(() {
+//                                 selectedGender = value;
+//                               });
+//                             },
+//                             validator: (value) =>
+//                                 value == null ? "Please select your gender" : null,
+//                           ),
+//                           const SizedBox(height: 25),
+
+//                           // 🔹 Next Button
+//                           SizedBox(
+//                             width: double.infinity,
+//                             child: ElevatedButton(
+//                               onPressed: () {
+//                                 if (_formKey.currentState!.validate()) {
+//                                   Navigator.push(
+//                                     context,
+//                                     MaterialPageRoute(
+//                                         builder: (context) =>
+//                                             const AboutPage()),
+//                                   );
+//                                 }
+//                               },
+//                               style: ElevatedButton.styleFrom(
+//                                 backgroundColor: Colors.green,
+//                                 padding:
+//                                     const EdgeInsets.symmetric(vertical: 14),
+//                                 shape: RoundedRectangleBorder(
+//                                   borderRadius: BorderRadius.circular(8),
+//                                 ),
+//                               ),
+//                               child: const Text(
+//                                 "Next",
+//                                 style: TextStyle(
+//                                   color: Colors.white,
+//                                   fontSize: 18,
+//                                   fontWeight: FontWeight.bold,
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   // 🔹 Custom Text Field Widget
+//   Widget buildTextField(String label, TextEditingController controller,
+//       {TextInputType keyboardType = TextInputType.text, int maxLines = 1}) {
+//     return TextFormField(
+//       controller: controller,
+//       keyboardType: keyboardType,
+//       maxLines: maxLines,
+//       validator: (value) =>
+//           value == null || value.isEmpty ? "Please enter $label" : null,
+//       decoration: InputDecoration(
+//         labelText: label,
+//         filled: true,
+//         fillColor: Colors.grey[100],
+//         border: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(10),
+//         ),
+//         focusedBorder: const OutlineInputBorder(
+//           borderSide: BorderSide(color: Colors.green, width: 2),
+//         ),
+//       ),
+//     );
+//   }
+// }

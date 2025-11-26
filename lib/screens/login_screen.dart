@@ -1,9 +1,11 @@
+
 import 'package:flutter/material.dart';
 import 'forgot_password_page.dart';
 import 'home_screen.dart';
 import 'signup_screen.dart';
+import 'first_loan_application.dart';
 import 'profile_page.dart';
-import 'about_screen.dart'; // ✅ Added import for About Page
+import 'about_screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -21,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
   int _selectedIndex = 0;
 
-  // 🔹 Handle Bottom Navigation
+  // Bottom Navigation
   void _onItemTapped(int index) {
     setState(() => _selectedIndex = index);
 
@@ -54,9 +56,8 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      // 🔹 App Bar
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blueAccent,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -69,7 +70,6 @@ class _LoginPageState extends State<LoginPage> {
         centerTitle: true,
       ),
 
-      // 🔹 Main Body
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
@@ -77,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
             key: _formKey,
             child: Column(
               children: [
-                // Logo
+                // App Logo
                 Center(
                   child: Container(
                     width: 200,
@@ -92,6 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 25),
 
                 const Text(
@@ -102,15 +103,17 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.black87,
                   ),
                 ),
+
                 const SizedBox(height: 8),
+
                 const Text(
                   "Login to your account and apply for a loan",
                   style: TextStyle(fontSize: 16, color: Colors.black),
                   textAlign: TextAlign.center,
                 ),
+
                 const SizedBox(height: 30),
 
-                // Email Field
                 _buildTextField(
                   emailController,
                   "Enter Email:",
@@ -119,7 +122,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 15),
 
-                // Phone Field
                 _buildTextField(
                   phoneController,
                   "Enter Phone:",
@@ -133,8 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                   controller: passwordController,
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
-                    prefixIcon:
-                        const Icon(Icons.lock, color: Colors.blueAccent),
+                    prefixIcon: const Icon(Icons.lock, color: Colors.blueAccent),
                     hintText: "Enter Password:",
                     filled: true,
                     fillColor: Colors.white,
@@ -168,7 +169,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 15),
 
-                // Forgot Password link
                 Align(
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
@@ -185,7 +185,6 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(
                         color: Colors.blueAccent,
                         fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.none,
                         fontSize: 15,
                       ),
                     ),
@@ -194,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 30),
 
-                // Login Button
+                // LOGIN BUTTON → Goes to Loan Application Page
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -219,7 +218,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 30),
 
-                // Register link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -241,7 +239,6 @@ class _LoginPageState extends State<LoginPage> {
                           fontSize: 16,
                           color: Colors.blueAccent,
                           fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.none,
                         ),
                       ),
                     ),
@@ -253,7 +250,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
 
-      // 🔹 Bottom Navigation Bar
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         currentIndex: _selectedIndex,
@@ -262,23 +258,17 @@ class _LoginPageState extends State<LoginPage> {
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
+              icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(
-            icon: Icon(Icons.info_outline),
-            label: "About",
-          ),
+              icon: Icon(Icons.info_outline), label: "About"),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "Profile",
-          ),
+              icon: Icon(Icons.person), label: "Profile"),
         ],
       ),
     );
   }
 
-  // 🔸 Text Field Builder
+  // Textfield component
   Widget _buildTextField(
     TextEditingController controller,
     String hintText, {
@@ -309,7 +299,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // 🔸 Login Logic
+  // LOGIN → Redirect to LoanApplicationPage
   void _loginUser() {
     if (_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -323,7 +313,7 @@ class _LoginPageState extends State<LoginPage> {
       Future.delayed(const Duration(seconds: 2), () {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => const LoanApplicationPage()),
         );
       });
     }
@@ -339,11 +329,16 @@ class _LoginPageState extends State<LoginPage> {
 
 
 
+
+
+
 // import 'package:flutter/material.dart';
 // import 'forgot_password_page.dart';
 // import 'home_screen.dart';
 // import 'signup_screen.dart';
+// import 'first_loan_application.dart';
 // import 'profile_page.dart';
+// import 'about_screen.dart'; // ✅ Added import for About Page
 
 // class LoginPage extends StatefulWidget {
 //   const LoginPage({super.key});
@@ -361,27 +356,26 @@ class _LoginPageState extends State<LoginPage> {
 //   bool _obscurePassword = true;
 //   int _selectedIndex = 0;
 
-//   // Handle bottom navigation
+//   // 🔹 Handle Bottom Navigation
 //   void _onItemTapped(int index) {
 //     setState(() => _selectedIndex = index);
 
 //     switch (index) {
-//       case 0:
+//       case 0: // Home
 //         Navigator.pushReplacement(
 //           context,
 //           MaterialPageRoute(builder: (context) => const HomePage()),
 //         );
 //         break;
-//       case 1:
-//         // Placeholder for "History" — can be connected later
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           const SnackBar(
-//             content: Text("History page coming soon"),
-//             backgroundColor: Colors.green,
-//           ),
+
+//       case 1: // About
+//         Navigator.pushReplacement(
+//           context,
+//           MaterialPageRoute(builder: (context) => const AboutPage()),
 //         );
 //         break;
-//       case 2:
+
+//       case 2: // Profile
 //         Navigator.pushReplacement(
 //           context,
 //           MaterialPageRoute(builder: (context) => const ProfilePage()),
@@ -395,8 +389,9 @@ class _LoginPageState extends State<LoginPage> {
 //     return Scaffold(
 //       backgroundColor: Colors.white,
 
+//       // 🔹 App Bar
 //       appBar: AppBar(
-//         backgroundColor: Colors.green,
+//         backgroundColor: Colors.blueAccent,
 //         elevation: 0,
 //         leading: IconButton(
 //           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -409,6 +404,7 @@ class _LoginPageState extends State<LoginPage> {
 //         centerTitle: true,
 //       ),
 
+//       // 🔹 Main Body
 //       body: Center(
 //         child: SingleChildScrollView(
 //           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
@@ -416,7 +412,7 @@ class _LoginPageState extends State<LoginPage> {
 //             key: _formKey,
 //             child: Column(
 //               children: [
-//                 // 🔹 Company Logo (rectangle)
+//                 // Logo
 //                 Center(
 //                   child: Container(
 //                     width: 200,
@@ -449,7 +445,7 @@ class _LoginPageState extends State<LoginPage> {
 //                 ),
 //                 const SizedBox(height: 30),
 
-//                 // 🔹 Email Field
+//                 // Email Field
 //                 _buildTextField(
 //                   emailController,
 //                   "Enter Email:",
@@ -458,7 +454,7 @@ class _LoginPageState extends State<LoginPage> {
 //                 ),
 //                 const SizedBox(height: 15),
 
-//                 // 🔹 Phone Field
+//                 // Phone Field
 //                 _buildTextField(
 //                   phoneController,
 //                   "Enter Phone:",
@@ -467,7 +463,7 @@ class _LoginPageState extends State<LoginPage> {
 //                 ),
 //                 const SizedBox(height: 15),
 
-//                 // 🔹 Password Field
+//                 // Password Field
 //                 TextFormField(
 //                   controller: passwordController,
 //                   obscureText: _obscurePassword,
@@ -501,17 +497,13 @@ class _LoginPageState extends State<LoginPage> {
 //                       },
 //                     ),
 //                   ),
-//                   validator: (value) {
-//                     if (value == null || value.isEmpty) {
-//                       return 'Please enter your password';
-//                     }
-//                     return null;
-//                   },
+//                   validator: (value) =>
+//                       value == null || value.isEmpty ? 'Please enter your password' : null,
 //                 ),
 
 //                 const SizedBox(height: 15),
 
-//                 // 🔹 Forgot Password link
+//                 // Forgot Password link
 //                 Align(
 //                   alignment: Alignment.centerRight,
 //                   child: GestureDetector(
@@ -537,7 +529,7 @@ class _LoginPageState extends State<LoginPage> {
 
 //                 const SizedBox(height: 30),
 
-//                 // 🔹 Login Button
+//                 // Login Button
 //                 SizedBox(
 //                   width: double.infinity,
 //                   child: ElevatedButton(
@@ -562,7 +554,7 @@ class _LoginPageState extends State<LoginPage> {
 
 //                 const SizedBox(height: 30),
 
-//                 // 🔹 Register Link
+//                 // Register link
 //                 Row(
 //                   mainAxisAlignment: MainAxisAlignment.center,
 //                   children: [
@@ -596,7 +588,7 @@ class _LoginPageState extends State<LoginPage> {
 //         ),
 //       ),
 
-//       // 🔹 Bottom Navigation Bar (connected)
+//       // 🔹 Bottom Navigation Bar
 //       bottomNavigationBar: BottomNavigationBar(
 //         backgroundColor: Colors.white,
 //         currentIndex: _selectedIndex,
@@ -609,8 +601,8 @@ class _LoginPageState extends State<LoginPage> {
 //             label: "Home",
 //           ),
 //           BottomNavigationBarItem(
-//             icon: Icon(Icons.history),
-//             label: "History",
+//             icon: Icon(Icons.info_outline),
+//             label: "About",
 //           ),
 //           BottomNavigationBarItem(
 //             icon: Icon(Icons.person),
@@ -621,9 +613,13 @@ class _LoginPageState extends State<LoginPage> {
 //     );
 //   }
 
-//   // 🔸 TextField Builder
-//   Widget _buildTextField(TextEditingController controller, String hintText,
-//       {TextInputType keyboardType = TextInputType.text, IconData? icon}) {
+//   // 🔸 Text Field Builder
+//   Widget _buildTextField(
+//     TextEditingController controller,
+//     String hintText, {
+//     TextInputType keyboardType = TextInputType.text,
+//     IconData? icon,
+//   }) {
 //     return TextFormField(
 //       controller: controller,
 //       keyboardType: keyboardType,
@@ -643,12 +639,8 @@ class _LoginPageState extends State<LoginPage> {
 //           borderSide: const BorderSide(color: Colors.blueAccent),
 //         ),
 //       ),
-//       validator: (value) {
-//         if (value == null || value.isEmpty) {
-//           return 'Please fill in this field';
-//         }
-//         return null;
-//       },
+//       validator: (value) =>
+//           value == null || value.isEmpty ? 'Please fill in this field' : null,
 //     );
 //   }
 
