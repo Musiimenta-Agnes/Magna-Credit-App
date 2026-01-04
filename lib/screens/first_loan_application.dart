@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';   // <-- Back arrow goes here
-import 'about_screen.dart';
+import 'second_loan_application.dart';
 
 class LoanApplicationPage extends StatefulWidget {
   const LoanApplicationPage({super.key});
@@ -29,7 +29,7 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
 
       // TOP BAR
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Color(0xFF007BFF),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -142,7 +142,7 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const AboutPage(),
+                            builder: (context) => const LoanApplicationPage2(),
                           ),
                         );
                       }

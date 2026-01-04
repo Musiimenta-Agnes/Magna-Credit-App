@@ -56,7 +56,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       backgroundColor: Colors.white,
 
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Color(0xFF007BFF),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),

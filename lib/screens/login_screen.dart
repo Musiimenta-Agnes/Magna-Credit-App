@@ -279,7 +279,7 @@ class _LoginPageState extends State<LoginPage> {
       controller: controller,
       keyboardType: keyboardType,
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Colors.blueAccent),
+        prefixIcon: Icon(icon, color: Color(0xFF007BFF)),
         hintText: hintText,
         filled: true,
         fillColor: Colors.white,
@@ -291,7 +291,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: Colors.blueAccent),
+          borderSide: const BorderSide(color: Color(0xFF007BFF)),
         ),
       ),
       validator: (value) =>

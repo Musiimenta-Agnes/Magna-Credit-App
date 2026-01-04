@@ -64,39 +64,60 @@ class _TermsPoliciesPageState extends State<TermsPoliciesPage> {
       ),
 
       // BODY
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // --- PAGE HEADER ---
-            Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF007BFF), Color.fromARGB(255, 27, 229, 33)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 6,
-                    offset: Offset(0, 3),
-                  )
-                ],
-              ),
-              child: const Text(
-                "Please read the terms and loan policies carefully before applying for a loan with Magna Credit Limited.",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
+body: SingleChildScrollView(
+  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+
+      // --- PAGE HEADER (NO CONTAINER, NO GRADIENT) ---
+      const Text(
+        "Please read the terms and loan policies carefully before applying for a loan with Magna Credit Limited.",
+        style: TextStyle(
+          color: Colors.blueAccent,   // 🔵 Blue heading text
+          fontSize: 17,
+          fontWeight: FontWeight.w600,
+        ),
+        textAlign: TextAlign.left,     // You can change to center if you want
+      ),
+
+      const SizedBox(height: 20),
+
+
+      // // BODY
+      // body: SingleChildScrollView(
+      //   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      //   child: Column(
+      //     crossAxisAlignment: CrossAxisAlignment.start,
+      //     children: [
+      //       // --- PAGE HEADER ---
+      //       Container(
+      //         padding: const EdgeInsets.all(18),
+      //         decoration: BoxDecoration(
+      //           gradient: const LinearGradient(
+      //             colors: [Color(0xFF007BFF), Color.fromARGB(255, 27, 229, 33)],
+      //             begin: Alignment.topLeft,
+      //             end: Alignment.bottomRight,
+      //           ),
+      //           borderRadius: BorderRadius.circular(16),
+      //           boxShadow: [
+      //             BoxShadow(
+      //               color: Colors.black12,
+      //               blurRadius: 6,
+      //               offset: Offset(0, 3),
+      //             )
+      //           ],
+      //         ),
+      //         child: const Text(
+      //           "Please read the terms and loan policies carefully before applying for a loan with Magna Credit Limited.",
+      //           style: TextStyle(
+      //             color: Colors.white,
+      //             fontSize: 17,
+      //             fontWeight: FontWeight.w600,
+      //           ),
+      //           textAlign: TextAlign.center,
+      //         ),
+      //       ),
 
             const SizedBox(height: 25),
 

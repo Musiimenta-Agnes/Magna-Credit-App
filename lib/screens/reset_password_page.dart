@@ -24,7 +24,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
       // 🔹 UPDATED APP BAR WITH HEADING
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Color(0xFF007BFF),
         elevation: 0,
 
         // 👇 Back arrow icon (unchanged)
