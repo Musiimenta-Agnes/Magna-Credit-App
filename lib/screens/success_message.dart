@@ -43,7 +43,7 @@ class ApplicationSuccessPage extends StatelessWidget {
               const SizedBox(height: 20),
 
               const Text(
-                "Application Complete",
+                "Loan Application Complete",
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
