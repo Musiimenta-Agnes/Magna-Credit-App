@@ -74,7 +74,7 @@ body: SingleChildScrollView(
       const Text(
         "Please read the terms and loan policies carefully before applying for a loan with Magna Credit Limited.",
         style: TextStyle(
-          color: Colors.blueAccent,   // 🔵 Blue heading text
+          color: Colors.green,   // 🔵 Blue heading text
           fontSize: 17,
           fontWeight: FontWeight.w600,
         ),
@@ -129,6 +129,7 @@ body: SingleChildScrollView(
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
+                    // ignore: deprecated_member_use
                     color: Colors.black12.withOpacity(0.10),
                     blurRadius: 8,
                     offset: Offset(0, 4),
