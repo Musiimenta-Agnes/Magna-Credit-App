@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'success_message.dart';
+
 class LoanApplicationPage2 extends StatefulWidget {
   const LoanApplicationPage2({super.key});
 
@@ -45,8 +46,18 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    // Dark mode colors
+    Color background = isDark ? Colors.black : Colors.white;
+    Color textColor = isDark ? Colors.white : Colors.black;
+    Color subtitleColor = isDark ? Colors.white70 : Colors.black87;
+    Color fillColor = isDark ? Colors.grey[900]! : Colors.white;
+    Color containerColor = isDark ? Colors.grey[900]! : Colors.grey.shade100;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: background,
 
       appBar: AppBar(
         backgroundColor: const Color(0xFF007BFF),
@@ -70,7 +81,7 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              const Text(
+              Text(
                 "Continue your loan application by submitting required details below.",
                 style: TextStyle(
                   color: Colors.green,
@@ -80,13 +91,16 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
               ),
               const SizedBox(height: 25),
 
-              _buildField("Next of Kin Name", kinNameController),
+              _buildField("Next of Kin Name", kinNameController,
+                  fillColor: fillColor, textColor: textColor),
               const SizedBox(height: 15),
 
               _buildField(
                 "Next of Kin Contact",
                 kinContactController,
                 keyboardType: TextInputType.phone,
+                fillColor: fillColor,
+                textColor: textColor,
               ),
               const SizedBox(height: 15),
 
@@ -106,6 +120,9 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
                   "Other",
                 ],
                 onChanged: (v) => setState(() => selectedOccupation = v),
+                fillColor: fillColor,
+                textColor: textColor,
+                isDark: isDark,
               ),
               const SizedBox(height: 15),
 
@@ -113,6 +130,8 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
                 "Monthly Income (UGX)",
                 incomeController,
                 keyboardType: TextInputType.number,
+                fillColor: fillColor,
+                textColor: textColor,
               ),
               const SizedBox(height: 15),
 
@@ -127,6 +146,9 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
                   "Car Loan",
                 ],
                 onChanged: (v) => setState(() => selectedLoanType = v),
+                fillColor: fillColor,
+                textColor: textColor,
+                isDark: isDark,
               ),
               const SizedBox(height: 15),
 
@@ -143,15 +165,27 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
                   "Other",
                 ],
                 onChanged: (v) => setState(() => selectedEducation = v),
+                fillColor: fillColor,
+                textColor: textColor,
+                isDark: isDark,
               ),
               const SizedBox(height: 15),
 
-              _buildField("Current Address", addressController),
+              _buildField(
+                "Current Address",
+                addressController,
+                fillColor: fillColor,
+                textColor: textColor,
+              ),
               const SizedBox(height: 20),
 
-              const Text(
+              Text(
                 "National ID",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
+                ),
               ),
               const SizedBox(height: 8),
 
@@ -161,15 +195,15 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
                   height: 150,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
+                    color: containerColor,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: Colors.blueAccent, width: 0.8),
                   ),
                   child: nationalIdImage == null
-                      ? const Center(
+                      ? Center(
                           child: Text(
                             "Tap to upload National ID",
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(color: subtitleColor),
                           ),
                         )
                       : Image.file(nationalIdImage!, fit: BoxFit.cover),
@@ -177,9 +211,13 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
               ),
               const SizedBox(height: 20),
 
-              const Text(
+              Text(
                 "Collateral (Upload one or more images)",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
+                ),
               ),
               const SizedBox(height: 8),
 
@@ -188,15 +226,15 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
                 child: Container(
                   height: 150,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
+                    color: containerColor,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: Colors.blueAccent, width: 0.8),
                   ),
                   child: collateralImages.isEmpty
-                      ? const Center(
+                      ? Center(
                           child: Text(
                             "Tap to upload collateral images",
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(color: subtitleColor),
                           ),
                         )
                       : ListView(
@@ -219,7 +257,6 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
               ),
               const SizedBox(height: 30),
 
-              // ✅ UPDATED SUBMIT BUTTON
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -263,19 +300,25 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
     String label,
     TextEditingController controller, {
     TextInputType keyboardType = TextInputType.text,
+    required Color fillColor,
+    required Color textColor,
   }) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
+      style: TextStyle(color: textColor),
       validator: (val) =>
           val == null || val.isEmpty ? "Please enter $label" : null,
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: TextStyle(color: textColor),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: fillColor,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: Colors.black12, width: 0.6),
+          borderSide: BorderSide(
+              color: textColor == Colors.white ? Colors.white12 : Colors.black12,
+              width: 0.6),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
@@ -291,16 +334,23 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
     required String? value,
     required List<String> items,
     required Function(String?) onChanged,
+    required Color fillColor,
+    required Color textColor,
+    required bool isDark,
   }) {
     return DropdownButtonFormField<String>(
       value: value,
+      style: TextStyle(color: textColor),
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: TextStyle(color: textColor),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: fillColor,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: Colors.black12, width: 0.6),
+          borderSide: BorderSide(
+              color: isDark ? Colors.white12 : Colors.black12,
+              width: 0.6),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
@@ -309,12 +359,17 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
       ),
       items: items
           .map(
-            (item) => DropdownMenuItem(value: item, child: Text(item)),
+            (item) => DropdownMenuItem(
+              value: item,
+              child: Text(
+                item,
+                style: TextStyle(color: textColor),
+              ),
+            ),
           )
           .toList(),
       onChanged: onChanged,
-      validator: (val) =>
-          val == null ? "Please select your $label" : null,
+      validator: (val) => val == null ? "Please select your $label" : null,
     );
   }
 }
@@ -336,7 +391,7 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
 // import 'package:flutter/material.dart';
 // import 'dart:io';
 // import 'package:image_picker/image_picker.dart';
-
+// import 'success_message.dart';
 // class LoanApplicationPage2 extends StatefulWidget {
 //   const LoanApplicationPage2({super.key});
 
@@ -475,7 +530,7 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
 //                   "Bachelor’s Degree",
 //                   "Master’s Degree",
 //                   "Doctorate",
-//                   "Other"
+//                   "Other",
 //                 ],
 //                 onChanged: (v) => setState(() => selectedEducation = v),
 //               ),
@@ -554,19 +609,19 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
 //               ),
 //               const SizedBox(height: 30),
 
+//               // ✅ UPDATED SUBMIT BUTTON
 //               SizedBox(
 //                 width: double.infinity,
 //                 child: ElevatedButton(
 //                   onPressed: () {
 //                     if (_formKey.currentState!.validate()) {
-//                       ScaffoldMessenger.of(context).showSnackBar(
-//                         const SnackBar(
-//                           content: Text(
-//                               "Loan Application Submitted Successfully!"),
-//                           backgroundColor: Colors.green,
+//                       Navigator.pushReplacement(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (context) =>
+//                               const ApplicationSuccessPage(),
 //                         ),
 //                       );
-//                       Navigator.pop(context);
 //                     }
 //                   },
 //                   style: ElevatedButton.styleFrom(
@@ -610,17 +665,11 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
 //         fillColor: Colors.white,
 //         enabledBorder: OutlineInputBorder(
 //           borderRadius: BorderRadius.circular(6),
-//           borderSide: const BorderSide(
-//             color: Colors.black12,
-//             width: 0.6,
-//           ),
+//           borderSide: const BorderSide(color: Colors.black12, width: 0.6),
 //         ),
 //         focusedBorder: OutlineInputBorder(
 //           borderRadius: BorderRadius.circular(6),
-//           borderSide: const BorderSide(
-//             color: Colors.blueAccent,
-//             width: 0.8,
-//           ),
+//           borderSide: const BorderSide(color: Colors.blueAccent, width: 0.8),
 //         ),
 //       ),
 //     );
@@ -641,23 +690,16 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
 //         fillColor: Colors.white,
 //         enabledBorder: OutlineInputBorder(
 //           borderRadius: BorderRadius.circular(6),
-//           borderSide: const BorderSide(
-//             color: Colors.black12,
-//             width: 0.6,
-//           ),
+//           borderSide: const BorderSide(color: Colors.black12, width: 0.6),
 //         ),
 //         focusedBorder: OutlineInputBorder(
 //           borderRadius: BorderRadius.circular(6),
-//           borderSide: const BorderSide(
-//             color: Colors.blueAccent,
-//             width: 0.8,
-//           ),
+//           borderSide: const BorderSide(color: Colors.blueAccent, width: 0.8),
 //         ),
 //       ),
 //       items: items
 //           .map(
-//             (item) =>
-//                 DropdownMenuItem(value: item, child: Text(item)),
+//             (item) => DropdownMenuItem(value: item, child: Text(item)),
 //           )
 //           .toList(),
 //       onChanged: onChanged,
@@ -666,16 +708,5 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
 //     );
 //   }
 // }
-
-
-
-
-
-
-
-
-
-
-
 
 

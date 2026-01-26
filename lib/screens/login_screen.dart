@@ -53,19 +53,25 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
 
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: const Color(0xFF007BFF),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.foregroundColor),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          "Go Back",
-          style: TextStyle(color: Colors.white, fontSize: 20),
+        title: Text(
+          "Login",
+          style: TextStyle(
+            color: theme.appBarTheme.foregroundColor,
+            fontSize: 20,
+          ),
         ),
         centerTitle: true,
       ),
@@ -95,20 +101,23 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 25),
 
-                const Text(
-                  "LOGIN",
+                Text(
+                  "",
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
 
                 const SizedBox(height: 8),
 
-                const Text(
+                Text(
                   "Login to your account and apply for a loan",
-                  style: TextStyle(fontSize: 16, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: isDark ? Colors.white70 : Colors.black,
+                  ),
                   textAlign: TextAlign.center,
                 ),
 
@@ -119,6 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                   "Enter Email:",
                   icon: Icons.email,
                   keyboardType: TextInputType.emailAddress,
+                  isDark: isDark,
                 ),
                 const SizedBox(height: 15),
 
@@ -127,6 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                   "Enter Phone:",
                   icon: Icons.phone,
                   keyboardType: TextInputType.phone,
+                  isDark: isDark,
                 ),
                 const SizedBox(height: 15),
 
@@ -135,19 +146,21 @@ class _LoginPageState extends State<LoginPage> {
                   controller: passwordController,
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.lock, color: Colors.blueAccent),
+                    prefixIcon:
+                        const Icon(Icons.lock, color: Color(0xFF007BFF)),
                     hintText: "Enter Password:",
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: isDark ? Colors.grey[900] : Colors.white,
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 14, horizontal: 15),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(6),
-                      borderSide: const BorderSide(color: Colors.black12),
+                      borderSide: BorderSide(
+                          color: isDark ? Colors.white12 : Colors.black12),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(6),
-                      borderSide: const BorderSide(color: Colors.blueAccent),
+                      borderSide: const BorderSide(color: Color(0xFF007BFF)),
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -164,7 +177,12 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   validator: (value) =>
-                      value == null || value.isEmpty ? 'Please enter your password' : null,
+                      value == null || value.isEmpty
+                          ? 'Please enter your password'
+                          : null,
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
                 ),
 
                 const SizedBox(height: 15),
@@ -180,10 +198,10 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       );
                     },
-                    child: const Text(
+                    child: Text(
                       "Forgot Password?",
                       style: TextStyle(
-                        color: Colors.blueAccent,
+                        color: const Color(0xFF007BFF),
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
                       ),
@@ -221,9 +239,12 @@ class _LoginPageState extends State<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "Don’t have an account? ",
-                      style: TextStyle(fontSize: 16, color: Colors.black54),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: isDark ? Colors.white70 : Colors.black54,
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -237,7 +258,7 @@ class _LoginPageState extends State<LoginPage> {
                         "Register",
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.blueAccent,
+                          color: Color(0xFF007BFF),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -251,18 +272,16 @@ class _LoginPageState extends State<LoginPage> {
       ),
 
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.scaffoldBackgroundColor,
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueAccent,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: const Color(0xFF007BFF),
+        unselectedItemColor: isDark ? Colors.white54 : Colors.grey,
         onTap: _onItemTapped,
         items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(
               icon: Icon(Icons.info_outline), label: "About"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person), label: "Profile"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
       ),
     );
@@ -272,22 +291,25 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildTextField(
     TextEditingController controller,
     String hintText, {
+    required bool isDark,
     TextInputType keyboardType = TextInputType.text,
     IconData? icon,
   }) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
+      style: TextStyle(color: isDark ? Colors.white : Colors.black),
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Color(0xFF007BFF)),
+        prefixIcon: Icon(icon, color: const Color(0xFF007BFF)),
         hintText: hintText,
         filled: true,
-        fillColor: Colors.white,
+        fillColor: isDark ? Colors.grey[900] : Colors.white,
         contentPadding:
             const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: Colors.black12),
+          borderSide: BorderSide(
+              color: isDark ? Colors.white12 : Colors.black12),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
@@ -303,10 +325,13 @@ class _LoginPageState extends State<LoginPage> {
   void _loginUser() {
     if (_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('✅ Welcome back!'),
+        SnackBar(
+          content: Text(
+            '✅ Welcome back!',
+            style: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.white),
+          ),
           backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
 
@@ -332,13 +357,20 @@ class _LoginPageState extends State<LoginPage> {
 
 
 
+
+
+
+
+
+
+
 // import 'package:flutter/material.dart';
 // import 'forgot_password_page.dart';
 // import 'home_screen.dart';
 // import 'signup_screen.dart';
 // import 'first_loan_application.dart';
 // import 'profile_page.dart';
-// import 'about_screen.dart'; // ✅ Added import for About Page
+// import 'about_screen.dart';
 
 // class LoginPage extends StatefulWidget {
 //   const LoginPage({super.key});
@@ -356,7 +388,7 @@ class _LoginPageState extends State<LoginPage> {
 //   bool _obscurePassword = true;
 //   int _selectedIndex = 0;
 
-//   // 🔹 Handle Bottom Navigation
+//   // Bottom Navigation
 //   void _onItemTapped(int index) {
 //     setState(() => _selectedIndex = index);
 
@@ -389,7 +421,6 @@ class _LoginPageState extends State<LoginPage> {
 //     return Scaffold(
 //       backgroundColor: Colors.white,
 
-//       // 🔹 App Bar
 //       appBar: AppBar(
 //         backgroundColor: Colors.blueAccent,
 //         elevation: 0,
@@ -404,7 +435,6 @@ class _LoginPageState extends State<LoginPage> {
 //         centerTitle: true,
 //       ),
 
-//       // 🔹 Main Body
 //       body: Center(
 //         child: SingleChildScrollView(
 //           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
@@ -412,7 +442,7 @@ class _LoginPageState extends State<LoginPage> {
 //             key: _formKey,
 //             child: Column(
 //               children: [
-//                 // Logo
+//                 // App Logo
 //                 Center(
 //                   child: Container(
 //                     width: 200,
@@ -427,6 +457,7 @@ class _LoginPageState extends State<LoginPage> {
 //                     ),
 //                   ),
 //                 ),
+
 //                 const SizedBox(height: 25),
 
 //                 const Text(
@@ -437,15 +468,17 @@ class _LoginPageState extends State<LoginPage> {
 //                     color: Colors.black87,
 //                   ),
 //                 ),
+
 //                 const SizedBox(height: 8),
+
 //                 const Text(
 //                   "Login to your account and apply for a loan",
 //                   style: TextStyle(fontSize: 16, color: Colors.black),
 //                   textAlign: TextAlign.center,
 //                 ),
+
 //                 const SizedBox(height: 30),
 
-//                 // Email Field
 //                 _buildTextField(
 //                   emailController,
 //                   "Enter Email:",
@@ -454,7 +487,6 @@ class _LoginPageState extends State<LoginPage> {
 //                 ),
 //                 const SizedBox(height: 15),
 
-//                 // Phone Field
 //                 _buildTextField(
 //                   phoneController,
 //                   "Enter Phone:",
@@ -468,8 +500,7 @@ class _LoginPageState extends State<LoginPage> {
 //                   controller: passwordController,
 //                   obscureText: _obscurePassword,
 //                   decoration: InputDecoration(
-//                     prefixIcon:
-//                         const Icon(Icons.lock, color: Colors.blueAccent),
+//                     prefixIcon: const Icon(Icons.lock, color: Colors.blueAccent),
 //                     hintText: "Enter Password:",
 //                     filled: true,
 //                     fillColor: Colors.white,
@@ -503,7 +534,6 @@ class _LoginPageState extends State<LoginPage> {
 
 //                 const SizedBox(height: 15),
 
-//                 // Forgot Password link
 //                 Align(
 //                   alignment: Alignment.centerRight,
 //                   child: GestureDetector(
@@ -520,7 +550,6 @@ class _LoginPageState extends State<LoginPage> {
 //                       style: TextStyle(
 //                         color: Colors.blueAccent,
 //                         fontWeight: FontWeight.bold,
-//                         decoration: TextDecoration.none,
 //                         fontSize: 15,
 //                       ),
 //                     ),
@@ -529,7 +558,7 @@ class _LoginPageState extends State<LoginPage> {
 
 //                 const SizedBox(height: 30),
 
-//                 // Login Button
+//                 // LOGIN BUTTON → Goes to Loan Application Page
 //                 SizedBox(
 //                   width: double.infinity,
 //                   child: ElevatedButton(
@@ -554,7 +583,6 @@ class _LoginPageState extends State<LoginPage> {
 
 //                 const SizedBox(height: 30),
 
-//                 // Register link
 //                 Row(
 //                   mainAxisAlignment: MainAxisAlignment.center,
 //                   children: [
@@ -576,7 +604,6 @@ class _LoginPageState extends State<LoginPage> {
 //                           fontSize: 16,
 //                           color: Colors.blueAccent,
 //                           fontWeight: FontWeight.bold,
-//                           decoration: TextDecoration.none,
 //                         ),
 //                       ),
 //                     ),
@@ -588,7 +615,6 @@ class _LoginPageState extends State<LoginPage> {
 //         ),
 //       ),
 
-//       // 🔹 Bottom Navigation Bar
 //       bottomNavigationBar: BottomNavigationBar(
 //         backgroundColor: Colors.white,
 //         currentIndex: _selectedIndex,
@@ -597,23 +623,17 @@ class _LoginPageState extends State<LoginPage> {
 //         onTap: _onItemTapped,
 //         items: const [
 //           BottomNavigationBarItem(
-//             icon: Icon(Icons.home),
-//             label: "Home",
-//           ),
+//               icon: Icon(Icons.home), label: "Home"),
 //           BottomNavigationBarItem(
-//             icon: Icon(Icons.info_outline),
-//             label: "About",
-//           ),
+//               icon: Icon(Icons.info_outline), label: "About"),
 //           BottomNavigationBarItem(
-//             icon: Icon(Icons.person),
-//             label: "Profile",
-//           ),
+//               icon: Icon(Icons.person), label: "Profile"),
 //         ],
 //       ),
 //     );
 //   }
 
-//   // 🔸 Text Field Builder
+//   // Textfield component
 //   Widget _buildTextField(
 //     TextEditingController controller,
 //     String hintText, {
@@ -624,7 +644,7 @@ class _LoginPageState extends State<LoginPage> {
 //       controller: controller,
 //       keyboardType: keyboardType,
 //       decoration: InputDecoration(
-//         prefixIcon: Icon(icon, color: Colors.blueAccent),
+//         prefixIcon: Icon(icon, color: Color(0xFF007BFF)),
 //         hintText: hintText,
 //         filled: true,
 //         fillColor: Colors.white,
@@ -636,7 +656,7 @@ class _LoginPageState extends State<LoginPage> {
 //         ),
 //         focusedBorder: OutlineInputBorder(
 //           borderRadius: BorderRadius.circular(6),
-//           borderSide: const BorderSide(color: Colors.blueAccent),
+//           borderSide: const BorderSide(color: Color(0xFF007BFF)),
 //         ),
 //       ),
 //       validator: (value) =>
@@ -644,7 +664,7 @@ class _LoginPageState extends State<LoginPage> {
 //     );
 //   }
 
-//   // 🔸 Login Logic
+//   // LOGIN → Redirect to LoanApplicationPage
 //   void _loginUser() {
 //     if (_formKey.currentState!.validate()) {
 //       ScaffoldMessenger.of(context).showSnackBar(
@@ -658,7 +678,7 @@ class _LoginPageState extends State<LoginPage> {
 //       Future.delayed(const Duration(seconds: 2), () {
 //         Navigator.pushReplacement(
 //           context,
-//           MaterialPageRoute(builder: (context) => const HomePage()),
+//           MaterialPageRoute(builder: (context) => const LoanApplicationPage()),
 //         );
 //       });
 //     }

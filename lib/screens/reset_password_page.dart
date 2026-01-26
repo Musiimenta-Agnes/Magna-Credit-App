@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 
@@ -19,35 +18,34 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    Color background = isDark ? Colors.black : Colors.white;
+    Color textColor = isDark ? Colors.white : Colors.black;
+    Color subtitleColor = isDark ? Colors.white70 : Colors.black54;
+    Color fillColor = isDark ? Colors.black12 : Colors.white;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: background,
 
-      // 🔹 UPDATED APP BAR WITH HEADING
       appBar: AppBar(
-        backgroundColor: Color(0xFF007BFF),
+        backgroundColor: const Color(0xFF007BFF),
         elevation: 0,
-
-        // 👇 Back arrow icon (unchanged)
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-
-        //  NEW: Add a title to show the previous page name
-        // You can customize the text here to match the actual previous page title.
         title: const Text(
-          "Verify Code", // 🟢 Example: Name of previous page (change as needed)
+          "Back to Verify Code",
           style: TextStyle(
-            color: Colors.white, // makes the title text white
+            color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
         ),
-
-        // 👇 Center title for symmetry (optional)
         centerTitle: true,
       ),
-      // 🔹 END OF APP BAR UPDATE
 
       body: Center(
         child: SingleChildScrollView(
@@ -55,37 +53,25 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           child: Form(
             key: _formKey,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // 🔹 Larger Image
-
-
-                // 🔹 Company Logo (Rectangle form)
-                  Center(
-                    child: Container(
-                      width: 200,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade100,
-                        borderRadius: BorderRadius.circular(12), // make corners slightly rounded
-                        image: const DecorationImage(
-                          image: AssetImage('assets/reset_password.jpg'),
-                          fit: BoxFit.cover, // makes image fill the rectangle nicely
-                        ),
+                Center(
+                  child: Container(
+                    width: 200,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                      image: const DecorationImage(
+                        image: AssetImage('assets/reset_password.jpg'),
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-
-                                  // CircleAvatar(
-                //   radius: 70, // Increased size
-                //   backgroundImage: const AssetImage('assets/reset_password.jpg'),
-                //   backgroundColor: Colors.blue.shade50,
-                // ),
+                ),
 
                 const SizedBox(height: 25),
 
-                const Text(
+                Text(
                   "Reset Password",
                   style: TextStyle(
                     fontSize: 22,
@@ -96,10 +82,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
                 const SizedBox(height: 10),
 
-                const Text(
+                Text(
                   "Enter your new password and confirm it",
                   style: TextStyle(
-                    color: Colors.black54,
+                    color: subtitleColor,
                     fontSize: 20,
                   ),
                   textAlign: TextAlign.center,
@@ -107,27 +93,28 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
                 const SizedBox(height: 30),
 
-                // 🔹 New Password Field
                 _buildPasswordField(
                   newPasswordController,
                   "Enter New Password",
                   _obscurePassword,
                   () => setState(() => _obscurePassword = !_obscurePassword),
+                  fillColor: fillColor,
+                  textColor: textColor,
                 ),
 
                 const SizedBox(height: 15),
 
-                // 🔹 Confirm Password Field
                 _buildPasswordField(
                   confirmPasswordController,
                   "Confirm Password",
                   _obscureConfirmPassword,
                   () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+                  fillColor: fillColor,
+                  textColor: textColor,
                 ),
 
                 const SizedBox(height: 30),
 
-                // 🔹 Reset Password Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -157,17 +144,22 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     );
   }
 
-  // 🔸 Password Field with Toggle
-  Widget _buildPasswordField(TextEditingController controller, String hintText,
-      bool obscureText, VoidCallback toggleVisibility) {
+  Widget _buildPasswordField(
+      TextEditingController controller,
+      String hintText,
+      bool obscureText,
+      VoidCallback toggleVisibility,
+      {required Color fillColor, required Color textColor}) {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
+      style: TextStyle(color: textColor),
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.lock, color: Colors.blueAccent),
         hintText: hintText,
+        hintStyle: TextStyle(color: textColor.withOpacity(0.6)),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: fillColor,
         contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -194,7 +186,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     );
   }
 
-  // 🔸 Top Notification
   void _showTopNotification(String message, {Color bgColor = Colors.green}) {
     final overlay = Overlay.of(context);
     final overlayEntry = OverlayEntry(
@@ -209,11 +200,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             decoration: BoxDecoration(
               color: bgColor,
               borderRadius: BorderRadius.circular(8),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black26,
                   blurRadius: 6,
-                  offset: const Offset(0, 3),
+                  offset: Offset(0, 3),
                 ),
               ],
             ),
@@ -240,7 +231,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     Future.delayed(const Duration(seconds: 2), () => overlayEntry.remove());
   }
 
-  // 🔸 Reset Password Logic
   void _resetPassword() {
     if (_formKey.currentState!.validate()) {
       if (newPasswordController.text != confirmPasswordController.text) {
@@ -260,13 +250,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     }
   }
 }
-
-
-
-
-
-
-
 
 
 
@@ -308,72 +291,131 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       backgroundColor: Colors.white,
+
+//       // 🔹 UPDATED APP BAR WITH HEADING
+//       appBar: AppBar(
+//         backgroundColor: Color(0xFF007BFF),
+//         elevation: 0,
+
+//         // 👇 Back arrow icon (unchanged)
+//         leading: IconButton(
+//           icon: const Icon(Icons.arrow_back, color: Colors.white),
+//           onPressed: () => Navigator.pop(context),
+//         ),
+
+//         //  NEW: Add a title to show the previous page name
+//         // You can customize the text here to match the actual previous page title.
+//         title: const Text(
+//           "Verify Code", // 🟢 Example: Name of previous page (change as needed)
+//           style: TextStyle(
+//             color: Colors.white, // makes the title text white
+//             fontSize: 20,
+//             fontWeight: FontWeight.w600,
+//           ),
+//         ),
+
+//         // 👇 Center title for symmetry (optional)
+//         centerTitle: true,
+//       ),
+//       // 🔹 END OF APP BAR UPDATE
+
 //       body: Center(
 //         child: SingleChildScrollView(
-//           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+//           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
 //           child: Form(
 //             key: _formKey,
 //             child: Column(
 //               mainAxisAlignment: MainAxisAlignment.center,
+//               crossAxisAlignment: CrossAxisAlignment.center,
 //               children: [
-//                 CircleAvatar(
-//                   radius: 40,
-//                   backgroundImage: const AssetImage('assets/reset_password.jpg'),
-//                 ),
-//                 const SizedBox(height: 20),
+//                 // 🔹 Larger Image
+
+
+//                 // 🔹 Company Logo (Rectangle form)
+//                   Center(
+//                     child: Container(
+//                       width: 200,
+//                       height: 120,
+//                       decoration: BoxDecoration(
+//                         color: Colors.blue.shade100,
+//                         borderRadius: BorderRadius.circular(12), // make corners slightly rounded
+//                         image: const DecorationImage(
+//                           image: AssetImage('assets/reset_password.jpg'),
+//                           fit: BoxFit.cover, // makes image fill the rectangle nicely
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+
+//                                   // CircleAvatar(
+//                 //   radius: 70, // Increased size
+//                 //   backgroundImage: const AssetImage('assets/reset_password.jpg'),
+//                 //   backgroundColor: Colors.blue.shade50,
+//                 // ),
+
+//                 const SizedBox(height: 25),
+
 //                 const Text(
 //                   "Reset Password",
 //                   style: TextStyle(
-//                     fontSize: 20,
+//                     fontSize: 22,
 //                     fontWeight: FontWeight.bold,
-//                     color: Colors.black,
+//                     color: Colors.blueAccent,
 //                   ),
 //                 ),
+
 //                 const SizedBox(height: 10),
+
 //                 const Text(
 //                   "Enter your new password and confirm it",
 //                   style: TextStyle(
-//                     color: Colors.blueAccent,
-//                     fontSize: 13,
+//                     color: Colors.black54,
+//                     fontSize: 20,
 //                   ),
 //                   textAlign: TextAlign.center,
 //                 ),
-//                 const SizedBox(height: 25),
 
+//                 const SizedBox(height: 30),
+
+//                 // 🔹 New Password Field
 //                 _buildPasswordField(
 //                   newPasswordController,
 //                   "Enter New Password",
 //                   _obscurePassword,
-//                   () {
-//                     setState(() => _obscurePassword = !_obscurePassword);
-//                   },
+//                   () => setState(() => _obscurePassword = !_obscurePassword),
 //                 ),
+
 //                 const SizedBox(height: 15),
+
+//                 // 🔹 Confirm Password Field
 //                 _buildPasswordField(
 //                   confirmPasswordController,
 //                   "Confirm Password",
 //                   _obscureConfirmPassword,
-//                   () {
-//                     setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
-//                   },
+//                   () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
 //                 ),
 
-//                 const SizedBox(height: 25),
+//                 const SizedBox(height: 30),
 
+//                 // 🔹 Reset Password Button
 //                 SizedBox(
 //                   width: double.infinity,
 //                   child: ElevatedButton(
 //                     onPressed: _resetPassword,
 //                     style: ElevatedButton.styleFrom(
 //                       backgroundColor: Colors.green,
-//                       padding: const EdgeInsets.symmetric(vertical: 12),
+//                       padding: const EdgeInsets.symmetric(vertical: 14),
 //                       shape: RoundedRectangleBorder(
 //                         borderRadius: BorderRadius.circular(8),
 //                       ),
 //                     ),
 //                     child: const Text(
 //                       "Reset Password",
-//                       style: TextStyle(color: Colors.white, fontSize: 16),
+//                       style: TextStyle(
+//                         color: Colors.white,
+//                         fontSize: 16,
+//                         fontWeight: FontWeight.bold,
+//                       ),
 //                     ),
 //                   ),
 //                 ),
@@ -385,21 +427,25 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 //     );
 //   }
 
-//   // 🔹 Password TextField with toggle
+//   // 🔸 Password Field with Toggle
 //   Widget _buildPasswordField(TextEditingController controller, String hintText,
 //       bool obscureText, VoidCallback toggleVisibility) {
 //     return TextFormField(
 //       controller: controller,
 //       obscureText: obscureText,
 //       decoration: InputDecoration(
+//         prefixIcon: const Icon(Icons.lock, color: Colors.blueAccent),
 //         hintText: hintText,
 //         filled: true,
-//         fillColor: Colors.grey[100],
-//         contentPadding:
-//             const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
-//         border: OutlineInputBorder(
+//         fillColor: Colors.white,
+//         contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+//         enabledBorder: OutlineInputBorder(
 //           borderRadius: BorderRadius.circular(8),
 //           borderSide: const BorderSide(color: Colors.black12),
+//         ),
+//         focusedBorder: OutlineInputBorder(
+//           borderRadius: BorderRadius.circular(8),
+//           borderSide: const BorderSide(color: Colors.blueAccent),
 //         ),
 //         suffixIcon: IconButton(
 //           icon: Icon(
@@ -418,7 +464,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 //     );
 //   }
 
-//   // 🔹 Custom top notification banner
+//   // 🔸 Top Notification
 //   void _showTopNotification(String message, {Color bgColor = Colors.green}) {
 //     final overlay = Overlay.of(context);
 //     final overlayEntry = OverlayEntry(
@@ -428,36 +474,32 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 //         right: 20,
 //         child: Material(
 //           color: Colors.transparent,
-//           child: AnimatedSlide(
-//             duration: const Duration(milliseconds: 300),
-//             offset: const Offset(0, 0),
-//             child: Container(
-//               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-//               decoration: BoxDecoration(
-//                 color: bgColor,
-//                 borderRadius: BorderRadius.circular(8),
-//                 boxShadow: [
-//                   BoxShadow(
-//                     color: Colors.black26,
-//                     blurRadius: 6,
-//                     offset: const Offset(0, 3),
+//           child: Container(
+//             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+//             decoration: BoxDecoration(
+//               color: bgColor,
+//               borderRadius: BorderRadius.circular(8),
+//               boxShadow: [
+//                 BoxShadow(
+//                   color: Colors.black26,
+//                   blurRadius: 6,
+//                   offset: const Offset(0, 3),
+//                 ),
+//               ],
+//             ),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 const Icon(Icons.check_circle, color: Colors.white),
+//                 const SizedBox(width: 10),
+//                 Expanded(
+//                   child: Text(
+//                     message,
+//                     style: const TextStyle(color: Colors.white, fontSize: 14),
+//                     overflow: TextOverflow.ellipsis,
 //                   ),
-//                 ],
-//               ),
-//               child: Row(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   const Icon(Icons.check_circle, color: Colors.white),
-//                   const SizedBox(width: 10),
-//                   Expanded(
-//                     child: Text(
-//                       message,
-//                       style: const TextStyle(color: Colors.white, fontSize: 14),
-//                       overflow: TextOverflow.ellipsis,
-//                     ),
-//                   ),
-//                 ],
-//               ),
+//                 ),
+//               ],
 //             ),
 //           ),
 //         ),
@@ -465,14 +507,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 //     );
 
 //     overlay.insert(overlayEntry);
-
-//     // Remove after delay
-//     Future.delayed(const Duration(seconds: 2), () {
-//       overlayEntry.remove();
-//     });
+//     Future.delayed(const Duration(seconds: 2), () => overlayEntry.remove());
 //   }
 
-//   // 🔹 Handle reset logic
+//   // 🔸 Reset Password Logic
 //   void _resetPassword() {
 //     if (_formKey.currentState!.validate()) {
 //       if (newPasswordController.text != confirmPasswordController.text) {
@@ -480,10 +518,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 //         return;
 //       }
 
-//       // ✅ Successful password reset
 //       _showTopNotification("✅ Password reset successful! Redirecting...");
 
-//       // Redirect to login after short delay
 //       Future.delayed(const Duration(seconds: 2), () {
 //         Navigator.pushAndRemoveUntil(
 //           context,
@@ -494,3 +530,5 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 //     }
 //   }
 // }
+
+
