@@ -339,7 +339,7 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
     required bool isDark,
   }) {
     return DropdownButtonFormField<String>(
-      value: value,
+      initialValue: value,
       style: TextStyle(color: textColor),
       decoration: InputDecoration(
         labelText: label,
