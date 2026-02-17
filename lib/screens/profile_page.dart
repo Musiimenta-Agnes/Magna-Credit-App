@@ -16,11 +16,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // 🔹 User Data Controllers (All fields from LoanApplicationPage & Page2, excluding National ID and Collateral)
   final TextEditingController nameController =
-      TextEditingController(text: "John Doe");
+      TextEditingController(text: "Musiimenta Agnes");
   final TextEditingController contactController =
       TextEditingController(text: "+256 700 123456");
   final TextEditingController emailController =
-      TextEditingController(text: "johndoe@example.com");
+      TextEditingController(text: "musiimentaagnes9@gmail.com");
   final TextEditingController bioInfoController =
       TextEditingController(text: "Business Owner with 5 years experience");
   final TextEditingController locationController =

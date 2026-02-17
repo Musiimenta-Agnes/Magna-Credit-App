@@ -119,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 30),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1BBE6D),
+                  color: Colors.green,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: const [
                     BoxShadow(
@@ -162,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
-                        foregroundColor: const Color(0xFF1BBE6D),
+                        foregroundColor: Colors.green,
                         padding: const EdgeInsets.symmetric(
                             vertical: 14, horizontal: 40),
                         shape: RoundedRectangleBorder(
