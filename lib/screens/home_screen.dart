@@ -75,19 +75,21 @@ class _HomePageState extends State<HomePage> {
 
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Why Choose Magna",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : const Color(0xFF1A237E),
-                ),
-              ),
-              const SizedBox(height: 18),
+                  Text(
+                    "Why Choose Magna",
+                    textAlign: TextAlign.center,  // ← This centers the text horizontally
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : const Color(0xFF007BFF),
+                    ),
+                  ),
+
+              const SizedBox(height: 35),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -101,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                   _FeatureItem(
                     icon: Icons.account_balance_wallet,
                     label: "High Limits",
-                    color: const Color(0xFF00C853),
+                    color: Colors.green,
                     textColor: isDark ? Colors.white : Colors.black87,
                   ),
                   _FeatureItem(
@@ -113,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
 
-              const SizedBox(height: 36),
+              const SizedBox(height: 55),
 
               Container(
                 width: double.infinity,
@@ -136,21 +138,21 @@ class _HomePageState extends State<HomePage> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 24,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 6),
                     const Text(
                       "Fast, secure and reliable loans designed for your needs.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white70,
-                        fontSize: 19,
+                        fontSize: 15,
                         height: 1.4,
                       ),
                     ),
-                    const SizedBox(height: 22),
+                    const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -164,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.green,
                         padding: const EdgeInsets.symmetric(
-                            vertical: 14, horizontal: 40),
+                            vertical: 5, horizontal: 30),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
@@ -172,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                       child: const Text(
                         "Apply for a Loan",
                         style: TextStyle(
-                          fontSize: 19,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -181,7 +183,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 60),
 
               Container(
                 width: double.infinity,

@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'login_screen.dart';
 import 'second_loan_application.dart';
 
@@ -21,17 +23,23 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
 
   String? selectedGender;
 
+  bool _isLoading = false;
+
+  // Replace this with your actual backend API URL
+  final String apiUrl = "http://127.0.0.1:8000/api/loan-applications";
+
+
+  // Example: If you have login and saved user_id:
+  int userId = 1; // Replace with actual logged-in user ID
+
   @override
   Widget build(BuildContext context) {
-    final bool isDark =
-        Theme.of(context).brightness == Brightness.dark;
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      // 🔥 SAME as login page
       backgroundColor: isDark ? Colors.black : Colors.white,
-
       appBar: AppBar(
-        backgroundColor: const Color(0xFF007BFF), // BLUE stays blue
+        backgroundColor: const Color(0xFF007BFF),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -48,7 +56,6 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
         ),
         centerTitle: true,
       ),
-
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
@@ -66,19 +73,15 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
-
                 Text(
                   "Please fill in your details for loan verification.",
                   style: TextStyle(
                     color: isDark ? Colors.white70 : Colors.black54,
                   ),
                 ),
-
                 const SizedBox(height: 25),
-
                 _buildTextField(nameController, "Full Name", isDark),
                 const SizedBox(height: 15),
-
                 _buildTextField(
                   contactController,
                   "Contact",
@@ -86,7 +89,6 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
                   keyboardType: TextInputType.phone,
                 ),
                 const SizedBox(height: 15),
-
                 _buildTextField(
                   emailController,
                   "Email",
@@ -94,7 +96,6 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
                   keyboardType: TextInputType.emailAddress,
                 ),
                 const SizedBox(height: 15),
-
                 _buildTextField(
                   bioInfoController,
                   "Bio Information",
@@ -102,10 +103,8 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
                   maxLines: 3,
                 ),
                 const SizedBox(height: 15),
-
                 _buildTextField(locationController, "Location", isDark),
                 const SizedBox(height: 15),
-
                 _buildTextField(
                   otherContactController,
                   "Other Contact",
@@ -113,7 +112,6 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
                   keyboardType: TextInputType.phone,
                 ),
                 const SizedBox(height: 15),
-
                 DropdownButtonFormField<String>(
                   value: selectedGender,
                   decoration: _inputDecoration("Select Gender", isDark),
@@ -132,13 +130,9 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
                       )
                       .toList(),
                   onChanged: (v) => setState(() => selectedGender = v),
-                  validator: (v) =>
-                      v == null ? "Please select gender" : null,
+                  validator: (v) => v == null ? "Please select gender" : null,
                 ),
-
                 const SizedBox(height: 30),
-
-                // 🟢 GREEN button restored (login-style)
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -149,25 +143,19 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                const LoanApplicationPage2(),
+                    onPressed: _isLoading ? null : _submitLoanApplication,
+                    child: _isLoading
+                        ? const CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation(Colors.white),
+                          )
+                        : const Text(
+                            "Next",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        );
-                      }
-                    },
-                    child: const Text(
-                      "Next",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                   ),
                 ),
               ],
@@ -183,14 +171,11 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
       hintText: hint,
       filled: true,
       fillColor: isDark ? Colors.grey[900] : Colors.white,
-      hintStyle:
-          TextStyle(color: isDark ? Colors.white54 : Colors.black54),
-      contentPadding:
-          const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+      hintStyle: TextStyle(color: isDark ? Colors.white54 : Colors.black54),
+      contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(6),
-        borderSide:
-            BorderSide(color: isDark ? Colors.white12 : Colors.black12),
+        borderSide: BorderSide(color: isDark ? Colors.white12 : Colors.black12),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(6),
@@ -212,11 +197,305 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
       maxLines: maxLines,
       style: TextStyle(color: isDark ? Colors.white : Colors.black),
       decoration: _inputDecoration(hint, isDark),
-      validator: (v) =>
-          v == null || v.isEmpty ? "Please fill in this field" : null,
+      validator: (v) => v == null || v.isEmpty ? "Please fill in this field" : null,
     );
   }
+
+  Future<void> _submitLoanApplication() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'user_id': userId,
+          'name': nameController.text.trim(),
+          'contact': contactController.text.trim(),
+          'email': emailController.text.trim(),
+          'bio_info': bioInfoController.text.trim(),
+          'location': locationController.text.trim(),
+          'other_contact': otherContactController.text.trim(),
+          'gender': selectedGender,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 201 && data['success'] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(data['message']),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        // Navigate to next loan page
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const LoanApplicationPage2()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              data['message'] ?? "Failed to submit loan application",
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error: $e"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import 'package:flutter/material.dart';
+// import 'login_screen.dart';
+// import 'second_loan_application.dart';
+
+// class LoanApplicationPage extends StatefulWidget {
+//   const LoanApplicationPage({super.key});
+
+//   @override
+//   State<LoanApplicationPage> createState() => _LoanApplicationPageState();
+// }
+
+// class _LoanApplicationPageState extends State<LoanApplicationPage> {
+//   final _formKey = GlobalKey<FormState>();
+
+//   final TextEditingController nameController = TextEditingController();
+//   final TextEditingController contactController = TextEditingController();
+//   final TextEditingController emailController = TextEditingController();
+//   final TextEditingController bioInfoController = TextEditingController();
+//   final TextEditingController locationController = TextEditingController();
+//   final TextEditingController otherContactController = TextEditingController();
+
+//   String? selectedGender;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final bool isDark =
+//         Theme.of(context).brightness == Brightness.dark;
+
+//     return Scaffold(
+//       // 🔥 SAME as login page
+//       backgroundColor: isDark ? Colors.black : Colors.white,
+
+//       appBar: AppBar(
+//         backgroundColor: const Color(0xFF007BFF), // BLUE stays blue
+//         elevation: 0,
+//         leading: IconButton(
+//           icon: const Icon(Icons.arrow_back, color: Colors.white),
+//           onPressed: () {
+//             Navigator.pushReplacement(
+//               context,
+//               MaterialPageRoute(builder: (_) => const LoginPage()),
+//             );
+//           },
+//         ),
+//         title: const Text(
+//           "Loan Application",
+//           style: TextStyle(color: Colors.white, fontSize: 20),
+//         ),
+//         centerTitle: true,
+//       ),
+
+//       body: SafeArea(
+//         child: SingleChildScrollView(
+//           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+//           child: Form(
+//             key: _formKey,
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   "Personal Information",
+//                   style: TextStyle(
+//                     fontSize: 22,
+//                     fontWeight: FontWeight.bold,
+//                     color: isDark ? Colors.white : Colors.black,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 8),
+
+//                 Text(
+//                   "Please fill in your details for loan verification.",
+//                   style: TextStyle(
+//                     color: isDark ? Colors.white70 : Colors.black54,
+//                   ),
+//                 ),
+
+//                 const SizedBox(height: 25),
+
+//                 _buildTextField(nameController, "Full Name", isDark),
+//                 const SizedBox(height: 15),
+
+//                 _buildTextField(
+//                   contactController,
+//                   "Contact",
+//                   isDark,
+//                   keyboardType: TextInputType.phone,
+//                 ),
+//                 const SizedBox(height: 15),
+
+//                 _buildTextField(
+//                   emailController,
+//                   "Email",
+//                   isDark,
+//                   keyboardType: TextInputType.emailAddress,
+//                 ),
+//                 const SizedBox(height: 15),
+
+//                 _buildTextField(
+//                   bioInfoController,
+//                   "Bio Information",
+//                   isDark,
+//                   maxLines: 3,
+//                 ),
+//                 const SizedBox(height: 15),
+
+//                 _buildTextField(locationController, "Location", isDark),
+//                 const SizedBox(height: 15),
+
+//                 _buildTextField(
+//                   otherContactController,
+//                   "Other Contact",
+//                   isDark,
+//                   keyboardType: TextInputType.phone,
+//                 ),
+//                 const SizedBox(height: 15),
+
+//                 DropdownButtonFormField<String>(
+//                   value: selectedGender,
+//                   decoration: _inputDecoration("Select Gender", isDark),
+//                   dropdownColor: isDark ? Colors.grey[900] : Colors.white,
+//                   items: ["Male", "Female", "Other"]
+//                       .map(
+//                         (g) => DropdownMenuItem(
+//                           value: g,
+//                           child: Text(
+//                             g,
+//                             style: TextStyle(
+//                               color: isDark ? Colors.white : Colors.black,
+//                             ),
+//                           ),
+//                         ),
+//                       )
+//                       .toList(),
+//                   onChanged: (v) => setState(() => selectedGender = v),
+//                   validator: (v) =>
+//                       v == null ? "Please select gender" : null,
+//                 ),
+
+//                 const SizedBox(height: 30),
+
+//                 // 🟢 GREEN button restored (login-style)
+//                 SizedBox(
+//                   width: double.infinity,
+//                   child: ElevatedButton(
+//                     style: ElevatedButton.styleFrom(
+//                       backgroundColor: Colors.green,
+//                       padding: const EdgeInsets.symmetric(vertical: 14),
+//                       shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(8),
+//                       ),
+//                     ),
+//                     onPressed: () {
+//                       if (_formKey.currentState!.validate()) {
+//                         Navigator.push(
+//                           context,
+//                           MaterialPageRoute(
+//                             builder: (_) =>
+//                                 const LoanApplicationPage2(),
+//                           ),
+//                         );
+//                       }
+//                     },
+//                     child: const Text(
+//                       "Next",
+//                       style: TextStyle(
+//                         fontSize: 18,
+//                         color: Colors.white,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   InputDecoration _inputDecoration(String hint, bool isDark) {
+//     return InputDecoration(
+//       hintText: hint,
+//       filled: true,
+//       fillColor: isDark ? Colors.grey[900] : Colors.white,
+//       hintStyle:
+//           TextStyle(color: isDark ? Colors.white54 : Colors.black54),
+//       contentPadding:
+//           const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+//       enabledBorder: OutlineInputBorder(
+//         borderRadius: BorderRadius.circular(6),
+//         borderSide:
+//             BorderSide(color: isDark ? Colors.white12 : Colors.black12),
+//       ),
+//       focusedBorder: OutlineInputBorder(
+//         borderRadius: BorderRadius.circular(6),
+//         borderSide: const BorderSide(color: Color(0xFF007BFF)),
+//       ),
+//     );
+//   }
+
+//   Widget _buildTextField(
+//     TextEditingController controller,
+//     String hint,
+//     bool isDark, {
+//     TextInputType keyboardType = TextInputType.text,
+//     int maxLines = 1,
+//   }) {
+//     return TextFormField(
+//       controller: controller,
+//       keyboardType: keyboardType,
+//       maxLines: maxLines,
+//       style: TextStyle(color: isDark ? Colors.white : Colors.black),
+//       decoration: _inputDecoration(hint, isDark),
+//       validator: (v) =>
+//           v == null || v.isEmpty ? "Please fill in this field" : null,
+//     );
+//   }
+// }
 
 
 

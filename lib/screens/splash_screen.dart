@@ -97,7 +97,7 @@ class _SplashScreenState extends State<SplashScreen>
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40),
                   child: Text(
-                    "Fast, simple, and reliable loans",
+                    "",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,

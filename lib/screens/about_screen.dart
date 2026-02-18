@@ -70,7 +70,7 @@ class _AboutPageState extends State<AboutPage> {
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green, // keeps your original color
+                  color: const Color(0xFF007BFF), // keeps your original color
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -132,10 +132,10 @@ class _AboutPageState extends State<AboutPage> {
             _buildCard(
               title: "Contact Us",
               text:
-                  "📍 Address: Kampala, Uganda\n"
-                  "📞 Phone: +256 700 123456\n"
-                  "✉️ Email: info@magnacredit.com\n"
-                  "🌐 Website: www.magnacredit.com",
+                  "~ Address: Kampala, Uganda\n"
+                  "~ Phone: +256 700 123456\n"
+                  "~ Email: info@magnacredit.com\n"
+                  "~ Website: www.magnacredit.com",
               isDark: isDark,
             ),
           ],
