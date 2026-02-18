@@ -29,6 +29,7 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
   final String apiUrl = "http://127.0.0.1:8000/api/loan-applications";
 
 
+
   // Example: If you have login and saved user_id:
   int userId = 1; // Replace with actual logged-in user ID
 
@@ -232,11 +233,21 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
           ),
         );
 
-        // Navigate to next loan page
         Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const LoanApplicationPage2()),
-        );
+              context,
+              MaterialPageRoute(
+                builder: (_) => LoanApplicationPage2(
+                  loanApplicationId: data['data']['id'], // ← pass backend ID
+                ),
+              ),
+            );
+
+
+        // Navigate to next loan page
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (_) => const LoanApplicationPage2()),
+        // );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
