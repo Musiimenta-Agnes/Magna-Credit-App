@@ -114,7 +114,7 @@ class _LoanApplicationPageState extends State<LoanApplicationPage> {
                 ),
                 const SizedBox(height: 15),
                 DropdownButtonFormField<String>(
-                  value: selectedGender,
+                  initialValue: selectedGender,
                   decoration: _inputDecoration("Select Gender", isDark),
                   dropdownColor: isDark ? Colors.grey[900] : Colors.white,
                   items: ["Male", "Female", "Other"]

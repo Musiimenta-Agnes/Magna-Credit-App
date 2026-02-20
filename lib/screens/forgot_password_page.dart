@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'verify_code_page.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -10,6 +12,47 @@ class ForgotPasswordPage extends StatefulWidget {
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final TextEditingController emailController = TextEditingController();
+  bool isLoading = false;
+
+  Future<void> sendCode() async {
+    final email = emailController.text.trim();
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Please enter your email")));
+      return;
+    }
+
+    setState(() => isLoading = true);
+
+    try {
+      final response = await http.post(
+        Uri.parse("[http://127.0.0.1:8000/api/forgot-password/send-code"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email}),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        // Navigate to VerifyCodePage with email
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerifyCodePage(email: email),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(data['message'])));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to send code. Try again.")),
+      );
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,25 +66,19 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
     return Scaffold(
       backgroundColor: background,
-
       appBar: AppBar(
         backgroundColor: const Color(0xFF007BFF),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           "Go to Login",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
-
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
@@ -60,31 +97,18 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 20),
-
               Text(
                 "Forgot Password",
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: textColor,
-                ),
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: textColor),
               ),
-
               const SizedBox(height: 15),
-
               Text(
                 "Enter your email to receive a verification code",
-                style: TextStyle(
-                  color: subtitleColor,
-                  fontSize: 17,
-                ),
+                style: TextStyle(color: subtitleColor, fontSize: 17),
                 textAlign: TextAlign.center,
               ),
-
               const SizedBox(height: 35),
-
               TextField(
                 controller: emailController,
                 style: TextStyle(color: textColor),
@@ -94,13 +118,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   hintStyle: TextStyle(color: textColor.withOpacity(0.6)),
                   filled: true,
                   fillColor: fillColor,
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                      color: isDark ? Colors.white12 : Colors.black12,
-                    ),
+                    borderSide: BorderSide(color: isDark ? Colors.white12 : Colors.black12),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -108,35 +129,22 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 35),
-
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const VerifyCodePage(),
-                      ),
-                    );
-                  },
+                  onPressed: isLoading ? null : sendCode,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: const Text(
-                    "Send Code",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          "Send Code",
+                          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
                 ),
               ),
             ],
@@ -146,11 +154,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     );
   }
 }
-
-
-
-
-
 
 
 
