@@ -1,34 +1,17 @@
-
-
-// import 'package:flutter/material.dart'; 
-// import 'screens/splash_screen.dart'; 
-// void main() { 
-// runApp(MyApp()); 
-// } 
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
- 
-// @override 
-// Widget build(BuildContext context) { 
-// return MaterialApp( 
-// debugShowCheckedModeBanner: false, 
-// title: 'Splash Demo', 
-// home: SplashScreen(), 
-// ); 
-// } 
-// }
-
-
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'screens/splash_screen.dart';
 import 'screens/theme_controller.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final themeController = ThemeController();
+  await themeController.loadTheme(); // ← loads saved theme before UI builds
+
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeController(),
+    ChangeNotifierProvider.value(
+      value: themeController,
       child: const MyApp(),
     ),
   );
@@ -70,6 +53,63 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+// import 'screens/splash_screen.dart';
+// import 'screens/theme_controller.dart';
+
+// void main() {
+//   runApp(
+//     ChangeNotifierProvider(
+//       create: (_) => ThemeController(),
+//       child: const MyApp(),
+//     ),
+//   );
+// }
+
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final themeController = context.watch<ThemeController>();
+    
+
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       title: 'Magna Credit',
+
+//       // ☀️ LIGHT THEME
+//       theme: ThemeData(
+//         brightness: Brightness.light,
+//         scaffoldBackgroundColor: const Color(0xFFF5F8FA),
+//         appBarTheme: const AppBarTheme(
+//           backgroundColor: Color(0xFF007BFF),
+//           foregroundColor: Colors.white,
+//         ),
+//       ),
+
+//       // 🌙 DARK THEME
+//       darkTheme: ThemeData(
+//         brightness: Brightness.dark,
+//         scaffoldBackgroundColor: Colors.black,
+//         appBarTheme: const AppBarTheme(
+//           backgroundColor: Colors.black,
+//           foregroundColor: Colors.white,
+//         ),
+//       ),
+
+//       themeMode: themeController.themeMode,
+//       home: const SplashScreen(),
+//     );
+//   }
+// }
 
 
 
@@ -187,114 +227,3 @@ class MyApp extends StatelessWidget {
 //     );
 //   }
 // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import 'screens/splash_screen.dart';
-// import 'screens/theme_controller.dart';
-
-
-// void main() {
-//   runApp(
-//     ChangeNotifierProvider(
-//       create: (_) => ThemeController(),
-//       child: const MyApp(),
-//     ),
-//   );
-// }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final themeController = context.watch<ThemeController>();
-
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       title: 'Magna Credit',
-
-//       // ☀️ LIGHT THEME
-//       theme: ThemeData(
-//         brightness: Brightness.light,
-//         primaryColor: const Color(0xFF007BFF),
-//         scaffoldBackgroundColor: const Color(0xFFF5F8FA),
-//         appBarTheme: const AppBarTheme(
-//           backgroundColor: Color(0xFF007BFF),
-//           foregroundColor: Colors.white,
-//         ),
-//       ),
-
-//       // 🌙 DARK THEME
-//       darkTheme: ThemeData(
-//         brightness: Brightness.dark,
-//         primaryColor: Colors.green,
-//         scaffoldBackgroundColor: Colors.black,
-//         appBarTheme: const AppBarTheme(
-//           backgroundColor: Colors.black,
-//           foregroundColor: Colors.white,
-//         ),
-//       ),
-
-//       themeMode: themeController.themeMode,
-
-//       home: const SplashScreen(),
-//     );
-//   }
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

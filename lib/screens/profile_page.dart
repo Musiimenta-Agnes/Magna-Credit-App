@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:magna_credit_app/api_service.dart';
 import 'home_screen.dart';
 import 'about_screen.dart';
-import 'first_loan_application.dart'; // <-- For navigation
+import 'first_loan_application.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -13,374 +16,693 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   int _selectedIndex = 2;
   bool isEditing = false;
+  bool isLoading = true;
 
-  // 🔹 User Data Controllers (All fields from LoanApplicationPage & Page2, excluding National ID and Collateral)
-  final TextEditingController nameController =
-      TextEditingController(text: "Musiimenta Agnes");
-  final TextEditingController contactController =
-      TextEditingController(text: "+256 700 123456");
-  final TextEditingController emailController =
-      TextEditingController(text: "musiimentaagnes9@gmail.com");
-  final TextEditingController bioInfoController =
-      TextEditingController(text: "Business Owner with 5 years experience");
-  final TextEditingController locationController =
-      TextEditingController(text: "Kampala, Uganda");
-  final TextEditingController otherContactController =
-      TextEditingController(text: "+256 701 654321");
-  final TextEditingController kinNameController =
-      TextEditingController(text: "Jane Doe");
-  final TextEditingController kinContactController =
-      TextEditingController(text: "+256 702 987654");
-  final TextEditingController incomeController =
-      TextEditingController(text: "UGX 2,000,000");
-  final TextEditingController addressController =
-      TextEditingController(text: "Kampala, Uganda");
+  File? profileImage;
 
-  String? selectedGender;
-  String? selectedOccupation;
-  String? selectedLoanType;
-  String? selectedEducation;
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController contactController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController bioInfoController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController otherContactController = TextEditingController();
+  final TextEditingController kinNameController = TextEditingController();
+  final TextEditingController kinContactController = TextEditingController();
+  final TextEditingController incomeController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
 
-  // 🔹 Bottom navigation
-  void _onItemTapped(int index) {
-    setState(() => _selectedIndex = index);
+  String selectedGender = 'Other';
+  String selectedOccupation = 'Other';
+  String selectedLoanType = '';
+  String selectedEducation = '';
+  String? profileImageUrl;
 
-    if (index == 0) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const HomePage()),
-      );
-    } else if (index == 1) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const AboutPage()),
+  static const Color _blue = Color(0xFF007BFF);
+  static const Color _green = Colors.green;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    try {
+      final data = await ApiService.getProfile();
+      setState(() {
+        nameController.text = data['name'] ?? '';
+        emailController.text = data['email'] ?? '';
+        contactController.text = data['phone'] ?? '';
+        bioInfoController.text = data['profile']?['bio'] ?? '';
+        locationController.text = data['profile']?['address'] ?? '';
+        otherContactController.text = data['profile']?['other_contact'] ?? '';
+        kinNameController.text = data['profile']?['kin_name'] ?? '';
+        kinContactController.text = data['profile']?['kin_contact'] ?? '';
+        incomeController.text = data['profile']?['income'] ?? '';
+        addressController.text = data['profile']?['current_address'] ?? '';
+        selectedGender = data['profile']?['gender'] ?? 'Other';
+        selectedOccupation = data['profile']?['occupation'] ?? 'Other';
+        selectedLoanType = data['profile']?['loan_type'] ?? '';
+        selectedEducation = data['profile']?['education'] ?? '';
+        profileImageUrl = data['profile']?['profile_image'];
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() => isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load profile: $e')),
       );
     }
   }
 
+  Future<void> _pickImage() async {
+    final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (picked != null) setState(() => profileImage = File(picked.path));
+  }
+
+  Future<void> _saveProfile() async {
+    final profileData = {
+      'name': nameController.text,
+      'phone': contactController.text,
+      'bio': bioInfoController.text,
+      'address': locationController.text,
+      'other_contact': otherContactController.text,
+      'kin_name': kinNameController.text,
+      'kin_contact': kinContactController.text,
+      'income': incomeController.text,
+      'current_address': addressController.text,
+      'gender': selectedGender,
+      'occupation': selectedOccupation,
+      'loan_type': selectedLoanType,
+      'education': selectedEducation,
+    };
+    try {
+      await ApiService.updateProfile(profileData, profileImage);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('✅ Profile updated successfully'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      setState(() => isEditing = false);
+      _loadProfile();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update: $e')),
+      );
+    }
+  }
+
+  void _onItemTapped(int index) {
+    setState(() => _selectedIndex = index);
+    if (index == 0) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => const HomePage()));
+    } else if (index == 1) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => const AboutPage()));
+    }
+  }
+
+  String safeDropdownValue(String current, List<String> items,
+      {String defaultValue = 'Other'}) {
+    if (current.isNotEmpty && items.contains(current)) return current;
+    if (current.isNotEmpty && !items.contains(current)) items.add(current);
+    return defaultValue;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    if (isLoading) {
+      return Scaffold(
+        backgroundColor: isDark ? Colors.black : Colors.white,
+        body: const Center(
+          child: CircularProgressIndicator(color: _blue),
+        ),
+      );
+    }
 
     return Scaffold(
-      backgroundColor: isDark ? Colors.black : Colors.white,
+      backgroundColor: isDark ? Colors.black : const Color(0xFFF5F8FA),
 
-      // 🔹 App Bar
       appBar: AppBar(
-        backgroundColor: const Color(0xFF007BFF),
+        backgroundColor: _blue,
         elevation: 0,
+        centerTitle: true,
         title: const Text(
           "My Profile",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            letterSpacing: 0.4,
+          ),
         ),
-        centerTitle: true,
         actions: [
-          IconButton(
-            icon: Icon(
-              isEditing ? Icons.check_circle : Icons.edit,
-              color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: GestureDetector(
+              onTap: () {
+                if (isEditing) {
+                  _saveProfile();
+                } else {
+                  setState(() => isEditing = true);
+                }
+              },
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.18),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      isEditing ? Icons.check_rounded : Icons.edit_rounded,
+                      color: Colors.white,
+                      size: 15,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      isEditing ? "Save" : "Edit",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            onPressed: () {
-              setState(() => isEditing = !isEditing);
-            },
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(3),
+          child: Container(
+            height: 3,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(colors: [_blue, _green]),
+            ),
+          ),
+        ),
       ),
 
-      // 🔹 Body
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(18, 24, 18, 30),
         child: Column(
           children: [
-            // 🔹 Profile Header
-            _buildProfileHeader(theme, isDark),
-            const SizedBox(height: 25),
 
-            // 🔹 Personal Information
-            _buildSection(
-              theme: theme,
+            // ── Profile header card ──
+            _buildProfileHeader(isDark),
+
+            const SizedBox(height: 22),
+
+            // ── Personal Information ──
+            _buildSectionCard(
               title: "Personal Information",
+              icon: Icons.person_rounded,
+              isDark: isDark,
               children: [
-                _buildField("Full Name", nameController, theme, isDark),
-                _buildField("Email Address", emailController, theme, isDark),
-                _buildField("Phone Number", contactController, theme, isDark),
-                _buildField("Other Contact", otherContactController, theme, isDark),
-                _buildField("Address", locationController, theme, isDark),
-                _buildField("Bio Information", bioInfoController, theme, isDark, maxLines: 3),
+                _buildField("Full Name", nameController, isDark,
+                    icon: Icons.badge_rounded),
+                _buildField("Email Address", emailController, isDark,
+                    icon: Icons.email_rounded, readOnly: true),
+                _buildField("Phone Number", contactController, isDark,
+                    icon: Icons.phone_rounded,
+                    keyboardType: TextInputType.phone),
+                _buildField("Other Contact", otherContactController, isDark,
+                    icon: Icons.phone_in_talk_rounded,
+                    keyboardType: TextInputType.phone),
+                _buildField("Address", locationController, isDark,
+                    icon: Icons.location_on_rounded),
+                _buildField("Bio", bioInfoController, isDark,
+                    icon: Icons.info_outline_rounded, maxLines: 3),
                 _buildDropdown(
-                  label: "Select Gender",
-                  value: selectedGender,
-                  items: ["Male", "Female", "Other"],
-                  theme: theme,
-                  isDark: isDark,
-                  onChanged: (v) => setState(() => selectedGender = v),
+                  "Gender",
+                  safeDropdownValue(
+                      selectedGender, ["Male", "Female", "Other"]),
+                  ["Male", "Female", "Other"],
+                  isDark,
+                  Icons.wc_rounded,
+                  (v) => setState(() => selectedGender = v!),
                 ),
               ],
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
-            // 🔹 Employment & Loan Information
-            _buildSection(
-              theme: theme,
+            // ── Employment & Loan ──
+            _buildSectionCard(
               title: "Employment & Loan Details",
+              icon: Icons.work_rounded,
+              isDark: isDark,
               children: [
-                _buildField("Next of Kin Name", kinNameController, theme, isDark),
-                _buildField("Next of Kin Contact", kinContactController, theme, isDark,
+                _buildField("Next of Kin Name", kinNameController, isDark,
+                    icon: Icons.people_rounded),
+                _buildField("Next of Kin Contact", kinContactController, isDark,
+                    icon: Icons.contact_phone_rounded,
                     keyboardType: TextInputType.phone),
                 _buildDropdown(
-                  label: "Occupation",
-                  value: selectedOccupation,
-                  items: [
-                    "Farmer",
-                    "Business Owner",
-                    "Teacher",
-                    "Engineer",
-                    "Driver",
-                    "Student",
-                    "Civil Servant",
-                    "Medical Worker",
-                    "Technician",
-                    "Other",
+                  "Occupation",
+                  safeDropdownValue(selectedOccupation, [
+                    "Farmer", "Business Owner", "Teacher", "Engineer",
+                    "Driver", "Student", "Civil Servant", "Medical Worker",
+                    "Technician", "Other"
+                  ]),
+                  [
+                    "Farmer", "Business Owner", "Teacher", "Engineer",
+                    "Driver", "Student", "Civil Servant", "Medical Worker",
+                    "Technician", "Other"
                   ],
-                  theme: theme,
-                  isDark: isDark,
-                  onChanged: (v) => setState(() => selectedOccupation = v),
+                  isDark,
+                  Icons.work_outline_rounded,
+                  (v) => setState(() => selectedOccupation = v!),
                 ),
                 _buildField(
                   "Monthly Income (UGX)",
                   incomeController,
-                  theme,
                   isDark,
+                  icon: Icons.account_balance_wallet_rounded,
                   keyboardType: TextInputType.number,
                 ),
                 _buildDropdown(
-                  label: "Loan Type",
-                  value: selectedLoanType,
-                  items: [
-                    "Logbook Loan",
-                    "Business Loan",
-                    "Personal Loan",
-                    "Investment Loan",
-                    "Car Loan",
+                  "Loan Type",
+                  safeDropdownValue(selectedLoanType, [
+                    "Logbook Loan", "Business Loan", "Personal Loan",
+                    "Investment Loan", "Car Loan"
+                  ]),
+                  [
+                    "Logbook Loan", "Business Loan", "Personal Loan",
+                    "Investment Loan", "Car Loan"
                   ],
-                  theme: theme,
-                  isDark: isDark,
-                  onChanged: (v) => setState(() => selectedLoanType = v),
+                  isDark,
+                  Icons.monetization_on_rounded,
+                  (v) => setState(() => selectedLoanType = v!),
                 ),
                 _buildDropdown(
-                  label: "Highest Education",
-                  value: selectedEducation,
-                  items: [
-                    "Primary",
-                    "Secondary",
-                    "Diploma",
-                    "Bachelor’s Degree",
-                    "Master’s Degree",
-                    "Doctorate",
-                    "Other",
+                  "Highest Education",
+                  safeDropdownValue(selectedEducation, [
+                    "Primary", "Secondary", "Diploma", "Bachelor's Degree",
+                    "Master's Degree", "Doctorate", "Other"
+                  ]),
+                  [
+                    "Primary", "Secondary", "Diploma", "Bachelor's Degree",
+                    "Master's Degree", "Doctorate", "Other"
                   ],
-                  theme: theme,
-                  isDark: isDark,
-                  onChanged: (v) => setState(() => selectedEducation = v),
+                  isDark,
+                  Icons.school_rounded,
+                  (v) => setState(() => selectedEducation = v!),
                 ),
-                _buildField("Current Address", addressController, theme, isDark),
+                _buildField("Current Address", addressController, isDark,
+                    icon: Icons.home_rounded),
               ],
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 24),
 
-            // 🔹 Action Button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                label: const Text(
-                  "Apply for Loan",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoanApplicationPage(),
+            // ── Apply for Loan button ──
+            GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const LoanApplicationPage()),
+              ),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                decoration: BoxDecoration(
+                  color: _green,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.green.withOpacity(0.28),
+                      blurRadius: 16,
+                      offset: const Offset(0, 6),
                     ),
-                  );
-                },
+                  ],
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.account_balance_rounded,
+                        color: Colors.white, size: 20),
+                    SizedBox(width: 10),
+                    Text(
+                      "Apply for a Loan",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                        letterSpacing: 0.4,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
         ),
       ),
 
-      // 🔹 Bottom Navigation
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: Colors.green,
+        selectedItemColor: _blue,
         unselectedItemColor: Colors.grey,
         backgroundColor: isDark ? Colors.black : Colors.white,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.info_outline), label: "About"),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profile"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.info_outline), label: "About"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline), label: "Profile"),
         ],
       ),
     );
   }
 
-  // 🔹 Profile Header Card
-  Widget _buildProfileHeader(ThemeData theme, bool isDark) {
+  // ── Profile header ──
+  Widget _buildProfileHeader(bool isDark) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 20),
       decoration: BoxDecoration(
-        color: isDark ? Colors.grey[900] : Colors.grey[100],
-        borderRadius: BorderRadius.circular(16),
+        color: _blue,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: _blue.withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       child: Column(
         children: [
-          CircleAvatar(
-            radius: 45,
-            backgroundColor: const Color(0xFF007BFF),
-            child: const Icon(Icons.person, size: 50, color: Colors.white),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            nameController.text,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black,
+          // Avatar
+          GestureDetector(
+            onTap: isEditing ? _pickImage : null,
+            child: Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 3),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 12,
+                      ),
+                    ],
+                  ),
+                  child: CircleAvatar(
+                    radius: 46,
+                    backgroundColor: Colors.white.withOpacity(0.2),
+                    backgroundImage: profileImage != null
+                        ? FileImage(profileImage!)
+                        : (profileImageUrl != null
+                            ? NetworkImage(profileImageUrl!)
+                                as ImageProvider
+                            : null),
+                    child: profileImage == null && profileImageUrl == null
+                        ? const Icon(Icons.person_rounded,
+                            size: 50, color: Colors.white)
+                        : null,
+                  ),
+                ),
+                if (isEditing)
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: _green,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      child: const Icon(Icons.camera_alt_rounded,
+                          color: Colors.white, size: 14),
+                    ),
+                  ),
+              ],
             ),
           ),
+
+          const SizedBox(height: 14),
+
+          Text(
+            nameController.text.isNotEmpty
+                ? nameController.text
+                : "Your Name",
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+              letterSpacing: 0.3,
+            ),
+          ),
+
           const SizedBox(height: 4),
+
           Text(
             emailController.text,
             style: TextStyle(
-              color: isDark ? Colors.white70 : Colors.black54,
+              fontSize: 13,
+              color: Colors.white.withOpacity(0.8),
             ),
+          ),
+
+          const SizedBox(height: 14),
+
+          // Info chips row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _InfoChip(
+                  icon: Icons.phone_rounded,
+                  label: contactController.text.isNotEmpty
+                      ? contactController.text
+                      : "No phone"),
+              const SizedBox(width: 10),
+              _InfoChip(
+                  icon: Icons.work_rounded,
+                  label: selectedOccupation.isNotEmpty
+                      ? selectedOccupation
+                      : "Occupation"),
+            ],
           ),
         ],
       ),
     );
   }
 
-  // 🔹 Section Container
-  Widget _buildSection({
-    required ThemeData theme,
+  // ── Section card ──
+  Widget _buildSectionCard({
     required String title,
+    required IconData icon,
+    required bool isDark,
     required List<Widget> children,
   }) {
-    final isDark = theme.brightness == Brightness.dark;
-
     return Container(
-      padding: const EdgeInsets.all(16),
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: isDark ? Colors.grey[900] : Colors.grey[100],
-        borderRadius: BorderRadius.circular(14),
+        color: isDark ? Colors.grey[900] : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: _blue.withOpacity(0.1)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDark ? 0.3 : 0.05),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-              color: Colors.blueAccent,
-            ),
+          // Section header
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 20,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [_blue, _green],
+                  ),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Icon(icon, color: _blue, size: 18),
+              const SizedBox(width: 6),
+              Text(
+                title,
+                style: const TextStyle(
+                  color: _blue,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.2,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 18),
           ...children,
         ],
       ),
     );
   }
 
-  // 🔹 Input Field (Editable / Readonly)
-  Widget _buildField(String label, TextEditingController controller,
-      ThemeData theme, bool isDark,
-      {TextInputType keyboardType = TextInputType.text, int maxLines = 1}) {
+  // ── Input field ──
+  Widget _buildField(
+    String label,
+    TextEditingController controller,
+    bool isDark, {
+    IconData? icon,
+    TextInputType keyboardType = TextInputType.text,
+    int maxLines = 1,
+    bool readOnly = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: TextField(
         controller: controller,
-        readOnly: !isEditing,
+        readOnly: readOnly || !isEditing,
         maxLines: maxLines,
         keyboardType: keyboardType,
-        style: TextStyle(color: isDark ? Colors.white : Colors.black),
+        style: TextStyle(
+          color: isDark ? Colors.white : Colors.black87,
+          fontSize: 14,
+        ),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+          labelStyle: TextStyle(
+            color: isDark ? Colors.white54 : Colors.black45,
+            fontSize: 13,
+          ),
+          prefixIcon: icon != null
+              ? Icon(icon, color: _blue, size: 18)
+              : null,
           filled: true,
-          fillColor: isDark ? Colors.grey[900] : Colors.white,
+          fillColor: isDark
+              ? Colors.grey[850]
+              : (isEditing ? const Color(0xFFF5F8FF) : Colors.grey.shade50),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 13, horizontal: 14),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: isDark ? Colors.white12 : Colors.black12,
-              width: 0.6,
+              color: isDark
+                  ? Colors.white12
+                  : (isEditing
+                      ? const Color(0xFFD0E4FF)
+                      : Colors.black.withOpacity(0.07)),
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.blueAccent, width: 0.8),
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: _blue, width: 1.5),
           ),
         ),
       ),
     );
   }
 
-  // 🔹 Dropdown Field
-  Widget _buildDropdown({
-    required String label,
-    required String? value,
-    required List<String> items,
-    required ThemeData theme,
-    required bool isDark,
-    required Function(String?) onChanged,
-  }) {
+  // ── Dropdown ──
+  Widget _buildDropdown(
+    String label,
+    String value,
+    List<String> items,
+    bool isDark,
+    IconData icon,
+    Function(String?) onChanged,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: DropdownButtonFormField<String>(
-        initialValue: value,
-        style: TextStyle(color: isDark ? Colors.white : Colors.black),
+        value: value,
+        style: TextStyle(
+          color: isDark ? Colors.white : Colors.black87,
+          fontSize: 14,
+        ),
+        dropdownColor: isDark ? Colors.grey[900] : Colors.white,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+          labelStyle: TextStyle(
+            color: isDark ? Colors.white54 : Colors.black45,
+            fontSize: 13,
+          ),
+          prefixIcon: Icon(icon, color: _blue, size: 18),
           filled: true,
-          fillColor: isDark ? Colors.grey[900] : Colors.white,
+          fillColor: isDark
+              ? Colors.grey[850]
+              : (isEditing ? const Color(0xFFF5F8FF) : Colors.grey.shade50),
           contentPadding:
-              const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+              const EdgeInsets.symmetric(vertical: 13, horizontal: 14),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: isDark ? Colors.white12 : Colors.black12,
-              width: 0.6,
+              color: isDark
+                  ? Colors.white12
+                  : (isEditing
+                      ? const Color(0xFFD0E4FF)
+                      : Colors.black.withOpacity(0.07)),
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.blueAccent, width: 0.8),
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: _blue, width: 1.5),
           ),
         ),
         items: items
-            .map((item) => DropdownMenuItem(
-                  value: item,
-                  child: Text(item),
-                ))
+            .map((item) => DropdownMenuItem(value: item, child: Text(item)))
             .toList(),
-        onChanged: onChanged,
+        onChanged: isEditing ? onChanged : null,
+      ),
+    );
+  }
+}
+
+// ── Info chip on profile header ──
+class _InfoChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+
+  const _InfoChip({required this.icon, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withOpacity(0.25)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white, size: 13),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -407,10 +729,29 @@ class _ProfilePageState extends State<ProfilePage> {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import 'dart:io';
+// // import 'package:flutter/foundation.dart' show kIsWeb;
 // import 'package:flutter/material.dart';
+// import 'package:image_picker/image_picker.dart';
+// import 'package:magna_credit_app/api_service.dart';
 // import 'home_screen.dart';
 // import 'about_screen.dart';
-// import 'first_loan_application.dart'; // <-- For navigation
+// import 'first_loan_application.dart';
 
 // class ProfilePage extends StatefulWidget {
 //   const ProfilePage({super.key});
@@ -422,57 +763,135 @@ class _ProfilePageState extends State<ProfilePage> {
 // class _ProfilePageState extends State<ProfilePage> {
 //   int _selectedIndex = 2;
 //   bool isEditing = false;
+//   bool isLoading = true;
 
-//   // 🔹 User Data Controllers (All fields from LoanApplicationPage & Page2, excluding National ID and Collateral)
-//   final TextEditingController nameController =
-//       TextEditingController(text: "John Doe");
-//   final TextEditingController contactController =
-//       TextEditingController(text: "+256 700 123456");
-//   final TextEditingController emailController =
-//       TextEditingController(text: "johndoe@example.com");
-//   final TextEditingController bioInfoController =
-//       TextEditingController(text: "Business Owner with 5 years experience");
-//   final TextEditingController locationController =
-//       TextEditingController(text: "Kampala, Uganda");
-//   final TextEditingController otherContactController =
-//       TextEditingController(text: "+256 701 654321");
-//   final TextEditingController kinNameController =
-//       TextEditingController(text: "Jane Doe");
-//   final TextEditingController kinContactController =
-//       TextEditingController(text: "+256 702 987654");
-//   final TextEditingController incomeController =
-//       TextEditingController(text: "UGX 2,000,000");
-//   final TextEditingController addressController =
-//       TextEditingController(text: "Kampala, Uganda");
+//   // 🔹 Profile Image
+//   File? profileImage;
 
-//   String? selectedGender;
-//   String? selectedOccupation;
-//   String? selectedLoanType;
-//   String? selectedEducation;
+//   // 🔹 User Data Controllers
+//   final TextEditingController nameController = TextEditingController();
+//   final TextEditingController contactController = TextEditingController();
+//   final TextEditingController emailController = TextEditingController();
+//   final TextEditingController bioInfoController = TextEditingController();
+//   final TextEditingController locationController = TextEditingController();
+//   final TextEditingController otherContactController = TextEditingController();
+//   final TextEditingController kinNameController = TextEditingController();
+//   final TextEditingController kinContactController = TextEditingController();
+//   final TextEditingController incomeController = TextEditingController();
+//   final TextEditingController addressController = TextEditingController();
 
-//   // 🔹 Bottom navigation
-//   void _onItemTapped(int index) {
-//     setState(() => _selectedIndex = index);
+//   String selectedGender = 'Other';
+//   String selectedOccupation = 'Other';
+//   String selectedLoanType = '';
+//   String selectedEducation = '';
 
-//     if (index == 0) {
-//       Navigator.pushReplacement(
-//         context,
-//         MaterialPageRoute(builder: (_) => const HomePage()),
-//       );
-//     } else if (index == 1) {
-//       Navigator.pushReplacement(
-//         context,
-//         MaterialPageRoute(builder: (_) => const AboutPage()),
+//   String? profileImageUrl;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _loadProfile();
+//   }
+
+//   Future<void> _loadProfile() async {
+//     try {
+//       final data = await ApiService.getProfile();
+
+//       setState(() {
+//         nameController.text = data['name'] ?? '';
+//         emailController.text = data['email'] ?? '';
+//         contactController.text = data['phone'] ?? '';
+//         bioInfoController.text = data['profile']?['bio'] ?? '';
+//         locationController.text = data['profile']?['address'] ?? '';
+//         otherContactController.text = data['profile']?['other_contact'] ?? '';
+//         kinNameController.text = data['profile']?['kin_name'] ?? '';
+//         kinContactController.text = data['profile']?['kin_contact'] ?? '';
+//         incomeController.text = data['profile']?['income'] ?? '';
+//         addressController.text = data['profile']?['current_address'] ?? '';
+//         selectedGender = data['profile']?['gender'] ?? 'Other';
+//         selectedOccupation = data['profile']?['occupation'] ?? 'Other';
+//         selectedLoanType = data['profile']?['loan_type'] ?? '';
+//         selectedEducation = data['profile']?['education'] ?? '';
+//         profileImageUrl = data['profile']?['profile_image'];
+//         isLoading = false;
+//       });
+//     } catch (e) {
+//       setState(() => isLoading = false);
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text('Failed to load profile: $e')),
 //       );
 //     }
 //   }
 
+//   // 🔹 Pick Image
+//   Future<void> _pickImage() async {
+//     final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
+//     if (picked != null) {
+//       setState(() => profileImage = File(picked.path));
+//     }
+//   }
+
+//   // 🔹 Save Profile
+//   Future<void> _saveProfile() async {
+//     final profileData = {
+//       'name': nameController.text,
+//       'phone': contactController.text,
+//       'bio': bioInfoController.text,
+//       'address': locationController.text,
+//       'other_contact': otherContactController.text,
+//       'kin_name': kinNameController.text,
+//       'kin_contact': kinContactController.text,
+//       'income': incomeController.text,
+//       'current_address': addressController.text,
+//       'gender': selectedGender,
+//       'occupation': selectedOccupation,
+//       'loan_type': selectedLoanType,
+//       'education': selectedEducation,
+//     };
+
+//     try {
+//       await ApiService.updateProfile(profileData, profileImage);
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         const SnackBar(content: Text('Profile updated successfully')),
+//       );
+//       setState(() => isEditing = false);
+//       _loadProfile(); // refresh
+//     } catch (e) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text('Failed to update profile: $e')),
+//       );
+//     }
+//   }
+
+//   void _onItemTapped(int index) {
+//     setState(() => _selectedIndex = index);
+//     if (index == 0) {
+//       Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomePage()));
+//     } else if (index == 1) {
+//       Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const AboutPage()));
+//     }
+//   }
+
+//   // 🔹 Safe dropdown helper
+//   String safeDropdownValue(String currentValue, List<String> items, {String defaultValue = 'Other'}) {
+//     if (currentValue.isNotEmpty && items.contains(currentValue)) return currentValue;
+//     if (currentValue.isNotEmpty && !items.contains(currentValue)) items.add(currentValue);
+//     return defaultValue;
+//   }
+
 //   @override
 //   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.white,
+//     final theme = Theme.of(context);
+//     final isDark = theme.brightness == Brightness.dark;
 
-//       // 🔹 App Bar
+//     if (isLoading) {
+//       return const Scaffold(
+//         body: Center(child: CircularProgressIndicator()),
+//       );
+//     }
+
+//     return Scaffold(
+//       backgroundColor: isDark ? Colors.black : Colors.white,
 //       appBar: AppBar(
 //         backgroundColor: const Color(0xFF007BFF),
 //         elevation: 0,
@@ -483,108 +902,80 @@ class _ProfilePageState extends State<ProfilePage> {
 //         centerTitle: true,
 //         actions: [
 //           IconButton(
-//             icon: Icon(
-//               isEditing ? Icons.check_circle : Icons.edit,
-//               color: Colors.white,
-//             ),
+//             icon: Icon(isEditing ? Icons.check_circle : Icons.edit, color: Colors.white),
 //             onPressed: () {
+//               if (isEditing) _saveProfile();
 //               setState(() => isEditing = !isEditing);
 //             },
 //           ),
 //         ],
 //       ),
-
-//       // 🔹 Body
 //       body: SingleChildScrollView(
 //         padding: const EdgeInsets.all(20),
 //         child: Column(
 //           children: [
-//             // 🔹 Profile Header
-//             _buildProfileHeader(),
+//             _buildProfileHeader(theme, isDark),
 //             const SizedBox(height: 25),
-
 //             // 🔹 Personal Information
 //             _buildSection(
+//               theme: theme,
 //               title: "Personal Information",
 //               children: [
-//                 _buildField("Full Name", nameController),
-//                 _buildField("Email Address", emailController),
-//                 _buildField("Phone Number", contactController),
-//                 _buildField("Other Contact", otherContactController),
-//                 _buildField("Address", locationController),
-//                 _buildField("Bio Information", bioInfoController, maxLines: 3),
+//                 _buildField("Full Name", nameController, isDark),
+//                 _buildField("Email Address", emailController, isDark, readOnly: true),
+//                 _buildField("Phone Number", contactController, isDark),
+//                 _buildField("Other Contact", otherContactController, isDark),
+//                 _buildField("Address", locationController, isDark),
+//                 _buildField("Bio Information", bioInfoController, isDark, maxLines: 3),
 //                 _buildDropdown(
-//                   label: "Select Gender",
-//                   value: selectedGender,
-//                   items: ["Male", "Female", "Other"],
-//                   onChanged: (v) => setState(() => selectedGender = v),
+//                   "Select Gender",
+//                   safeDropdownValue(selectedGender, ["Male", "Female", "Other"]),
+//                   ["Male", "Female", "Other"],
+//                   isDark,
+//                   (v) => setState(() => selectedGender = v!),
 //                 ),
 //               ],
 //             ),
-
 //             const SizedBox(height: 20),
-
 //             // 🔹 Employment & Loan Information
 //             _buildSection(
+//               theme: theme,
 //               title: "Employment & Loan Details",
 //               children: [
-//                 _buildField("Next of Kin Name", kinNameController),
-//                 _buildField("Next of Kin Contact", kinContactController,
-//                     keyboardType: TextInputType.phone),
+//                 _buildField("Next of Kin Name", kinNameController, isDark),
+//                 _buildField("Next of Kin Contact", kinContactController, isDark, keyboardType: TextInputType.phone),
 //                 _buildDropdown(
-//                   label: "Occupation",
-//                   value: selectedOccupation,
-//                   items: [
-//                     "Farmer",
-//                     "Business Owner",
-//                     "Teacher",
-//                     "Engineer",
-//                     "Driver",
-//                     "Student",
-//                     "Civil Servant",
-//                     "Medical Worker",
-//                     "Technician",
-//                     "Other",
+//                   "Occupation",
+//                   safeDropdownValue(selectedOccupation, [
+//                     "Farmer","Business Owner","Teacher","Engineer","Driver",
+//                     "Student","Civil Servant","Medical Worker","Technician","Other"
+//                   ]),
+//                   [
+//                     "Farmer","Business Owner","Teacher","Engineer","Driver",
+//                     "Student","Civil Servant","Medical Worker","Technician","Other"
 //                   ],
-//                   onChanged: (v) => setState(() => selectedOccupation = v),
+//                   isDark,
+//                   (v) => setState(() => selectedOccupation = v!),
 //                 ),
-//                 _buildField(
-//                   "Monthly Income (UGX)",
-//                   incomeController,
-//                   keyboardType: TextInputType.number,
+//                 _buildField("Monthly Income (UGX)", incomeController, isDark, keyboardType: TextInputType.number),
+//                 _buildDropdown(
+//                   "Loan Type",
+//                   safeDropdownValue(selectedLoanType, ["Logbook Loan","Business Loan","Personal Loan","Investment Loan","Car Loan"]),
+//                   ["Logbook Loan","Business Loan","Personal Loan","Investment Loan","Car Loan"],
+//                   isDark,
+//                   (v) => setState(() => selectedLoanType = v!),
 //                 ),
 //                 _buildDropdown(
-//                   label: "Loan Type",
-//                   value: selectedLoanType,
-//                   items: [
-//                     "Logbook Loan",
-//                     "Business Loan",
-//                     "Personal Loan",
-//                     "Investment Loan",
-//                     "Car Loan",
-//                   ],
-//                   onChanged: (v) => setState(() => selectedLoanType = v),
+//                   "Highest Education",
+//                   safeDropdownValue(selectedEducation, ["Primary","Secondary","Diploma","Bachelor’s Degree","Master’s Degree","Doctorate","Other"]),
+//                   ["Primary","Secondary","Diploma","Bachelor’s Degree","Master’s Degree","Doctorate","Other"],
+//                   isDark,
+//                   (v) => setState(() => selectedEducation = v!),
 //                 ),
-//                 _buildDropdown(
-//                   label: "Highest Education",
-//                   value: selectedEducation,
-//                   items: [
-//                     "Primary",
-//                     "Secondary",
-//                     "Diploma",
-//                     "Bachelor’s Degree",
-//                     "Master’s Degree",
-//                     "Doctorate",
-//                     "Other",
-//                   ],
-//                   onChanged: (v) => setState(() => selectedEducation = v),
-//                 ),
-//                 _buildField("Current Address", addressController),
+//                 _buildField("Current Address", addressController, isDark),
 //               ],
 //             ),
-
 //             const SizedBox(height: 30),
-
 //             // 🔹 Action Button
 //             SizedBox(
 //               width: double.infinity,
@@ -592,40 +983,24 @@ class _ProfilePageState extends State<ProfilePage> {
 //                 style: ElevatedButton.styleFrom(
 //                   backgroundColor: Colors.green,
 //                   padding: const EdgeInsets.symmetric(vertical: 14),
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(10),
-//                   ),
+//                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
 //                 ),
-
 //                 label: const Text(
 //                   "Apply for Loan",
-//                   style: TextStyle(
-//                     fontSize: 17,
-//                     fontWeight: FontWeight.bold,
-//                     color: Colors.white,
-//                   ),
+//                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white),
 //                 ),
-//                 onPressed: () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(
-//                       builder: (context) => const LoanApplicationPage(),
-//                     ),
-//                   );
-//                 },
+//                 onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const LoanApplicationPage())),
 //               ),
 //             ),
 //           ],
 //         ),
 //       ),
-
-//       // 🔹 Bottom Navigation
 //       bottomNavigationBar: BottomNavigationBar(
 //         currentIndex: _selectedIndex,
 //         onTap: _onItemTapped,
 //         selectedItemColor: Colors.green,
 //         unselectedItemColor: Colors.grey,
-//         backgroundColor: Colors.white,
+//         backgroundColor: isDark ? Colors.black : Colors.white,
 //         items: const [
 //           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
 //           BottomNavigationBarItem(icon: Icon(Icons.info_outline), label: "About"),
@@ -635,126 +1010,562 @@ class _ProfilePageState extends State<ProfilePage> {
 //     );
 //   }
 
-//   // 🔹 Profile Header Card
-//   Widget _buildProfileHeader() {
-//     return Container(
-//       padding: const EdgeInsets.all(20),
-//       decoration: BoxDecoration(
-//         color: Colors.grey[100],
-//         borderRadius: BorderRadius.circular(16),
-//       ),
-//       child: Column(
-//         children: [
-//           CircleAvatar(
-//             radius: 45,
-//             backgroundColor: Colors.blueAccent,
-//             child: const Icon(Icons.person, size: 50, color: Colors.white),
-//           ),
-//           const SizedBox(height: 12),
-//           Text(
-//             nameController.text,
-//             style: const TextStyle(
-//               fontSize: 18,
-//               fontWeight: FontWeight.bold,
+//   Widget _buildProfileHeader(ThemeData theme, bool isDark) {
+//     return GestureDetector(
+//       onTap: isEditing ? _pickImage : null,
+//       child: Container(
+//         padding: const EdgeInsets.all(20),
+//         decoration: BoxDecoration(
+//           color: isDark ? Colors.grey[900] : Colors.grey[100],
+//           borderRadius: BorderRadius.circular(16),
+//         ),
+//         child: Column(
+//           children: [
+//             CircleAvatar(
+//               radius: 45,
+//               backgroundColor: const Color(0xFF007BFF),
+//               backgroundImage: profileImage != null
+//                   ? FileImage(profileImage!)
+//                   : (profileImageUrl != null ? NetworkImage(profileImageUrl!) as ImageProvider : null),
+//               child: profileImage == null && profileImageUrl == null ? const Icon(Icons.person, size: 50, color: Colors.white) : null,
 //             ),
-//           ),
-//           const SizedBox(height: 4),
-//           Text(
-//             emailController.text,
-//             style: const TextStyle(color: Colors.black54),
-//           ),
-//         ],
+//             const SizedBox(height: 12),
+//             Text(nameController.text, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black)),
+//             const SizedBox(height: 4),
+//             Text(emailController.text, style: TextStyle(color: isDark ? Colors.white70 : Colors.black54)),
+//           ],
+//         ),
 //       ),
 //     );
 //   }
 
-//   // 🔹 Section Container
-//   Widget _buildSection({
-//     required String title,
-//     required List<Widget> children,
-//   }) {
+//   Widget _buildSection({required ThemeData theme, required String title, required List<Widget> children}) {
+//     final isDark = theme.brightness == Brightness.dark;
 //     return Container(
 //       padding: const EdgeInsets.all(16),
+//       margin: const EdgeInsets.only(bottom: 20),
 //       decoration: BoxDecoration(
-//         color: Colors.grey[100],
+//         color: isDark ? Colors.grey[900] : Colors.grey[100],
 //         borderRadius: BorderRadius.circular(14),
 //       ),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Text(
-//             title,
-//             style: const TextStyle(
-//               fontSize: 17,
-//               fontWeight: FontWeight.bold,
-//               color: Colors.blueAccent,
-//             ),
-//           ),
-//           const SizedBox(height: 15),
-//           ...children,
-//         ],
-//       ),
+//       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+//         Text(title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.blueAccent)),
+//         const SizedBox(height: 15),
+//         ...children,
+//       ]),
 //     );
 //   }
 
-//   // 🔹 Input Field (Editable / Readonly)
-//   Widget _buildField(String label, TextEditingController controller,
-//       {TextInputType keyboardType = TextInputType.text, int maxLines = 1}) {
+//   Widget _buildField(String label, TextEditingController controller, bool isDark,
+//       {TextInputType keyboardType = TextInputType.text, int maxLines = 1, bool readOnly = false}) {
 //     return Padding(
 //       padding: const EdgeInsets.only(bottom: 14),
 //       child: TextField(
 //         controller: controller,
-//         readOnly: !isEditing,
+//         readOnly: readOnly || !isEditing,
 //         maxLines: maxLines,
 //         keyboardType: keyboardType,
+//         style: TextStyle(color: isDark ? Colors.white : Colors.black),
 //         decoration: InputDecoration(
 //           labelText: label,
+//           labelStyle: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
 //           filled: true,
-//           fillColor: Colors.white,
-//           enabledBorder: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(8),
-//             borderSide: const BorderSide(color: Colors.black12, width: 0.6),
-//           ),
-//           focusedBorder: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(8),
-//             borderSide: const BorderSide(color: Colors.blueAccent, width: 0.8),
-//           ),
+//           fillColor: isDark ? Colors.grey[900] : Colors.white,
+//           enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: isDark ? Colors.white12 : Colors.black12, width: 0.6)),
+//           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Colors.blueAccent, width: 0.8)),
 //         ),
 //       ),
 //     );
 //   }
 
-//   // 🔹 Dropdown Field
-//   Widget _buildDropdown({
-//     required String label,
-//     required String? value,
-//     required List<String> items,
-//     required Function(String?) onChanged,
-//   }) {
+//   Widget _buildDropdown(String label, String value, List<String> items, bool isDark, Function(String?) onChanged) {
 //     return Padding(
 //       padding: const EdgeInsets.only(bottom: 14),
 //       child: DropdownButtonFormField<String>(
 //         value: value,
+//         style: TextStyle(color: isDark ? Colors.white : Colors.black),
 //         decoration: InputDecoration(
 //           labelText: label,
+//           labelStyle: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
 //           filled: true,
-//           fillColor: Colors.white,
-//           contentPadding:
-//               const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
-//           enabledBorder: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(8),
-//             borderSide: const BorderSide(color: Colors.black12, width: 0.6),
-//           ),
-//           focusedBorder: OutlineInputBorder(
-//             borderRadius: BorderRadius.circular(8),
-//             borderSide: const BorderSide(color: Colors.blueAccent, width: 0.8),
-//           ),
+//           fillColor: isDark ? Colors.grey[900] : Colors.white,
+//           contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+//           enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: isDark ? Colors.white12 : Colors.black12, width: 0.6)),
+//           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: Colors.blueAccent, width: 0.8)),
 //         ),
-//         items: items
-//             .map((item) => DropdownMenuItem(value: item, child: Text(item)))
-//             .toList(),
+//         items: items.map((item) => DropdownMenuItem(value: item, child: Text(item))).toList(),
 //         onChanged: onChanged,
 //       ),
 //     );
 //   }
 // }
+
+
+
+
+
+
+// // import 'dart:io';
+// // import 'package:flutter/material.dart';
+// // import 'package:magna_credit_app/api_service.dart';
+// // import 'home_screen.dart';
+// // import 'about_screen.dart';
+// // import 'first_loan_application.dart';
+// // import 'package:image_picker/image_picker.dart';
+
+// // class ProfilePage extends StatefulWidget {
+// //   const ProfilePage({super.key});
+
+// //   @override
+// //   State<ProfilePage> createState() => _ProfilePageState();
+// // }
+
+// // class _ProfilePageState extends State<ProfilePage> {
+// //   int _selectedIndex = 2;
+// //   bool isEditing = false;
+// //   bool loanApproved = false;
+// //   File? profileImage;
+
+// //   // 🔹 User Data Controllers
+// //   final TextEditingController nameController = TextEditingController();
+// //   final TextEditingController contactController = TextEditingController();
+// //   final TextEditingController emailController = TextEditingController();
+// //   final TextEditingController bioInfoController = TextEditingController();
+// //   final TextEditingController locationController = TextEditingController();
+// //   final TextEditingController otherContactController = TextEditingController();
+// //   final TextEditingController kinNameController = TextEditingController();
+// //   final TextEditingController kinContactController = TextEditingController();
+// //   final TextEditingController incomeController = TextEditingController();
+// //   final TextEditingController addressController = TextEditingController();
+
+// //   String? selectedGender;
+// //   String? selectedOccupation;
+// //   String? selectedLoanType;
+// //   String? selectedEducation;
+
+// //   @override
+// //   void initState() {
+// //     super.initState();
+// //     _fetchProfile();
+// //   }
+
+// //   Future<void> _fetchProfile() async {
+// //     try {
+// //       final data = await ApiService.getProfile();
+// //       setState(() {
+// //         nameController.text = data['name'] ?? '';
+// //         emailController.text = data['email'] ?? '';
+// //         contactController.text = data['phone'] ?? '';
+// //         otherContactController.text = data['profile']?['other_contact'] ?? '';
+// //         locationController.text = data['profile']?['address'] ?? '';
+// //         bioInfoController.text = data['profile']?['bio'] ?? '';
+// //         kinNameController.text = data['profile']?['kin_name'] ?? '';
+// //         kinContactController.text = data['profile']?['kin_contact'] ?? '';
+// //         incomeController.text = data['profile']?['income'] ?? '';
+// //         addressController.text = data['profile']?['current_address'] ?? '';
+// //         selectedGender = data['profile']?['gender'];
+// //         selectedOccupation = data['profile']?['occupation'];
+// //         selectedEducation = data['profile']?['education'];
+// //         selectedLoanType = data['profile']?['loan_type'];
+// //         loanApproved = data['profile']?['loan_approved'] ?? false;
+// //       });
+// //     } catch (e) {
+// //       debugPrint('Failed to load profile: $e');
+// //     }
+// //   }
+
+// //   Future<void> _pickProfileImage() async {
+// //     final picker = ImagePicker();
+// //     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+// //     if (pickedFile != null) {
+// //       setState(() {
+// //         profileImage = File(pickedFile.path);
+// //       });
+// //     }
+// //   }
+
+// //   void _onItemTapped(int index) {
+// //     setState(() => _selectedIndex = index);
+
+// //     if (index == 0) {
+// //       Navigator.pushReplacement(
+// //         context,
+// //         MaterialPageRoute(builder: (_) => const HomePage()),
+// //       );
+// //     } else if (index == 1) {
+// //       Navigator.pushReplacement(
+// //         context,
+// //         MaterialPageRoute(builder: (_) => const AboutPage()),
+// //       );
+// //     }
+// //   }
+
+// //   Future<void> _saveProfile() async {
+// //     try {
+// //       Map<String, String> profileData = {
+// //         'name': nameController.text,
+// //         'email': emailController.text,
+// //         'phone': contactController.text,
+// //         'other_contact': otherContactController.text,
+// //         'address': locationController.text,
+// //         'bio': bioInfoController.text,
+// //         'kin_name': kinNameController.text,
+// //         'kin_contact': kinContactController.text,
+// //         'income': incomeController.text,
+// //         'current_address': addressController.text,
+// //         'gender': selectedGender ?? '',
+// //         'occupation': selectedOccupation ?? '',
+// //         'education': selectedEducation ?? '',
+// //         'loan_type': selectedLoanType ?? '',
+// //       };
+
+// //       await ApiService.updateProfile(profileData);
+// //       setState(() => isEditing = false);
+// //       ScaffoldMessenger.of(context)
+// //           .showSnackBar(const SnackBar(content: Text('Profile updated successfully')));
+// //     } catch (e) {
+// //       debugPrint('Failed to update profile: $e');
+// //       ScaffoldMessenger.of(context)
+// //           .showSnackBar(const SnackBar(content: Text('Failed to update profile')));
+// //     }
+// //   }
+
+// //   @override
+// //   Widget build(BuildContext context) {
+// //     final theme = Theme.of(context);
+// //     final isDark = theme.brightness == Brightness.dark;
+
+// //     return Scaffold(
+// //       backgroundColor: isDark ? Colors.black : Colors.white,
+
+// //       // 🔹 App Bar
+// //       appBar: AppBar(
+// //         backgroundColor: const Color(0xFF007BFF),
+// //         elevation: 0,
+// //         title: const Text(
+// //           "My Profile",
+// //           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+// //         ),
+// //         centerTitle: true,
+// //         actions: [
+// //           if (!loanApproved)
+// //             IconButton(
+// //               icon: Icon(
+// //                 isEditing ? Icons.check_circle : Icons.edit,
+// //                 color: Colors.white,
+// //               ),
+// //               onPressed: () {
+// //                 if (isEditing) {
+// //                   _saveProfile();
+// //                 } else {
+// //                   setState(() => isEditing = true);
+// //                 }
+// //               },
+// //             ),
+// //         ],
+// //       ),
+
+// //       // 🔹 Body
+// //       body: SingleChildScrollView(
+// //         padding: const EdgeInsets.all(20),
+// //         child: Column(
+// //           children: [
+// //             // 🔹 Profile Header
+// //             _buildProfileHeader(theme, isDark),
+// //             const SizedBox(height: 25),
+
+// //             // 🔹 Personal Information
+// //             _buildSection(
+// //               theme: theme,
+// //               title: "Personal Information",
+// //               children: [
+// //                 _buildField("Full Name", nameController, theme, isDark),
+// //                 _buildField("Email Address", emailController, theme, isDark),
+// //                 _buildField("Phone Number", contactController, theme, isDark),
+// //                 _buildField("Other Contact", otherContactController, theme, isDark),
+// //                 _buildField("Address", locationController, theme, isDark),
+// //                 _buildField("Bio Information", bioInfoController, theme, isDark, maxLines: 3),
+// //                 _buildDropdown(
+// //                   label: "Select Gender",
+// //                   value: selectedGender,
+// //                   items: ["Male", "Female", "Other"],
+// //                   theme: theme,
+// //                   isDark: isDark,
+// //                   onChanged: isEditing ? (v) => setState(() => selectedGender = v) : null,
+// //                 ),
+// //               ],
+// //             ),
+
+// //             const SizedBox(height: 20),
+
+// //             // 🔹 Employment & Loan Information
+// //             _buildSection(
+// //               theme: theme,
+// //               title: "Employment & Loan Details",
+// //               children: [
+// //                 _buildField("Next of Kin Name", kinNameController, theme, isDark),
+// //                 _buildField("Next of Kin Contact", kinContactController, theme, isDark,
+// //                     keyboardType: TextInputType.phone),
+// //                 _buildDropdown(
+// //                   label: "Occupation",
+// //                   value: selectedOccupation,
+// //                   items: [
+// //                     "Farmer",
+// //                     "Business Owner",
+// //                     "Teacher",
+// //                     "Engineer",
+// //                     "Driver",
+// //                     "Student",
+// //                     "Civil Servant",
+// //                     "Medical Worker",
+// //                     "Technician",
+// //                     "Other",
+// //                   ],
+// //                   theme: theme,
+// //                   isDark: isDark,
+// //                   onChanged: isEditing ? (v) => setState(() => selectedOccupation = v) : null,
+// //                 ),
+// //                 _buildField(
+// //                   "Monthly Income (UGX)",
+// //                   incomeController,
+// //                   theme,
+// //                   isDark,
+// //                   keyboardType: TextInputType.number,
+// //                 ),
+// //                 _buildDropdown(
+// //                   label: "Loan Type",
+// //                   value: selectedLoanType,
+// //                   items: [
+// //                     "Logbook Loan",
+// //                     "Business Loan",
+// //                     "Personal Loan",
+// //                     "Investment Loan",
+// //                     "Car Loan",
+// //                   ],
+// //                   theme: theme,
+// //                   isDark: isDark,
+// //                   onChanged: isEditing ? (v) => setState(() => selectedLoanType = v) : null,
+// //                 ),
+// //                 _buildDropdown(
+// //                   label: "Highest Education",
+// //                   value: selectedEducation,
+// //                   items: [
+// //                     "Primary",
+// //                     "Secondary",
+// //                     "Diploma",
+// //                     "Bachelor’s Degree",
+// //                     "Master’s Degree",
+// //                     "Doctorate",
+// //                     "Other",
+// //                   ],
+// //                   theme: theme,
+// //                   isDark: isDark,
+// //                   onChanged: isEditing ? (v) => setState(() => selectedEducation = v) : null,
+// //                 ),
+// //                 _buildField("Current Address", addressController, theme, isDark),
+// //               ],
+// //             ),
+
+// //             const SizedBox(height: 30),
+
+// //             // 🔹 Action Button
+// //             SizedBox(
+// //               width: double.infinity,
+// //               child: ElevatedButton.icon(
+// //                 style: ElevatedButton.styleFrom(
+// //                   backgroundColor: Colors.green,
+// //                   padding: const EdgeInsets.symmetric(vertical: 14),
+// //                   shape: RoundedRectangleBorder(
+// //                     borderRadius: BorderRadius.circular(10),
+// //                   ),
+// //                 ),
+// //                 label: const Text(
+// //                   "Apply for Loan",
+// //                   style: TextStyle(
+// //                     fontSize: 17,
+// //                     fontWeight: FontWeight.bold,
+// //                     color: Colors.white,
+// //                   ),
+// //                 ),
+// //                 onPressed: () {
+// //                   Navigator.push(
+// //                     context,
+// //                     MaterialPageRoute(
+// //                       builder: (context) => const LoanApplicationPage(),
+// //                     ),
+// //                   );
+// //                 },
+// //               ),
+// //             ),
+// //           ],
+// //         ),
+// //       ),
+
+// //       // 🔹 Bottom Navigation
+// //       bottomNavigationBar: BottomNavigationBar(
+// //         currentIndex: _selectedIndex,
+// //         onTap: _onItemTapped,
+// //         selectedItemColor: Colors.green,
+// //         unselectedItemColor: Colors.grey,
+// //         backgroundColor: isDark ? Colors.black : Colors.white,
+// //         items: const [
+// //           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+// //           BottomNavigationBarItem(icon: Icon(Icons.info_outline), label: "About"),
+// //           BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profile"),
+// //         ],
+// //       ),
+// //     );
+// //   }
+
+// //   // 🔹 Profile Header Card
+// //   Widget _buildProfileHeader(ThemeData theme, bool isDark) {
+// //     return Container(
+// //       padding: const EdgeInsets.all(20),
+// //       decoration: BoxDecoration(
+// //         color: isDark ? Colors.grey[900] : Colors.grey[100],
+// //         borderRadius: BorderRadius.circular(16),
+// //       ),
+// //       child: Column(
+// //         children: [
+// //           GestureDetector(
+// //             onTap: isEditing ? _pickProfileImage : null,
+// //             child: CircleAvatar(
+// //               radius: 45,
+// //               backgroundColor: const Color(0xFF007BFF),
+// //               backgroundImage: profileImage != null ? FileImage(profileImage!) : null,
+// //               child: profileImage == null
+// //                   ? const Icon(Icons.person, size: 50, color: Colors.white)
+// //                   : null,
+// //             ),
+// //           ),
+// //           const SizedBox(height: 12),
+// //           Text(
+// //             nameController.text,
+// //             style: TextStyle(
+// //               fontSize: 18,
+// //               fontWeight: FontWeight.bold,
+// //               color: isDark ? Colors.white : Colors.black,
+// //             ),
+// //           ),
+// //           const SizedBox(height: 4),
+// //           Text(
+// //             emailController.text,
+// //             style: TextStyle(
+// //               color: isDark ? Colors.white70 : Colors.black54,
+// //             ),
+// //           ),
+// //         ],
+// //       ),
+// //     );
+// //   }
+
+// //   // 🔹 Section Container
+// //   Widget _buildSection({
+// //     required ThemeData theme,
+// //     required String title,
+// //     required List<Widget> children,
+// //   }) {
+// //     final isDark = theme.brightness == Brightness.dark;
+
+// //     return Container(
+// //       padding: const EdgeInsets.all(16),
+// //       decoration: BoxDecoration(
+// //         color: isDark ? Colors.grey[900] : Colors.grey[100],
+// //         borderRadius: BorderRadius.circular(14),
+// //       ),
+// //       child: Column(
+// //         crossAxisAlignment: CrossAxisAlignment.start,
+// //         children: [
+// //           Text(
+// //             title,
+// //             style: const TextStyle(
+// //               fontSize: 17,
+// //               fontWeight: FontWeight.bold,
+// //               color: Colors.blueAccent,
+// //             ),
+// //           ),
+// //           const SizedBox(height: 15),
+// //           ...children,
+// //         ],
+// //       ),
+// //     );
+// //   }
+
+// //   // 🔹 Input Field (Editable / Readonly)
+// //   Widget _buildField(String label, TextEditingController controller,
+// //       ThemeData theme, bool isDark,
+// //       {TextInputType keyboardType = TextInputType.text, int maxLines = 1}) {
+// //     return Padding(
+// //       padding: const EdgeInsets.only(bottom: 14),
+// //       child: TextField(
+// //         controller: controller,
+// //         readOnly: !isEditing || loanApproved,
+// //         maxLines: maxLines,
+// //         keyboardType: keyboardType,
+// //         style: TextStyle(color: isDark ? Colors.white : Colors.black),
+// //         decoration: InputDecoration(
+// //           labelText: label,
+// //           labelStyle: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+// //           filled: true,
+// //           fillColor: isDark ? Colors.grey[900] : Colors.white,
+// //           enabledBorder: OutlineInputBorder(
+// //             borderRadius: BorderRadius.circular(8),
+// //             borderSide: BorderSide(
+// //               color: isDark ? Colors.white12 : Colors.black12,
+// //               width: 0.6,
+// //             ),
+// //           ),
+// //           focusedBorder: OutlineInputBorder(
+// //             borderRadius: BorderRadius.circular(8),
+// //             borderSide: const BorderSide(color: Colors.blueAccent, width: 0.8),
+// //           ),
+// //         ),
+// //       ),
+// //     );
+// //   }
+
+// //   // 🔹 Dropdown Field
+// //   Widget _buildDropdown({
+// //     required String label,
+// //     required String? value,
+// //     required List<String> items,
+// //     required ThemeData theme,
+// //     required bool isDark,
+// //     required Function(String?)? onChanged,
+// //   }) {
+// //     return Padding(
+// //       padding: const EdgeInsets.only(bottom: 14),
+// //       child: DropdownButtonFormField<String>(
+// //         value: value,
+// //         style: TextStyle(color: isDark ? Colors.white : Colors.black),
+// //         decoration: InputDecoration(
+// //           labelText: label,
+// //           labelStyle: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+// //           filled: true,
+// //           fillColor: isDark ? Colors.grey[900] : Colors.white,
+// //           contentPadding:
+// //               const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+// //           enabledBorder: OutlineInputBorder(
+// //             borderRadius: BorderRadius.circular(8),
+// //             borderSide: BorderSide(
+// //               color: isDark ? Colors.white12 : Colors.black12,
+// //               width: 0.6,
+// //             ),
+// //           ),
+// //           focusedBorder: OutlineInputBorder(
+// //             borderRadius: BorderRadius.circular(8),
+// //             borderSide: const BorderSide(color: Colors.blueAccent, width: 0.8),
+// //           ),
+// //         ),
+// //         items: items
+// //             .map((item) => DropdownMenuItem(
+// //                   value: item,
+// //                   child: Text(item),
+// //                 ))
+// //             .toList(),
+// //         onChanged: onChanged,
+// //       ),
+// //     );
+// //   }
+// // }
+
