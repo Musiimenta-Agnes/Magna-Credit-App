@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
 import 'package:magna_credit_app/api_service.dart';
 import 'home_screen.dart';
@@ -19,6 +21,8 @@ class _ProfilePageState extends State<ProfilePage> {
   bool isLoading = true;
 
   File? profileImage;
+  Uint8List? profileImageBytes;
+  String? profileImageName;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController contactController = TextEditingController();
@@ -46,70 +50,104 @@ class _ProfilePageState extends State<ProfilePage> {
     _loadProfile();
   }
 
+  // ── Load profile from Laravel backend ──
   Future<void> _loadProfile() async {
     try {
       final data = await ApiService.getProfile();
       setState(() {
-        nameController.text = data['name'] ?? '';
-        emailController.text = data['email'] ?? '';
-        contactController.text = data['phone'] ?? '';
-        bioInfoController.text = data['profile']?['bio'] ?? '';
-        locationController.text = data['profile']?['address'] ?? '';
+        nameController.text         = data['name'] ?? '';
+        emailController.text        = data['email'] ?? '';
+        contactController.text      = data['phone'] ?? '';
+        bioInfoController.text      = data['profile']?['bio'] ?? '';
+        locationController.text     = data['profile']?['address'] ?? '';
         otherContactController.text = data['profile']?['other_contact'] ?? '';
-        kinNameController.text = data['profile']?['kin_name'] ?? '';
-        kinContactController.text = data['profile']?['kin_contact'] ?? '';
-        incomeController.text = data['profile']?['income'] ?? '';
-        addressController.text = data['profile']?['current_address'] ?? '';
-        selectedGender = data['profile']?['gender'] ?? 'Other';
+        kinNameController.text      = data['profile']?['kin_name'] ?? '';
+        kinContactController.text   = data['profile']?['kin_contact'] ?? '';
+        incomeController.text       = data['profile']?['income'] ?? '';
+        addressController.text      = data['profile']?['current_address'] ?? '';
+        selectedGender     = data['profile']?['gender'] ?? 'Other';
         selectedOccupation = data['profile']?['occupation'] ?? 'Other';
-        selectedLoanType = data['profile']?['loan_type'] ?? '';
-        selectedEducation = data['profile']?['education'] ?? '';
-        profileImageUrl = data['profile']?['profile_image'];
+        selectedLoanType   = data['profile']?['loan_type'] ?? '';
+        selectedEducation  = data['profile']?['education'] ?? '';
+        profileImageUrl    = data['profile']?['profile_image'];
         isLoading = false;
       });
     } catch (e) {
       setState(() => isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load profile: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load profile: $e')),
+        );
+      }
     }
   }
 
+  // ── Pick image — handles both web and mobile ──
   Future<void> _pickImage() async {
     final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (picked != null) setState(() => profileImage = File(picked.path));
+    if (picked != null) {
+      if (kIsWeb) {
+        final bytes = await picked.readAsBytes();
+        setState(() {
+          profileImageBytes = bytes;
+          profileImageName  = picked.name;
+        });
+      } else {
+        setState(() => profileImage = File(picked.path));
+      }
+    }
   }
 
+  // ── Save profile to Laravel backend ──
   Future<void> _saveProfile() async {
-    final profileData = {
-      'name': nameController.text,
-      'phone': contactController.text,
-      'bio': bioInfoController.text,
-      'address': locationController.text,
-      'other_contact': otherContactController.text,
-      'kin_name': kinNameController.text,
-      'kin_contact': kinContactController.text,
-      'income': incomeController.text,
-      'current_address': addressController.text,
-      'gender': selectedGender,
-      'occupation': selectedOccupation,
-      'loan_type': selectedLoanType,
-      'education': selectedEducation,
+    final profileData = <String, String>{
+      'name'            : nameController.text,
+      'phone'           : contactController.text,
+      'bio'             : bioInfoController.text,
+      'address'         : locationController.text,
+      'other_contact'   : otherContactController.text,
+      'kin_name'        : kinNameController.text,
+      'kin_contact'     : kinContactController.text,
+      'income'          : incomeController.text,
+      'current_address' : addressController.text,
+      'gender'          : selectedGender,
+      'occupation'      : selectedOccupation,
+      'loan_type'       : selectedLoanType,
+      'education'       : selectedEducation,
     };
+
     try {
-      await ApiService.updateProfile(profileData, profileImage);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('✅ Profile updated successfully'),
-          backgroundColor: Colors.green,
-        ),
+      await ApiService.updateProfile(
+        profileData,
+        kIsWeb ? null : profileImage,
+        profileImageBytes: kIsWeb ? profileImageBytes : null,
+        profileImageName: kIsWeb ? profileImageName : null,
       );
-      setState(() => isEditing = false);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ Profile updated successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+
+      setState(() {
+        isEditing         = false;
+        profileImage      = null;
+        profileImageBytes = null;
+        profileImageName  = null;
+      });
+
+      // Reload fresh data from server
       _loadProfile();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update: $e')),
+        );
+      }
     }
   }
 
@@ -128,7 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
       {String defaultValue = 'Other'}) {
     if (current.isNotEmpty && items.contains(current)) return current;
     if (current.isNotEmpty && !items.contains(current)) items.add(current);
-    return defaultValue;
+    return items.contains(defaultValue) ? defaultValue : items.first;
   }
 
   @override
@@ -423,13 +461,17 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: CircleAvatar(
                     radius: 46,
                     backgroundColor: Colors.white.withOpacity(0.2),
-                    backgroundImage: profileImage != null
-                        ? FileImage(profileImage!)
-                        : (profileImageUrl != null
-                            ? NetworkImage(profileImageUrl!)
-                                as ImageProvider
-                            : null),
-                    child: profileImage == null && profileImageUrl == null
+                    // ── Handles web bytes, mobile file, and server URL ──
+                    backgroundImage: kIsWeb && profileImageBytes != null
+                        ? MemoryImage(profileImageBytes!)
+                        : profileImage != null
+                            ? FileImage(profileImage!) as ImageProvider
+                            : profileImageUrl != null
+                                ? NetworkImage(profileImageUrl!)
+                                : null,
+                    child: profileImageBytes == null &&
+                            profileImage == null &&
+                            profileImageUrl == null
                         ? const Icon(Icons.person_rounded,
                             size: 50, color: Colors.white)
                         : null,
@@ -527,7 +569,6 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Section header
           Row(
             children: [
               Container(
@@ -721,17 +762,6 @@ class _InfoChip extends StatelessWidget {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 // import 'dart:io';
 // import 'package:flutter/material.dart';
 // import 'package:image_picker/image_picker.dart';
@@ -740,9 +770,10 @@ class _InfoChip extends StatelessWidget {
 // import 'about_screen.dart';
 // import 'first_loan_application.dart';
 
+
+
 // class ProfilePage extends StatefulWidget {
-//   final int userId;
-//   const ProfilePage({super.key, required this.userId});
+//   const ProfilePage({super.key});
 
 //   @override
 //   State<ProfilePage> createState() => _ProfilePageState();
@@ -781,32 +812,35 @@ class _InfoChip extends StatelessWidget {
 //     _loadProfile();
 //   }
 
+//   // ── Load profile from Laravel backend ──
 //   Future<void> _loadProfile() async {
 //     try {
 //       final data = await ApiService.getProfile();
 //       setState(() {
-//         nameController.text = data['name'] ?? '';
-//         emailController.text = data['email'] ?? '';
-//         contactController.text = data['phone'] ?? '';
-//         bioInfoController.text = data['profile']?['bio'] ?? '';
-//         locationController.text = data['profile']?['address'] ?? '';
+//         nameController.text       = data['name'] ?? '';
+//         emailController.text      = data['email'] ?? '';
+//         contactController.text    = data['phone'] ?? '';
+//         bioInfoController.text    = data['profile']?['bio'] ?? '';
+//         locationController.text   = data['profile']?['address'] ?? '';
 //         otherContactController.text = data['profile']?['other_contact'] ?? '';
-//         kinNameController.text = data['profile']?['kin_name'] ?? '';
+//         kinNameController.text    = data['profile']?['kin_name'] ?? '';
 //         kinContactController.text = data['profile']?['kin_contact'] ?? '';
-//         incomeController.text = data['profile']?['income'] ?? '';
-//         addressController.text = data['profile']?['current_address'] ?? '';
-//         selectedGender = data['profile']?['gender'] ?? 'Other';
-//         selectedOccupation = data['profile']?['occupation'] ?? 'Other';
-//         selectedLoanType = data['profile']?['loan_type'] ?? '';
-//         selectedEducation = data['profile']?['education'] ?? '';
-//         profileImageUrl = data['profile']?['profile_image'];
+//         incomeController.text     = data['profile']?['income'] ?? '';
+//         addressController.text    = data['profile']?['current_address'] ?? '';
+//         selectedGender      = data['profile']?['gender'] ?? 'Other';
+//         selectedOccupation  = data['profile']?['occupation'] ?? 'Other';
+//         selectedLoanType    = data['profile']?['loan_type'] ?? '';
+//         selectedEducation   = data['profile']?['education'] ?? '';
+//         profileImageUrl     = data['profile']?['profile_image'];
 //         isLoading = false;
 //       });
 //     } catch (e) {
 //       setState(() => isLoading = false);
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text('Failed to load profile: $e')),
-//       );
+//       if (mounted) {
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           SnackBar(content: Text('Failed to load profile: $e')),
+//         );
+//       }
 //     }
 //   }
 
@@ -815,36 +849,50 @@ class _InfoChip extends StatelessWidget {
 //     if (picked != null) setState(() => profileImage = File(picked.path));
 //   }
 
+//   // ── Save profile to Laravel backend ──
 //   Future<void> _saveProfile() async {
-//     final profileData = {
-//       'name': nameController.text,
-//       'phone': contactController.text,
-//       'bio': bioInfoController.text,
-//       'address': locationController.text,
-//       'other_contact': otherContactController.text,
-//       'kin_name': kinNameController.text,
-//       'kin_contact': kinContactController.text,
-//       'income': incomeController.text,
-//       'current_address': addressController.text,
-//       'gender': selectedGender,
-//       'occupation': selectedOccupation,
-//       'loan_type': selectedLoanType,
-//       'education': selectedEducation,
+//     // Convert all fields to Map<String, String> for the API
+//     final profileData = <String, String>{
+//       'name'            : nameController.text,
+//       'phone'           : contactController.text,
+//       'bio'             : bioInfoController.text,
+//       'address'         : locationController.text,
+//       'other_contact'   : otherContactController.text,
+//       'kin_name'        : kinNameController.text,
+//       'kin_contact'     : kinContactController.text,
+//       'income'          : incomeController.text,
+//       'current_address' : addressController.text,
+//       'gender'          : selectedGender,
+//       'occupation'      : selectedOccupation,
+//       'loan_type'       : selectedLoanType,
+//       'education'       : selectedEducation,
 //     };
+
 //     try {
 //       await ApiService.updateProfile(profileData, profileImage);
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         const SnackBar(
-//           content: Text('✅ Profile updated successfully'),
-//           backgroundColor: Colors.green,
-//         ),
-//       );
-//       setState(() => isEditing = false);
+
+//       if (mounted) {
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           const SnackBar(
+//             content: Text('✅ Profile updated successfully'),
+//             backgroundColor: Colors.green,
+//           ),
+//         );
+//       }
+
+//       setState(() {
+//         isEditing = false;
+//         profileImage = null; // clear local file after upload
+//       });
+
+//       // Reload fresh data from server
 //       _loadProfile();
 //     } catch (e) {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text('Failed to update: $e')),
-//       );
+//       if (mounted) {
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           SnackBar(content: Text('Failed to update: $e')),
+//         );
+//       }
 //     }
 //   }
 
@@ -863,7 +911,7 @@ class _InfoChip extends StatelessWidget {
 //       {String defaultValue = 'Other'}) {
 //     if (current.isNotEmpty && items.contains(current)) return current;
 //     if (current.isNotEmpty && !items.contains(current)) items.add(current);
-//     return defaultValue;
+//     return items.contains(defaultValue) ? defaultValue : items.first;
 //   }
 
 //   @override
@@ -1065,9 +1113,7 @@ class _InfoChip extends StatelessWidget {
 //               onTap: () => Navigator.push(
 //                 context,
 //                 MaterialPageRoute(
-//                   // ✅ Pass the real userId from login
-//                   builder: (_) => LoanApplicationPage(userId: widget.userId),
-//                 ),
+//                     builder: (_) => const LoanApplicationPage()),
 //               ),
 //               child: Container(
 //                 width: double.infinity,
@@ -1163,7 +1209,8 @@ class _InfoChip extends StatelessWidget {
 //                     backgroundImage: profileImage != null
 //                         ? FileImage(profileImage!)
 //                         : (profileImageUrl != null
-//                             ? NetworkImage(profileImageUrl!) as ImageProvider
+//                             ? NetworkImage(profileImageUrl!)
+//                                 as ImageProvider
 //                             : null),
 //                     child: profileImage == null && profileImageUrl == null
 //                         ? const Icon(Icons.person_rounded,
@@ -1193,7 +1240,9 @@ class _InfoChip extends StatelessWidget {
 //           const SizedBox(height: 14),
 
 //           Text(
-//             nameController.text.isNotEmpty ? nameController.text : "Your Name",
+//             nameController.text.isNotEmpty
+//                 ? nameController.text
+//                 : "Your Name",
 //             style: const TextStyle(
 //               fontSize: 20,
 //               fontWeight: FontWeight.w700,
@@ -1214,6 +1263,7 @@ class _InfoChip extends StatelessWidget {
 
 //           const SizedBox(height: 14),
 
+//           // Info chips row
 //           Row(
 //             mainAxisAlignment: MainAxisAlignment.center,
 //             children: [
@@ -1322,8 +1372,9 @@ class _InfoChip extends StatelessWidget {
 //             color: isDark ? Colors.white54 : Colors.black45,
 //             fontSize: 13,
 //           ),
-//           prefixIcon:
-//               icon != null ? Icon(icon, color: _blue, size: 18) : null,
+//           prefixIcon: icon != null
+//               ? Icon(icon, color: _blue, size: 18)
+//               : null,
 //           filled: true,
 //           fillColor: isDark
 //               ? Colors.grey[850]
