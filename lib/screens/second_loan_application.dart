@@ -1,6 +1,9 @@
+
+
 // import 'dart:io';
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
 // import 'package:image_picker/image_picker.dart';
 // import 'package:http/http.dart' as http;
 // import 'success_message.dart';
@@ -20,6 +23,7 @@
 //   final TextEditingController kinNameController = TextEditingController();
 //   final TextEditingController kinContactController = TextEditingController();
 //   final TextEditingController incomeController = TextEditingController();
+//   final TextEditingController loanAmountController = TextEditingController();
 //   final TextEditingController addressController = TextEditingController();
 
 //   String? selectedOccupation;
@@ -131,6 +135,7 @@
 //       request.fields['kin_contact'] = kinContactController.text;
 //       request.fields['occupation'] = selectedOccupation!;
 //       request.fields['monthly_income'] = incomeController.text;
+//       request.fields['loan_amount'] = loanAmountController.text;
 //       request.fields['loan_type'] = selectedLoanType!;
 //       request.fields['education'] = selectedEducation!;
 //       request.fields['address'] = addressController.text;
@@ -267,6 +272,12 @@
 //                     kinContactController, "Next of Kin Contact",
 //                     icon: Icons.contact_phone_rounded, isDark: isDark,
 //                     keyboardType: TextInputType.phone,
+//                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+//                     validator: (v) {
+//                       if (v == null || v.isEmpty) return "Please fill in this field";
+//                       if (v.length != 10) return "Phone number must be exactly 10 digits";
+//                       return null;
+//                     },
 //                   ),
 //                   _buildDropdown(
 //                     label: "Occupation",
@@ -285,6 +296,22 @@
 //                     icon: Icons.account_balance_wallet_rounded,
 //                     isDark: isDark,
 //                     keyboardType: TextInputType.number,
+//                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+//                     validator: (v) {
+//                       if (v == null || v.isEmpty) return "Please fill in this field";
+//                       return null;
+//                     },
+//                   ),
+//                   _buildField(
+//                     loanAmountController, "Loan Amount (UGX)",
+//                     icon: Icons.monetization_on_outlined,
+//                     isDark: isDark,
+//                     keyboardType: TextInputType.number,
+//                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+//                     validator: (v) {
+//                       if (v == null || v.isEmpty) return "Please fill in this field";
+//                       return null;
+//                     },
 //                   ),
 //                   _buildDropdown(
 //                     label: "Loan Type",
@@ -454,6 +481,8 @@
 //     required bool isDark,
 //     TextInputType keyboardType = TextInputType.text,
 //     int maxLines = 1,
+//     List<TextInputFormatter>? inputFormatters,
+//     String? Function(String?)? validator,
 //   }) {
 //     return Padding(
 //       padding: const EdgeInsets.only(bottom: 14),
@@ -461,10 +490,11 @@
 //         controller: controller,
 //         keyboardType: keyboardType,
 //         maxLines: maxLines,
+//         inputFormatters: inputFormatters,
 //         style: TextStyle(
 //             color: isDark ? Colors.white : Colors.black87, fontSize: 14),
 //         decoration: _fieldDecoration(label, icon, isDark),
-//         validator: (v) =>
+//         validator: validator ?? (v) =>
 //             v == null || v.isEmpty ? "Please fill in this field" : null,
 //       ),
 //     );
@@ -825,18 +855,38 @@
 // }
 
 
+
+
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'success_message.dart';
 
 class LoanApplicationPage2 extends StatefulWidget {
-  final int loanApplicationId;
+  // ── Data passed from page 1 ──
+  final String name;
+  final String contact;
+  final String email;
+  final String bioInfo;
+  final String location;
+  final String otherContact;
+  final String gender;
 
-  const LoanApplicationPage2({super.key, required this.loanApplicationId});
+  const LoanApplicationPage2({
+    super.key,
+    required this.name,
+    required this.contact,
+    required this.email,
+    required this.bioInfo,
+    required this.location,
+    required this.otherContact,
+    required this.gender,
+  });
 
   @override
   State<LoanApplicationPage2> createState() => _LoanApplicationPage2State();
@@ -869,7 +919,16 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
     return 'http://10.0.2.2:8000';
   }
 
-  // ── Top notification overlay ──
+  @override
+  void dispose() {
+    kinNameController.dispose();
+    kinContactController.dispose();
+    incomeController.dispose();
+    loanAmountController.dispose();
+    addressController.dispose();
+    super.dispose();
+  }
+
   void _showTopSnackBar(String message, {bool isError = false}) {
     final overlay = Overlay.of(context);
     final overlayEntry = OverlayEntry(
@@ -916,7 +975,6 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
         ),
       ),
     );
-
     overlay.insert(overlayEntry);
     Future.delayed(const Duration(seconds: 3), () => overlayEntry.remove());
   }
@@ -941,6 +999,12 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
     }
   }
 
+  // ── Get Sanctum token from SharedPreferences ──
+  Future<String?> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('auth_token');
+  }
+
   Future<void> submitApplication() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -952,19 +1016,41 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
     setState(() => _isSubmitting = true);
 
     try {
-      var uri = Uri.parse("${getBaseUrl()}/api/loan-application-details");
+      final token = await _getToken();
+
+      if (token == null) {
+        _showTopSnackBar("Session expired. Please log in again.", isError: true);
+        setState(() => _isSubmitting = false);
+        return;
+      }
+
+      var uri = Uri.parse("${getBaseUrl()}/api/loan-applications");
       var request = http.MultipartRequest("POST", uri);
 
-      request.fields['loan_application_id'] = widget.loanApplicationId.toString();
-      request.fields['kin_name'] = kinNameController.text;
-      request.fields['kin_contact'] = kinContactController.text;
-      request.fields['occupation'] = selectedOccupation!;
-      request.fields['monthly_income'] = incomeController.text;
-      request.fields['loan_amount'] = loanAmountController.text;
-      request.fields['loan_type'] = selectedLoanType!;
-      request.fields['education'] = selectedEducation!;
-      request.fields['address'] = addressController.text;
+      // ── Auth header ──
+      request.headers['Authorization'] = 'Bearer $token';
+      request.headers['Accept'] = 'application/json';
 
+      // ── Page 1 fields (passed from previous page) ──
+      request.fields['name']          = widget.name;
+      request.fields['contact']       = widget.contact;
+      request.fields['email']         = widget.email;
+      request.fields['bio_info']      = widget.bioInfo;
+      request.fields['location']      = widget.location;
+      request.fields['other_contact'] = widget.otherContact;
+      request.fields['gender']        = widget.gender;
+
+      // ── Page 2 fields ──
+      request.fields['kin_name']       = kinNameController.text.trim();
+      request.fields['kin_contact']    = kinContactController.text.trim();
+      request.fields['occupation']     = selectedOccupation!;
+      request.fields['monthly_income'] = incomeController.text.trim();
+      request.fields['loan_amount']    = loanAmountController.text.trim();
+      request.fields['loan_type']      = selectedLoanType!;
+      request.fields['education']      = selectedEducation!;
+      request.fields['address']        = addressController.text.trim();
+
+      // ── National ID image ──
       if (kIsWeb) {
         final bytes = await nationalIdImage!.readAsBytes();
         request.files.add(http.MultipartFile.fromBytes(
@@ -977,6 +1063,7 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
         ));
       }
 
+      // ── Collateral images ──
       for (var image in collateralImages) {
         if (kIsWeb) {
           final bytes = await image.readAsBytes();
@@ -994,42 +1081,38 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
       var response = await request.send();
       var responseBody = await response.stream.bytesToString();
 
-      // Debug logs — remove after testing
+      // Debug — remove after testing
       print('Status code: ${response.statusCode}');
       print('Response body: $responseBody');
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        _showTopSnackBar("Application submitted successfully!");
+      // Parse response
+      Map<String, dynamic> data = {};
+      try {
+        data = jsonDecode(responseBody) as Map<String, dynamic>;
+      } catch (_) {}
 
-        // Small delay so user sees the success message before navigating
+      final bool isSuccess = data['success'] == true;
+
+      if (isSuccess) {
+        _showTopSnackBar("Loan application submitted successfully!");
+
         await Future.delayed(const Duration(milliseconds: 800));
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const ApplicationSuccessPage()),
-        );
-      } else {
-        // Try to extract a clean message from the response
-        String errorMessage = "Submission failed. Please try again.";
-        try {
-          final decoded = Map<String, dynamic>.from(
-            (responseBody.isNotEmpty)
-                ? (responseBody.startsWith('{')
-                    ? (throw FormatException()) // will be caught below
-                    : {})
-                : {},
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const ApplicationSuccessPage()),
           );
-          errorMessage = decoded['message'] ?? errorMessage;
-        } catch (_) {
-          // If JSON parsing fails just use the default message
         }
+      } else {
+        String errorMessage = data['message'] ?? "Submission failed. Please try again.";
         _showTopSnackBar(errorMessage, isError: true);
       }
     } catch (e) {
       print('Exception: $e');
       _showTopSnackBar("Something went wrong. Please try again.", isError: true);
     } finally {
-      setState(() => _isSubmitting = false);
+      if (mounted) setState(() => _isSubmitting = false);
     }
   }
 
@@ -1077,25 +1160,21 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              // ── Step indicator ──
               _StepIndicator(currentStep: 2),
-
               const SizedBox(height: 22),
 
-              // ── Employment & Loan Details ──
               _FormCard(
                 isDark: isDark,
                 title: "Employment & Loan Details",
                 icon: Icons.work_rounded,
                 subtitle: "Help us understand your financial background.",
                 children: [
-                  _buildField(
-                    kinNameController, "Next of Kin Name",
-                    icon: Icons.people_rounded, isDark: isDark,
-                  ),
+                  _buildField(kinNameController, "Next of Kin Name",
+                      icon: Icons.people_rounded, isDark: isDark),
                   _buildField(
                     kinContactController, "Next of Kin Contact",
-                    icon: Icons.contact_phone_rounded, isDark: isDark,
+                    icon: Icons.contact_phone_rounded,
+                    isDark: isDark,
                     keyboardType: TextInputType.phone,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     validator: (v) {
@@ -1122,10 +1201,6 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
                     isDark: isDark,
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    validator: (v) {
-                      if (v == null || v.isEmpty) return "Please fill in this field";
-                      return null;
-                    },
                   ),
                   _buildField(
                     loanAmountController, "Loan Amount (UGX)",
@@ -1133,10 +1208,6 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
                     isDark: isDark,
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    validator: (v) {
-                      if (v == null || v.isEmpty) return "Please fill in this field";
-                      return null;
-                    },
                   ),
                   _buildDropdown(
                     label: "Loan Type",
@@ -1161,29 +1232,20 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
                     isDark: isDark,
                     onChanged: (v) => setState(() => selectedEducation = v),
                   ),
-                  _buildField(
-                    addressController, "Current Address",
-                    icon: Icons.home_rounded, isDark: isDark,
-                  ),
+                  _buildField(addressController, "Current Address",
+                      icon: Icons.home_rounded, isDark: isDark),
                 ],
               ),
 
               const SizedBox(height: 16),
 
-              // ── Documents card ──
               _FormCard(
                 isDark: isDark,
                 title: "Documents",
                 icon: Icons.upload_file_rounded,
                 subtitle: "Upload required documents for verification.",
                 children: [
-
-                  // National ID
-                  _DocumentLabel(
-                    label: "National ID",
-                    icon: Icons.badge_rounded,
-                    isDark: isDark,
-                  ),
+                  _DocumentLabel(label: "National ID", icon: Icons.badge_rounded, isDark: isDark),
                   const SizedBox(height: 8),
                   GestureDetector(
                     onTap: pickNationalIdImage,
@@ -1200,10 +1262,7 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
                           : null,
                     ),
                   ),
-
                   const SizedBox(height: 18),
-
-                  // Collateral
                   _DocumentLabel(
                     label: "Collateral Images",
                     icon: Icons.collections_rounded,
@@ -1245,7 +1304,6 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
 
               const SizedBox(height: 28),
 
-              // ── Submit button ──
               GestureDetector(
                 onTap: _isSubmitting ? null : submitApplication,
                 child: Container(
@@ -1319,8 +1377,8 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
         style: TextStyle(
             color: isDark ? Colors.white : Colors.black87, fontSize: 14),
         decoration: _fieldDecoration(label, icon, isDark),
-        validator: validator ?? (v) =>
-            v == null || v.isEmpty ? "Please fill in this field" : null,
+        validator: validator ??
+            (v) => v == null || v.isEmpty ? "Please fill in this field" : null,
       ),
     );
   }
@@ -1363,12 +1421,12 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
       prefixIcon: Icon(icon, color: _blue, size: 18),
       filled: true,
       fillColor: isDark ? Colors.grey[850] : const Color(0xFFF5F8FF),
-      contentPadding: const EdgeInsets.symmetric(vertical: 13, horizontal: 14),
+      contentPadding:
+          const EdgeInsets.symmetric(vertical: 13, horizontal: 14),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(
-          color: isDark ? Colors.white12 : const Color(0xFFD0E4FF),
-        ),
+            color: isDark ? Colors.white12 : const Color(0xFFD0E4FF)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -1386,7 +1444,7 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
   }
 }
 
-// ── Document section label ──
+// ── Document label ──
 class _DocumentLabel extends StatelessWidget {
   final String label;
   final IconData icon;
