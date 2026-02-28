@@ -597,7 +597,7 @@ class _SwitchTileState extends State<_SwitchTile> {
           ),
           Switch(
             value: _value,
-            activeColor: Colors.green,
+            activeThumbColor: Colors.green,
             onChanged: (val) => setState(() => _value = val),
           ),
         ],

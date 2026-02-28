@@ -1394,7 +1394,7 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: DropdownButtonFormField<String>(
-        value: value,
+        initialValue: value,
         style: TextStyle(
             color: isDark ? Colors.white : Colors.black87, fontSize: 14),
         dropdownColor: isDark ? Colors.grey[900] : Colors.white,
