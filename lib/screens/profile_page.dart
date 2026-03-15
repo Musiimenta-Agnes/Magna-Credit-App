@@ -2058,8 +2058,10 @@ class _EditLoanPageState extends State<_EditLoanPage> {
             backgroundColor: Colors.redAccent));
       }
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: $e'), backgroundColor: Colors.redAccent));
+      }
     }
     if (mounted) setState(() => isSaving = false);
   }
@@ -2447,7 +2449,7 @@ class _EditLoanPageState extends State<_EditLoanPage> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: DropdownButtonFormField<String>(
-        value: safe,
+        initialValue: safe,
         style: TextStyle(color: isDark ? Colors.white : Colors.black87, fontSize: 14),
         dropdownColor: isDark ? const Color(0xFF1A2235) : Colors.white,
         decoration: _deco(label, icon, isDark),
@@ -2647,7 +2649,7 @@ class _MakeRepaymentSheetState extends State<_MakeRepaymentSheet> {
             decoration: _inp('Amount (UGX)', Icons.attach_money_rounded)),
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
-          value: method,
+          initialValue: method,
           decoration: _inp('Payment Method', Icons.payment_rounded),
           items: const [
             DropdownMenuItem(value: 'mobile_money', child: Text('Mobile Money')),
@@ -2991,7 +2993,7 @@ class _Drop extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: DropdownButtonFormField<String>(
-        value: value,
+        initialValue: value,
         style: TextStyle(color: isDark ? Colors.white : Colors.black87, fontSize: 14),
         dropdownColor: isDark ? const Color(0xFF1A2235) : Colors.white,
         decoration: InputDecoration(
