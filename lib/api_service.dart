@@ -1,5 +1,3 @@
-
-
 // import 'dart:convert';
 // import 'dart:typed_data';
 // import 'dart:io';
@@ -60,7 +58,7 @@
 
 //     request.headers['Authorization'] = 'Bearer $token';
 //     request.headers['Accept']        = 'application/json';
-//     request.fields['_method']        = 'PATCH'; // Laravel method spoofing
+//     request.fields['_method']        = 'PATCH';
 
 //     data.forEach((key, value) => request.fields[key] = value);
 
@@ -109,9 +107,9 @@
 //     throw Exception('Error ${response.statusCode}: $message');
 //   }
 
-//   // ════════════════════════════════════════════════════════════
+//   // ════════════════════════════════════════════════════════════════
 //   //  PROFILE
-//   // ════════════════════════════════════════════════════════════
+//   // ════════════════════════════════════════════════════════════════
 
 //   static Future<Map<String, dynamic>> getProfile() async =>
 //       get('profile');
@@ -161,16 +159,16 @@
 //     }
 //   }
 
-//   // ════════════════════════════════════════════════════════════
+//   // ════════════════════════════════════════════════════════════════
 //   //  DASHBOARD
-//   // ════════════════════════════════════════════════════════════
+//   // ════════════════════════════════════════════════════════════════
 
 //   static Future<Map<String, dynamic>> getDashboard() async =>
 //       get('dashboard');
 
-//   // ════════════════════════════════════════════════════════════
+//   // ════════════════════════════════════════════════════════════════
 //   //  LOAN APPLICATIONS
-//   // ════════════════════════════════════════════════════════════
+//   // ════════════════════════════════════════════════════════════════
 
 //   static Future<Map<String, dynamic>> getLoanApplications() async =>
 //       get('loan-applications');
@@ -182,9 +180,8 @@
 //     int id,
 //     Map<String, String> data,
 //   ) async =>
-//       patch('loan-applications/$id', data);
+//       post('loan-applications/$id/update', data);
 
-//   // Apply for loan with images
 //   static Future<void> applyLoan(
 //     Map<String, String> data, {
 //     File? nationalIdFile,
@@ -207,7 +204,6 @@
 
 //     data.forEach((key, value) => request.fields[key] = value);
 
-//     // National ID
 //     if (!kIsWeb && nationalIdFile != null) {
 //       request.files.add(await http.MultipartFile.fromPath(
 //           'national_id_image', nationalIdFile.path,
@@ -218,7 +214,6 @@
 //           filename: nationalIdName));
 //     }
 
-//     // Collateral images
 //     if (!kIsWeb && collateralFiles != null) {
 //       for (final f in collateralFiles) {
 //         request.files.add(await http.MultipartFile.fromPath(
@@ -242,9 +237,9 @@
 //     }
 //   }
 
-//   // ════════════════════════════════════════════════════════════
+//   // ════════════════════════════════════════════════════════════════
 //   //  REPAYMENTS
-//   // ════════════════════════════════════════════════════════════
+//   // ════════════════════════════════════════════════════════════════
 
 //   static Future<Map<String, dynamic>> getRepayments() async =>
 //       get('repayments');
@@ -256,9 +251,22 @@
 //           Map<String, String> data) async =>
 //       post('repayments', data);
 
-//   // ════════════════════════════════════════════════════════════
+//   // ════════════════════════════════════════════════════════════════
+//   //  NOTIFICATIONS
+//   // ════════════════════════════════════════════════════════════════
+
+//   static Future<Map<String, dynamic>> getNotifications() async =>
+//       get('notifications');
+
+//   static Future<void> markNotificationRead(int id) async =>
+//       post('notifications/$id/mark-read', {});
+
+//   static Future<void> markAllNotificationsRead() async =>
+//       post('notifications/mark-all-read', {});
+
+//   // ════════════════════════════════════════════════════════════════
 //   //  AUTH
-//   // ════════════════════════════════════════════════════════════
+//   // ════════════════════════════════════════════════════════════════
 
 //   static Future<Map<String, dynamic>> forgotPassword(String email) async =>
 //       post('forgot-password', {'email': email}, withToken: false);
@@ -280,7 +288,13 @@
 //         'password': password,
 //         'password_confirmation': passwordConfirmation,
 //       }, withToken: false);
+
+//   static Future<void> clearAllNotifications() async {}
+
+//   static Future<void> clearNotification(n) async {}
 // }
+
+
 
 
 import 'dart:convert';
@@ -343,7 +357,7 @@ class ApiService {
 
     request.headers['Authorization'] = 'Bearer $token';
     request.headers['Accept']        = 'application/json';
-    request.fields['_method']        = 'PATCH'; // Laravel method spoofing
+    request.fields['_method']        = 'PATCH';
 
     data.forEach((key, value) => request.fields[key] = value);
 
@@ -392,9 +406,9 @@ class ApiService {
     throw Exception('Error ${response.statusCode}: $message');
   }
 
-  // ════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════
   //  PROFILE
-  // ════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════
 
   static Future<Map<String, dynamic>> getProfile() async =>
       get('profile');
@@ -444,16 +458,16 @@ class ApiService {
     }
   }
 
-  // ════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════
   //  DASHBOARD
-  // ════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════
 
   static Future<Map<String, dynamic>> getDashboard() async =>
       get('dashboard');
 
-  // ════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════
   //  LOAN APPLICATIONS
-  // ════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════
 
   static Future<Map<String, dynamic>> getLoanApplications() async =>
       get('loan-applications');
@@ -467,7 +481,6 @@ class ApiService {
   ) async =>
       post('loan-applications/$id/update', data);
 
-  // Apply for loan with images
   static Future<void> applyLoan(
     Map<String, String> data, {
     File? nationalIdFile,
@@ -490,7 +503,6 @@ class ApiService {
 
     data.forEach((key, value) => request.fields[key] = value);
 
-    // National ID
     if (!kIsWeb && nationalIdFile != null) {
       request.files.add(await http.MultipartFile.fromPath(
           'national_id_image', nationalIdFile.path,
@@ -501,7 +513,6 @@ class ApiService {
           filename: nationalIdName));
     }
 
-    // Collateral images
     if (!kIsWeb && collateralFiles != null) {
       for (final f in collateralFiles) {
         request.files.add(await http.MultipartFile.fromPath(
@@ -525,9 +536,9 @@ class ApiService {
     }
   }
 
-  // ════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════
   //  REPAYMENTS
-  // ════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════
 
   static Future<Map<String, dynamic>> getRepayments() async =>
       get('repayments');
@@ -539,9 +550,28 @@ class ApiService {
           Map<String, String> data) async =>
       post('repayments', data);
 
-  // ════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════
+  //  NOTIFICATIONS
+  // ════════════════════════════════════════════════════════════════
+
+  static Future<Map<String, dynamic>> getNotifications() async =>
+      get('notifications');
+
+  static Future<void> markNotificationRead(int id) async =>
+      post('notifications/$id/mark-read', {});
+
+  static Future<void> markAllNotificationsRead() async =>
+      post('notifications/mark-all-read', {});
+
+  static Future<void> clearNotification(int id) async =>
+      post('notifications/$id/clear', {});
+
+  static Future<void> clearAllNotifications() async =>
+      post('notifications/clear-all', {});
+
+  // ════════════════════════════════════════════════════════════════
   //  AUTH
-  // ════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════
 
   static Future<Map<String, dynamic>> forgotPassword(String email) async =>
       post('forgot-password', {'email': email}, withToken: false);
