@@ -364,6 +364,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:magna_credit_app/api_service.dart';
 import 'login_screen.dart';
 
 class ResetPasswordPage extends StatefulWidget {
@@ -404,7 +405,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
     try {
       final response = await http.post(
-        Uri.parse("http://127.0.0.1:8000/api/reset-password"),
+        Uri.parse("${ApiService.baseUrl}/reset-password"),
         headers: {"Accept": "application/json"},
         body: {
           "email": widget.email,

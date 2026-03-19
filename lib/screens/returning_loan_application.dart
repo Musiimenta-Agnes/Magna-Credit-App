@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:magna_credit_app/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -143,7 +144,7 @@ class _ReturningClientLoanPageState extends State<ReturningClientLoanPage> {
     setState(() => _isSubmitting = true);
 
     try {
-      final uri     = Uri.parse('http://127.0.0.1:8000/api/loan-applications');
+      final uri     = Uri.parse('${ApiService.baseUrl}/loan-applications');
       final request = http.MultipartRequest('POST', uri);
 
       request.headers['Authorization'] = 'Bearer $_token';

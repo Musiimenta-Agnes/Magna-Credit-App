@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:magna_credit_app/api_service.dart';
 import 'login_screen.dart';
 import 'home_screen.dart';
 import 'about_screen.dart';
@@ -104,7 +105,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       return;
     }
 
-    final url = Uri.parse('http://localhost:8000/api/register');
+    final url = Uri.parse('${ApiService.baseUrl}/register');
 
     final body = {
       'name': nameController.text.trim(),

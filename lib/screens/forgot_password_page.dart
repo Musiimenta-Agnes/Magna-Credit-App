@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:magna_credit_app/api_service.dart';
 import 'verify_code_page.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -70,7 +71,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
     try {
       final response = await http.post(
-        Uri.parse("http://127.0.0.1:8000/api/forgot-password"),
+        Uri.parse("${ApiService.baseUrl}/forgot-password"),
         headers: {"Accept": "application/json"},
         body: {"email": email},
       );

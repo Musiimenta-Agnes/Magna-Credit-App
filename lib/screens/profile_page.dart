@@ -901,7 +901,7 @@ class _EditLoanPageState extends State<_EditLoanPage> {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token') ?? '';
 
-      final uri     = Uri.parse('http://127.0.0.1:8000/api/loan-applications/${widget.loan['id']}/update');
+      final uri     = Uri.parse('${ApiService.baseUrl}/loan-applications/${widget.loan['id']}/update');
       final request = http.MultipartRequest('POST', uri)
         ..headers['Authorization'] = 'Bearer $token'
         ..headers['Accept']        = 'application/json';
