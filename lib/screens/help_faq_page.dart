@@ -20,7 +20,7 @@ class _HelpFaqPageState extends State<HelpFaqPage> {
     {
       "q": "What types of loans does Magna Credit offer?",
       "a":
-          "We offer Personal Loans, Business Loans, Logbook Loans, Investment Loans, and Car Loans. Each loan type is designed to meet specific financial needs — visit the About page for full details.",
+          "We offer Personal Loans, Asset Financing Loans, Logbook Loans, Business Loans, and Salary Loans. Each loan type is designed to meet specific financial needs — visit the About page for full details.",
     },
     {
       "q": "How long does loan approval take?",

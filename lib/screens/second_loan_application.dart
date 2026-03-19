@@ -1214,7 +1214,7 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
                     value: selectedLoanType,
                     items: [
                       "Logbook Loan", "Business Loan", "Personal Loan",
-                      "Investment Loan", "Car Loan",
+                      "Asset Financing Loan", "Salary Loan",
                     ],
                     icon: Icons.monetization_on_rounded,
                     isDark: isDark,

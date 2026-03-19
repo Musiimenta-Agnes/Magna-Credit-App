@@ -342,7 +342,7 @@ class _ReturningClientLoanPageState extends State<ReturningClientLoanPage> {
                 children: [
                   _dropdown(label: 'Loan Type', value: selectedLoanType,
                       items: ['Logbook Loan', 'Business Loan', 'Personal Loan',
-                        'Investment Loan', 'Car Loan'],
+                        'Asset Financing Loan', 'Salary Loan'],
                       icon: Icons.category_rounded, isDark: isDark,
                       onChanged: (v) => setState(() => selectedLoanType = v)),
                   _field(loanAmountController, 'Loan Amount (UGX)',

@@ -649,8 +649,8 @@ class _ProfileTabState extends State<_ProfileTab> {
           _Field('Monthly Income (UGX)', incomeCtrl, isEditing, widget.isDark,
               icon: Icons.account_balance_wallet_rounded, type: TextInputType.number),
           _Drop('Loan Type',
-              _safe(selectedLoanType, ['Logbook Loan','Business Loan','Personal Loan','Investment Loan','Car Loan']),
-              ['Logbook Loan','Business Loan','Personal Loan','Investment Loan','Car Loan'],
+              _safe(selectedLoanType, ['Logbook Loan','Business Loan','Personal Loan','Asset Financing Loan','Salary Loan']),
+              ['Logbook Loan','Business Loan','Personal Loan','Asset Financing Loan','Salary Loan'],
               isEditing, widget.isDark, Icons.monetization_on_rounded,
               (v) => setState(() => selectedLoanType = v!)),
           _Drop('Highest Education',
@@ -844,7 +844,7 @@ class _EditLoanPageState extends State<_EditLoanPage> {
   final _picker = ImagePicker();
 
   static const _genders     = ['Male', 'Female'];
-  static const _loanTypes   = ['Logbook Loan', 'Business Loan', 'Personal Loan', 'Investment Loan', 'Car Loan'];
+  static const _loanTypes   = ['Logbook Loan', 'Business Loan', 'Personal Loan', 'Asset Financing Loan', 'Salary Loan'];
   static const _occupations = ['Farmer','Business Owner','Teacher','Engineer','Driver','Student','Civil Servant','Medical Worker','Technician','Other'];
   static const _educations  = ["Primary","Secondary","Diploma","Bachelor's Degree","Master's Degree","Doctorate","Other"];
 
