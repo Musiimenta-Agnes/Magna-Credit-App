@@ -8,8 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart';
 
 class ApiService {
-  static const String baseUrl = "http://192.168.1.234:8000/api";
-  // static const String baseUrl = "http://127.0.0.1:8000/api";
+  // static const String baseUrl = "http://192.168.1.234:8000/api";
+  static const String baseUrl = "http://127.0.0.1:8000/api";
 
   // ── Get headers with optional token ──
   static Future<Map<String, String>> headers({bool withToken = true}) async {
