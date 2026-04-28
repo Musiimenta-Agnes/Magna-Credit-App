@@ -177,13 +177,13 @@ class _LoginPageState extends State<LoginPage> {
               decoration: BoxDecoration(
                 color: isDark ? Colors.grey[900] : Colors.white,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: _blue.withOpacity(0.15)),
-                boxShadow: [BoxShadow(color: _blue.withOpacity(0.12),
+                border: Border.all(color: _blue.withOpacity(0.00)),
+                boxShadow: [BoxShadow(color: _blue.withOpacity(0.00),
                     blurRadius: 16, offset: const Offset(0, 4))],
               ),
               child: Row(mainAxisSize: MainAxisSize.min, children: [
                 ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(2),
                     child: Image.asset('assets/magna_logo.jpeg',
                         width: 40, height: 40, fit: BoxFit.cover)),
                 const SizedBox(width: 10),
