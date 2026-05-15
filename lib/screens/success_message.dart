@@ -1,8 +1,5 @@
-
-
-
-
 import 'package:flutter/material.dart';
+import 'package:magna_credit_app/screens/profile_page.dart';
 
 class ApplicationSuccessPage extends StatefulWidget {
   const ApplicationSuccessPage({super.key});
@@ -54,7 +51,6 @@ class _ApplicationSuccessPageState extends State<ApplicationSuccessPage>
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _slideController, curve: Curves.easeOut));
 
-    // Staggered animation start
     Future.delayed(const Duration(milliseconds: 100), () {
       _scaleController.forward();
     });
@@ -117,7 +113,6 @@ class _ApplicationSuccessPageState extends State<ApplicationSuccessPage>
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  // Outer glow ring
                   Container(
                     width: 110,
                     height: 110,
@@ -130,7 +125,6 @@ class _ApplicationSuccessPageState extends State<ApplicationSuccessPage>
                       ),
                     ),
                   ),
-                  // Inner circle
                   Container(
                     width: 80,
                     height: 80,
@@ -213,7 +207,6 @@ class _ApplicationSuccessPageState extends State<ApplicationSuccessPage>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Card header
                       Row(
                         children: [
                           Container(
@@ -251,7 +244,6 @@ class _ApplicationSuccessPageState extends State<ApplicationSuccessPage>
 
                       const SizedBox(height: 18),
 
-                      // Info rows
                       _InfoRow(
                         icon: Icons.search_rounded,
                         text:
@@ -338,12 +330,18 @@ class _ApplicationSuccessPageState extends State<ApplicationSuccessPage>
 
             const SizedBox(height: 32),
 
-            // ── Home button ──
+            // ── Back to Profile button ──
             FadeTransition(
               opacity: _fadeAnimation,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.popUntil(context, (route) => route.isFirst);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const ProfilePage(),
+                    ),
+                    (route) => false,
+                  );
                 },
                 child: Container(
                   width: double.infinity,
@@ -362,10 +360,10 @@ class _ApplicationSuccessPageState extends State<ApplicationSuccessPage>
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.home_rounded, color: Colors.white, size: 20),
+                      Icon(Icons.person_rounded, color: Colors.white, size: 20),
                       SizedBox(width: 10),
                       Text(
-                        "Back to Home",
+                        "Back to Profile",
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.white,
