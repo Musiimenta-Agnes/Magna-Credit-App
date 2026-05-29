@@ -118,9 +118,9 @@ class _ApplicationSuccessPageState extends State<ApplicationSuccessPage>
                     height: 110,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: _green.withOpacity(0.08),
+                      color: _green.withValues(alpha: 0.08),
                       border: Border.all(
-                        color: _green.withOpacity(0.2),
+                        color: _green.withValues(alpha: 0.2),
                         width: 2,
                       ),
                     ),
@@ -133,7 +133,7 @@ class _ApplicationSuccessPageState extends State<ApplicationSuccessPage>
                       color: _green,
                       boxShadow: [
                         BoxShadow(
-                          color: _green.withOpacity(0.4),
+                          color: _green.withValues(alpha: 0.4),
                           blurRadius: 20,
                           spreadRadius: 2,
                         ),
@@ -198,7 +198,7 @@ class _ApplicationSuccessPageState extends State<ApplicationSuccessPage>
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.green.withOpacity(0.28),
+                        color: Colors.green.withValues(alpha: 0.28),
                         blurRadius: 20,
                         offset: const Offset(0, 8),
                       ),
@@ -212,7 +212,7 @@ class _ApplicationSuccessPageState extends State<ApplicationSuccessPage>
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
@@ -239,7 +239,7 @@ class _ApplicationSuccessPageState extends State<ApplicationSuccessPage>
 
                       Container(
                         height: 1,
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                       ),
 
                       const SizedBox(height: 18),
@@ -279,7 +279,7 @@ class _ApplicationSuccessPageState extends State<ApplicationSuccessPage>
                   color: isDark ? Colors.grey[900] : const Color(0xFFF5F8FF),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: _blue.withOpacity(0.15),
+                    color: _blue.withValues(alpha: 0.15),
                   ),
                 ),
                 child: Row(
@@ -351,7 +351,7 @@ class _ApplicationSuccessPageState extends State<ApplicationSuccessPage>
                     borderRadius: BorderRadius.circular(14),
                     boxShadow: [
                       BoxShadow(
-                        color: _blue.withOpacity(0.28),
+                        color: _blue.withValues(alpha: 0.28),
                         blurRadius: 16,
                         offset: const Offset(0, 6),
                       ),
@@ -398,7 +398,7 @@ class _InfoRow extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
             shape: BoxShape.circle,
           ),
           child: Icon(icon, color: Colors.white, size: 14),

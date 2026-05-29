@@ -528,7 +528,7 @@ class _LoginPageState extends State<LoginPage> {
               color: isError ? Colors.redAccent : Colors.green,
               borderRadius: BorderRadius.circular(14),
               boxShadow: [BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
+                  color: Colors.black.withValues(alpha: 0.15),
                   blurRadius: 12,
                   offset: const Offset(0, 4))],
             ),
@@ -643,8 +643,8 @@ class _LoginPageState extends State<LoginPage> {
               decoration: BoxDecoration(
                 color: isDark ? Colors.grey[900] : Colors.white,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: _blue.withOpacity(0.00)),
-                boxShadow: [BoxShadow(color: _blue.withOpacity(0.00),
+                border: Border.all(color: _blue.withValues(alpha: 0.00)),
+                boxShadow: [BoxShadow(color: _blue.withValues(alpha: 0.00),
                     blurRadius: 16, offset: const Offset(0, 4))],
               ),
               child: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -721,9 +721,9 @@ class _LoginPageState extends State<LoginPage> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 decoration: BoxDecoration(
-                  color: _isLoading ? _green.withOpacity(0.6) : _green,
+                  color: _isLoading ? _green.withValues(alpha: 0.6) : _green,
                   borderRadius: BorderRadius.circular(14),
-                  boxShadow: [BoxShadow(color: Colors.green.withOpacity(0.28),
+                  boxShadow: [BoxShadow(color: Colors.green.withValues(alpha: 0.28),
                       blurRadius: 16, offset: const Offset(0, 6))],
                 ),
                 child: _isLoading
@@ -766,10 +766,10 @@ class _LoginPageState extends State<LoginPage> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 decoration: BoxDecoration(
-                  color: isDark ? Colors.white.withOpacity(0.07) : const Color(0xFFF0F4FF),
+                  color: isDark ? Colors.white.withValues(alpha: 0.07) : const Color(0xFFF0F4FF),
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                    color: const Color(0xFF007BFF).withOpacity(0.35),
+                    color: const Color(0xFF007BFF).withValues(alpha: 0.35),
                     width: 1.5,
                   ),
                 ),

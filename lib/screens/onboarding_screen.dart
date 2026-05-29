@@ -530,9 +530,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 7),
                     decoration: BoxDecoration(
-                      color: _blue.withOpacity(0.07),
+                      color: _blue.withValues(alpha: 0.07),
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: _blue.withOpacity(0.18)),
+                      border: Border.all(color: _blue.withValues(alpha: 0.18)),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -646,7 +646,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.green.withOpacity(0.3),
+                              color: Colors.green.withValues(alpha: 0.3),
                               blurRadius: 16,
                               offset: const Offset(0, 6),
                             ),
@@ -706,7 +706,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: _blue.withOpacity(0.3),
+                                  color: _blue.withValues(alpha: 0.3),
                                   blurRadius: 14,
                                   offset: const Offset(0, 5),
                                 ),
@@ -787,7 +787,7 @@ class _OnboardPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: data.accentColor.withOpacity(0.18),
+                        color: data.accentColor.withValues(alpha: 0.18),
                         blurRadius: 24,
                         offset: const Offset(0, 10),
                       ),
@@ -805,7 +805,7 @@ class _OnboardPage extends StatelessWidget {
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.transparent,
-                          Colors.black.withOpacity(0.25),
+                          Colors.black.withValues(alpha: 0.25),
                         ],
                       ),
                     ),
@@ -824,7 +824,7 @@ class _OnboardPage extends StatelessWidget {
                       border: Border.all(color: Colors.white, width: 3),
                       boxShadow: [
                         BoxShadow(
-                          color: data.accentColor.withOpacity(0.35),
+                          color: data.accentColor.withValues(alpha: 0.35),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),

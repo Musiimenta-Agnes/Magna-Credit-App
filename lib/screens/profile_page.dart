@@ -2980,8 +2980,9 @@ class _DashboardTabState extends State<_DashboardTab> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading)
+    if (isLoading) {
       return const Center(child: CircularProgressIndicator(color: kBlue));
+    }
 
     if (dashboardData == null || dashboardData!['user'] == null) {
       return Center(
@@ -2993,7 +2994,7 @@ class _DashboardTabState extends State<_DashboardTab> {
                 Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                      color: kBlue.withOpacity(0.08),
+                      color: kBlue.withValues(alpha: 0.08),
                       shape: BoxShape.circle),
                   child: const Icon(Icons.person_outline_rounded,
                       size: 64, color: kBlue),
@@ -3044,7 +3045,7 @@ class _DashboardTabState extends State<_DashboardTab> {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                            color: kBlue.withOpacity(0.3),
+                            color: kBlue.withValues(alpha: 0.3),
                             blurRadius: 16,
                             offset: const Offset(0, 6))
                       ],
@@ -3052,7 +3053,7 @@ class _DashboardTabState extends State<_DashboardTab> {
                     child: Row(children: [
                       CircleAvatar(
                         radius: 28,
-                        backgroundColor: Colors.white.withOpacity(0.2),
+                        backgroundColor: Colors.white.withValues(alpha: 0.2),
                         child: Text(
                             (user['name'] ?? 'U')[0].toUpperCase(),
                             style: const TextStyle(
@@ -3067,7 +3068,7 @@ class _DashboardTabState extends State<_DashboardTab> {
                               children: [
                             Text('Welcome back,',
                                 style: TextStyle(
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                     fontSize: 13)),
                             Text(user['name'] ?? '',
                                 style: const TextStyle(
@@ -3076,7 +3077,7 @@ class _DashboardTabState extends State<_DashboardTab> {
                                     fontWeight: FontWeight.w700)),
                             Text(user['phone'] ?? '',
                                 style: TextStyle(
-                                    color: Colors.white.withOpacity(0.7),
+                                    color: Colors.white.withValues(alpha: 0.7),
                                     fontSize: 12)),
                           ])),
                     ]),
@@ -3183,7 +3184,7 @@ class _DashboardTabState extends State<_DashboardTab> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                          color: kGreen.withOpacity(0.3),
+                          color: kGreen.withValues(alpha: 0.3),
                           blurRadius: 16,
                           offset: const Offset(0, 6))
                     ],
@@ -3250,8 +3251,9 @@ class _LoansTabState extends State<_LoansTab> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading)
+    if (isLoading) {
       return const Center(child: CircularProgressIndicator(color: kBlue));
+    }
 
     return RefreshIndicator(
       onRefresh: _load,
@@ -3329,8 +3331,9 @@ class _RepaymentsTabState extends State<_RepaymentsTab> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading)
+    if (isLoading) {
       return const Center(child: CircularProgressIndicator(color: kBlue));
+    }
 
     return RefreshIndicator(
       onRefresh: _load,
@@ -3351,7 +3354,7 @@ class _RepaymentsTabState extends State<_RepaymentsTab> {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                      color: kBlue.withOpacity(0.3),
+                      color: kBlue.withValues(alpha: 0.3),
                       blurRadius: 16,
                       offset: const Offset(0, 6))
                 ],
@@ -3431,10 +3434,10 @@ class _RepaymentsTabState extends State<_RepaymentsTab> {
               width: double.infinity,
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.1),
+                color: Colors.orange.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(14),
                 border:
-                    Border.all(color: Colors.orange.withOpacity(0.3)),
+                    Border.all(color: Colors.orange.withValues(alpha: 0.3)),
               ),
               child: const Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -3481,7 +3484,7 @@ class _RepaymentsTabState extends State<_RepaymentsTab> {
                           : Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                          color: kBlue.withOpacity(0.1)),
+                          color: kBlue.withValues(alpha: 0.1)),
                     ),
                     child: const Column(children: [
                       Icon(Icons.payments_outlined,
@@ -3533,10 +3536,10 @@ class _PaymentCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF111827) : Colors.white,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-              color: color.withOpacity(0.07),
+              color: color.withValues(alpha: 0.07),
               blurRadius: 12,
               offset: const Offset(0, 4)),
         ],
@@ -3686,9 +3689,10 @@ class _ProfileTabState extends State<_ProfileTab> {
         _load();
       }
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Failed: $e')));
+      }
     }
   }
 
@@ -3752,8 +3756,9 @@ class _ProfileTabState extends State<_ProfileTab> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading)
+    if (isLoading) {
       return const Center(child: CircularProgressIndicator(color: kBlue));
+    }
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -3791,7 +3796,7 @@ class _ProfileTabState extends State<_ProfileTab> {
             const SizedBox(height: 4),
             Text(emailCtrl.text,
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.75),
+                    color: Colors.white.withValues(alpha: 0.75),
                     fontSize: 13)),
             const SizedBox(height: 16),
             GestureDetector(
@@ -3804,10 +3809,10 @@ class _ProfileTabState extends State<_ProfileTab> {
                 decoration: BoxDecoration(
                   color: isEditing
                       ? kGreen
-                      : Colors.white.withOpacity(0.2),
+                      : Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                      color: Colors.white.withOpacity(0.3)),
+                      color: Colors.white.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -3972,11 +3977,11 @@ class _ProfileTabState extends State<_ProfileTab> {
                 ? const Color(0xFF111827)
                 : Colors.white,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: kBlue.withOpacity(0.1)),
+            border: Border.all(color: kBlue.withValues(alpha: 0.1)),
             boxShadow: [
               BoxShadow(
                   color: Colors.black
-                      .withOpacity(widget.isDark ? 0.3 : 0.05),
+                      .withValues(alpha: widget.isDark ? 0.3 : 0.05),
                   blurRadius: 12,
                   offset: const Offset(0, 4))
             ],
@@ -4016,16 +4021,16 @@ class _ProfileTabState extends State<_ProfileTab> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 14),
                     decoration: BoxDecoration(
-                      color: kBlue.withOpacity(0.06),
+                      color: kBlue.withValues(alpha: 0.06),
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
-                          color: kBlue.withOpacity(0.15)),
+                          color: kBlue.withValues(alpha: 0.15)),
                     ),
                     child: Row(children: [
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                            color: kBlue.withOpacity(0.12),
+                            color: kBlue.withValues(alpha: 0.12),
                             borderRadius:
                                 BorderRadius.circular(10)),
                         child: const Icon(
@@ -4066,18 +4071,18 @@ class _ProfileTabState extends State<_ProfileTab> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 14),
                     decoration: BoxDecoration(
-                      color: Colors.redAccent.withOpacity(0.06),
+                      color: Colors.redAccent.withValues(alpha: 0.06),
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
                           color:
-                              Colors.redAccent.withOpacity(0.2)),
+                              Colors.redAccent.withValues(alpha: 0.2)),
                     ),
                     child: Row(children: [
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                             color:
-                                Colors.redAccent.withOpacity(0.10),
+                                Colors.redAccent.withValues(alpha: 0.10),
                             borderRadius:
                                 BorderRadius.circular(10)),
                         child: const Icon(Icons.logout_rounded,
@@ -4131,7 +4136,7 @@ class _GuestPrompt extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                    color: kBlue.withOpacity(0.07),
+                    color: kBlue.withValues(alpha: 0.07),
                     shape: BoxShape.circle),
                 child: const Icon(Icons.lock_outline_rounded,
                     size: 56, color: kBlue),
@@ -4422,10 +4427,10 @@ class _EditLoanPageState extends State<_EditLoanPage> {
               padding: const EdgeInsets.all(12),
               margin: const EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.1),
+                color: Colors.orange.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                    color: Colors.orange.withOpacity(0.3)),
+                    color: Colors.orange.withValues(alpha: 0.3)),
               ),
               child: const Row(children: [
                 Icon(Icons.info_outline_rounded,
@@ -4482,10 +4487,12 @@ class _EditLoanPageState extends State<_EditLoanPage> {
                       isDark,
                       type: TextInputType.phone,
                       validator: (v) {
-                        if (v == null || v.trim().isEmpty)
+                        if (v == null || v.trim().isEmpty) {
                           return 'Required';
-                        if (v.trim().length != 10)
+                        }
+                        if (v.trim().length != 10) {
                           return 'Must be exactly 10 digits';
+                        }
                         return null;
                       }),
                 ]),
@@ -4509,20 +4516,24 @@ class _EditLoanPageState extends State<_EditLoanPage> {
                       Icons.attach_money_rounded, isDark,
                       type: TextInputType.number,
                       validator: (v) {
-                        if (v == null || v.trim().isEmpty)
+                        if (v == null || v.trim().isEmpty) {
                           return 'Required';
-                        if (double.tryParse(v.trim()) == null)
+                        }
+                        if (double.tryParse(v.trim()) == null) {
                           return 'Enter a valid number';
+                        }
                         return null;
                       }),
                   _req(incomeCtrl, 'Monthly Income (UGX)',
                       Icons.account_balance_wallet_rounded, isDark,
                       type: TextInputType.number,
                       validator: (v) {
-                        if (v == null || v.trim().isEmpty)
+                        if (v == null || v.trim().isEmpty) {
                           return 'Required';
-                        if (double.tryParse(v.trim()) == null)
+                        }
+                        if (double.tryParse(v.trim()) == null) {
                           return 'Enter a valid number';
+                        }
                         return null;
                       }),
                   _reqDrop(
@@ -4556,10 +4567,10 @@ class _EditLoanPageState extends State<_EditLoanPage> {
                   padding: const EdgeInsets.all(11),
                   margin: const EdgeInsets.only(bottom: 14),
                   decoration: BoxDecoration(
-                    color: kBlue.withOpacity(0.07),
+                    color: kBlue.withValues(alpha: 0.07),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                        color: kBlue.withOpacity(0.2)),
+                        color: kBlue.withValues(alpha: 0.2)),
                   ),
                   child: Row(children: [
                     const Icon(Icons.info_outline_rounded,
@@ -4590,10 +4601,10 @@ class _EditLoanPageState extends State<_EditLoanPage> {
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
                         color: !_collateralValid
-                            ? Colors.redAccent.withOpacity(0.6)
+                            ? Colors.redAccent.withValues(alpha: 0.6)
                             : newCollateralImages.isNotEmpty
-                                ? kGreen.withOpacity(0.6)
-                                : kBlue.withOpacity(0.25),
+                                ? kGreen.withValues(alpha: 0.6)
+                                : kBlue.withValues(alpha: 0.25),
                         width: 1.8,
                       ),
                     ),
@@ -4610,7 +4621,7 @@ class _EditLoanPageState extends State<_EditLoanPage> {
                                       color: (_existingCount > 0
                                               ? kBlue
                                               : Colors.redAccent)
-                                          .withOpacity(0.09),
+                                          .withValues(alpha: 0.09),
                                       shape: BoxShape.circle),
                                   child: Icon(
                                       Icons
@@ -4638,7 +4649,7 @@ class _EditLoanPageState extends State<_EditLoanPage> {
                                       : 'Required — at least one image',
                                   style: TextStyle(
                                     color: _existingCount > 0
-                                        ? kBlue.withOpacity(0.6)
+                                        ? kBlue.withValues(alpha: 0.6)
                                         : Colors.redAccent,
                                     fontSize: 11,
                                     fontWeight: FontWeight.w500,
@@ -4728,14 +4739,14 @@ class _EditLoanPageState extends State<_EditLoanPage> {
                                       width: 100,
                                       height: 100,
                                       decoration: BoxDecoration(
-                                        color: kBlue.withOpacity(
-                                            0.06),
+                                        color: kBlue.withValues(
+                                            alpha: 0.06),
                                         borderRadius:
                                             BorderRadius.circular(
                                                 10),
                                         border: Border.all(
                                             color: kBlue
-                                                .withOpacity(0.25),
+                                                .withValues(alpha: 0.25),
                                             width: 1.5),
                                       ),
                                       child: const Column(
@@ -4816,12 +4827,12 @@ class _EditLoanPageState extends State<_EditLoanPage> {
                     const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
                   color: isSaving
-                      ? kGreen.withOpacity(0.6)
+                      ? kGreen.withValues(alpha: 0.6)
                       : kGreen,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                        color: kGreen.withOpacity(0.3),
+                        color: kGreen.withValues(alpha: 0.3),
                         blurRadius: 16,
                         offset: const Offset(0, 6))
                   ],
@@ -4867,11 +4878,11 @@ class _EditLoanPageState extends State<_EditLoanPage> {
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF111827) : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: kBlue.withOpacity(0.1)),
+        border: Border.all(color: kBlue.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
               color: Colors.black
-                  .withOpacity(isDark ? 0.3 : 0.05),
+                  .withValues(alpha: isDark ? 0.3 : 0.05),
               blurRadius: 12,
               offset: const Offset(0, 4))
         ],
@@ -5137,8 +5148,9 @@ class _NotificationBellState extends State<_NotificationBell> {
   Future<void> _loadUnread() async {
     try {
       final data = await ApiService.getNotifications();
-      if (mounted)
+      if (mounted) {
         setState(() => _unread = data['unread_count'] ?? 0);
+      }
     } catch (_) {}
   }
 
@@ -5156,7 +5168,7 @@ class _NotificationBellState extends State<_NotificationBell> {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.15),
+            color: Colors.white.withValues(alpha: 0.15),
             shape: BoxShape.circle,
           ),
           child: const Icon(Icons.notifications_rounded,
@@ -5212,10 +5224,10 @@ class _SummaryCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF111827) : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-              color: color.withOpacity(0.08),
+              color: color.withValues(alpha: 0.08),
               blurRadius: 12,
               offset: const Offset(0, 4))
         ],
@@ -5224,7 +5236,7 @@ class _SummaryCard extends StatelessWidget {
         Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10)),
             child: Icon(icon, color: color, size: 20)),
         const SizedBox(width: 12),
@@ -5267,9 +5279,9 @@ class _StatusPill extends StatelessWidget {
       padding:
           const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: color.withOpacity(0.3))),
+          border: Border.all(color: color.withValues(alpha: 0.3))),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Container(
             width: 8,
@@ -5318,10 +5330,10 @@ class _LoanCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF111827) : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 3))
         ],
@@ -5344,10 +5356,10 @@ class _LoanCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                        color: color.withOpacity(0.1),
+                        color: color.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                            color: color.withOpacity(0.3))),
+                            color: color.withValues(alpha: 0.3))),
                     child: Text(status.toUpperCase(),
                         style: TextStyle(
                             fontSize: 10,
@@ -5381,7 +5393,7 @@ class _LoanCard extends StatelessWidget {
               Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.08),
+                      color: Colors.red.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(8)),
                   child: Row(children: [
                     const Icon(Icons.info_outline,
@@ -5459,10 +5471,10 @@ class _RepaymentCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF111827) : Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: kGreen.withOpacity(0.2)),
+        border: Border.all(color: kGreen.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 6)
         ],
       ),
@@ -5470,7 +5482,7 @@ class _RepaymentCard extends StatelessWidget {
         Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color: kGreen.withOpacity(0.1),
+                color: kGreen.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10)),
             child: const Icon(Icons.check_circle_rounded,
                 color: kGreen, size: 22)),
@@ -5531,11 +5543,11 @@ class _Section extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF111827) : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: kBlue.withOpacity(0.1)),
+        border: Border.all(color: kBlue.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
               color: Colors.black
-                  .withOpacity(isDark ? 0.3 : 0.05),
+                  .withValues(alpha: isDark ? 0.3 : 0.05),
               blurRadius: 12,
               offset: const Offset(0, 4))
         ],
@@ -5616,7 +5628,7 @@ class _Field extends StatelessWidget {
                       ? Colors.white12
                       : (editing
                           ? const Color(0xFFD0E4FF)
-                          : Colors.black.withOpacity(0.07)))),
+                          : Colors.black.withValues(alpha: 0.07)))),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide:
@@ -5666,7 +5678,7 @@ class _Drop extends StatelessWidget {
               borderSide: BorderSide(
                   color: isDark
                       ? Colors.white12
-                      : Colors.black.withOpacity(0.07))),
+                      : Colors.black.withValues(alpha: 0.07))),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide:

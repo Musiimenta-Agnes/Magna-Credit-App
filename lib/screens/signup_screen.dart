@@ -59,7 +59,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
+                  color: Colors.black.withValues(alpha: 0.15),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -215,7 +215,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     borderRadius: BorderRadius.circular(2),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.00),
+                        color: Colors.black.withValues(alpha: 0.00),
                         blurRadius: 16,
                         offset: const Offset(0, 4),
                       ),
@@ -265,7 +265,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   "Create your account and apply for a loan",
                   style: TextStyle(
                     fontSize: 13,
-                    color: Colors.black.withOpacity(0.8),
+                    color: Colors.black.withValues(alpha: 0.8),
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -361,7 +361,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           borderRadius: BorderRadius.circular(14),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.green.withOpacity(0.28),
+                              color: Colors.green.withValues(alpha: 0.28),
                               blurRadius: 16,
                               offset: const Offset(0, 6),
                             ),

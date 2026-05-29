@@ -134,7 +134,7 @@ class _HelpFaqPageState extends State<HelpFaqPage> {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: _blue.withOpacity(0.3),
+                    color: _blue.withValues(alpha: 0.3),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -145,7 +145,7 @@ class _HelpFaqPageState extends State<HelpFaqPage> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
+                      color: Colors.white.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(Icons.help_outline_rounded,
@@ -198,7 +198,7 @@ class _HelpFaqPageState extends State<HelpFaqPage> {
                 Expanded(
                   child: Container(
                     height: 1,
-                    color: textSecondary.withOpacity(0.2),
+                    color: textSecondary.withValues(alpha: 0.2),
                   ),
                 ),
               ],
@@ -224,16 +224,16 @@ class _HelpFaqPageState extends State<HelpFaqPage> {
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: isOpen
-                          ? _blue.withOpacity(0.3)
+                          ? _blue.withValues(alpha: 0.3)
                           : (isDark
-                              ? Colors.white.withOpacity(0.06)
+                              ? Colors.white.withValues(alpha: 0.06)
                               : const Color(0xFFE8EAEE)),
                     ),
                     boxShadow: [
                       BoxShadow(
                         color: isOpen
-                            ? _blue.withOpacity(0.08)
-                            : Colors.black.withOpacity(0.04),
+                            ? _blue.withValues(alpha: 0.08)
+                            : Colors.black.withValues(alpha: 0.04),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -252,9 +252,9 @@ class _HelpFaqPageState extends State<HelpFaqPage> {
                               height: 28,
                               decoration: BoxDecoration(
                                 color: isOpen
-                                    ? _blue.withOpacity(0.12)
+                                    ? _blue.withValues(alpha: 0.12)
                                     : (isDark
-                                        ? Colors.white.withOpacity(0.07)
+                                        ? Colors.white.withValues(alpha: 0.07)
                                         : const Color(0xFFF0F4FF)),
                                 shape: BoxShape.circle,
                               ),
@@ -288,10 +288,10 @@ class _HelpFaqPageState extends State<HelpFaqPage> {
                           margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                           padding: const EdgeInsets.all(14),
                           decoration: BoxDecoration(
-                            color: _blue.withOpacity(0.05),
+                            color: _blue.withValues(alpha: 0.05),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                                color: _blue.withOpacity(0.1)),
+                                color: _blue.withValues(alpha: 0.1)),
                           ),
                           child: Text(
                             _faqs[i]["a"]!,
@@ -318,10 +318,10 @@ class _HelpFaqPageState extends State<HelpFaqPage> {
                 color: cardColor,
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(
-                    color: _green.withOpacity(0.2)),
+                    color: _green.withValues(alpha: 0.2)),
                 boxShadow: [
                   BoxShadow(
-                    color: _green.withOpacity(0.06),
+                    color: _green.withValues(alpha: 0.06),
                     blurRadius: 14,
                     offset: const Offset(0, 4),
                   ),
@@ -332,7 +332,7 @@ class _HelpFaqPageState extends State<HelpFaqPage> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: _green.withOpacity(0.1),
+                      color: _green.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(Icons.headset_mic_rounded,
@@ -361,7 +361,7 @@ class _HelpFaqPageState extends State<HelpFaqPage> {
                     ),
                   ),
                   Icon(Icons.arrow_forward_ios_rounded,
-                      color: _green.withOpacity(0.5), size: 14),
+                      color: _green.withValues(alpha: 0.5), size: 14),
                 ],
               ),
             ),

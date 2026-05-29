@@ -1294,9 +1294,9 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.1),
+                      color: Colors.green.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.green.withOpacity(0.3)),
+                      border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
                     ),
                     child: const Row(children: [
                       Icon(Icons.circle, color: Colors.green, size: 8),
@@ -1368,16 +1368,16 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
+                      color: Colors.white.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
-                          color: Colors.white.withOpacity(0.35), width: 1),
+                          color: Colors.white.withValues(alpha: 0.35), width: 1),
                     ),
                     child: Row(mainAxisSize: MainAxisSize.min, children: [
                       Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             shape: BoxShape.circle),
                         child: const Icon(Icons.trending_up_rounded,
                             color: Colors.white, size: 16),
@@ -1433,10 +1433,10 @@ class _HomePageState extends State<HomePage> {
                   color: isDark ? Colors.grey[900] : Colors.white,
                   borderRadius: BorderRadius.circular(22),
                   border: Border.all(
-                      color: const Color(0xFF007BFF).withOpacity(0.12)),
+                      color: const Color(0xFF007BFF).withValues(alpha: 0.12)),
                   boxShadow: [
                     BoxShadow(
-                        color: const Color(0xFF007BFF).withOpacity(0.07),
+                        color: const Color(0xFF007BFF).withValues(alpha: 0.07),
                         blurRadius: 18,
                         offset: const Offset(0, 6))
                   ],
@@ -1562,9 +1562,9 @@ class _LoanStep extends StatelessWidget {
       Container(
         width: 54, height: 54,
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           shape: BoxShape.circle,
-          border: Border.all(color: color.withOpacity(0.3), width: 1.5),
+          border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
         ),
         child: Icon(icon, color: color, size: 24),
       ),
@@ -1597,7 +1597,7 @@ class _StepConnector extends StatelessWidget {
           width: 5, height: 1.5,
           margin: const EdgeInsets.symmetric(horizontal: 1),
           decoration: BoxDecoration(
-            color: const Color(0xFF007BFF).withOpacity(0.3),
+            color: const Color(0xFF007BFF).withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(1),
           ),
         ),
@@ -1626,9 +1626,9 @@ class _StatChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.07),
+          color: color.withValues(alpha: 0.07),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.18)),
+          border: Border.all(color: color.withValues(alpha: 0.18)),
         ),
         child: Column(children: [
           Icon(icon, color: color, size: 20),
@@ -1670,7 +1670,7 @@ class _FeatureItem extends StatelessWidget {
       Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-            color: color.withOpacity(0.12), shape: BoxShape.circle),
+            color: color.withValues(alpha: 0.12), shape: BoxShape.circle),
         child: Icon(icon, color: color, size: 28),
       ),
       const SizedBox(height: 8),

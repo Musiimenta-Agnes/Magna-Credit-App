@@ -129,16 +129,16 @@ class _TermsPoliciesPageState extends State<TermsPoliciesPage> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
               decoration: BoxDecoration(
-                color: _blue.withOpacity(0.06),
+                color: _blue.withValues(alpha: 0.06),
                 borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: const Color.fromARGB(255, 0, 255, 179).withOpacity(0.15)),
+                border: Border.all(color: const Color.fromARGB(255, 0, 255, 179).withValues(alpha: 0.15)),
               ),
               child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: _blue.withOpacity(0.12),
+                      color: _blue.withValues(alpha: 0.12),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(Icons.info_outline_rounded,
@@ -215,15 +215,15 @@ class _TermsPoliciesPageState extends State<TermsPoliciesPage> {
                     horizontal: 16, vertical: 14),
                 decoration: BoxDecoration(
                   color: isChecked
-                      ? _green.withOpacity(0.07)
+                      ? _green.withValues(alpha: 0.07)
                       : (isDark
                           ? Colors.grey[900]
-                          : Colors.grey.withOpacity(0.05)),
+                          : Colors.grey.withValues(alpha: 0.05)),
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
                     color: isChecked
-                        ? _green.withOpacity(0.4)
-                        : Colors.grey.withOpacity(0.25),
+                        ? _green.withValues(alpha: 0.4)
+                        : Colors.grey.withValues(alpha: 0.25),
                     width: 1.5,
                   ),
                 ),
@@ -277,12 +277,12 @@ class _TermsPoliciesPageState extends State<TermsPoliciesPage> {
                           colors: [Colors.green, Color(0xFF00A845)],
                         )
                       : null,
-                  color: isChecked ? null : Colors.grey.withOpacity(0.35),
+                  color: isChecked ? null : Colors.grey.withValues(alpha: 0.35),
                   borderRadius: BorderRadius.circular(14),
                   boxShadow: isChecked
                       ? [
                           BoxShadow(
-                            color: Colors.green.withOpacity(0.35),
+                            color: Colors.green.withValues(alpha: 0.35),
                             blurRadius: 14,
                             offset: const Offset(0, 6),
                           )
@@ -387,10 +387,10 @@ class _PolicyItem extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.15)),
+        border: Border.all(color: color.withValues(alpha: 0.15)),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.06),
+            color: color.withValues(alpha: 0.06),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -403,7 +403,7 @@ class _PolicyItem extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(9),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: color, size: 18),

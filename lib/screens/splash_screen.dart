@@ -281,7 +281,7 @@ class _SplashScreenState extends State<SplashScreen>
                 height: 220,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withValues(alpha: 0.05),
                 ),
               ),
             ),
@@ -293,7 +293,7 @@ class _SplashScreenState extends State<SplashScreen>
                 height: 260,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.green.withOpacity(0.08),
+                  color: Colors.green.withValues(alpha: 0.08),
                 ),
               ),
             ),
@@ -305,7 +305,7 @@ class _SplashScreenState extends State<SplashScreen>
                 height: 120,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.04),
+                  color: Colors.white.withValues(alpha: 0.04),
                 ),
               ),
             ),
@@ -333,7 +333,7 @@ class _SplashScreenState extends State<SplashScreen>
                                 borderRadius: BorderRadius.circular(22),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.25),
+                                    color: Colors.black.withValues(alpha: 0.25),
                                     blurRadius: 30,
                                     offset: const Offset(0, 10),
                                   ),
@@ -403,7 +403,7 @@ class _SplashScreenState extends State<SplashScreen>
                                 Text(
                                   "Your trusted lending partner",
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.7),
+                                    color: Colors.white.withValues(alpha: 0.7),
                                     fontSize: 14,
                                     letterSpacing: 0.3,
                                   ),
@@ -432,7 +432,7 @@ class _SplashScreenState extends State<SplashScreen>
                             Text(
                               _loadingMessages[_msgIndex],
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.75),
+                                color: Colors.white.withValues(alpha: 0.75),
                                 fontSize: 12,
                                 letterSpacing: 0.2,
                               ),
@@ -449,7 +449,7 @@ class _SplashScreenState extends State<SplashScreen>
                                     shape: BoxShape.circle,
                                     color: i == _dotIndex
                                         ? Colors.white
-                                        : Colors.white.withOpacity(0.35),
+                                        : Colors.white.withValues(alpha: 0.35),
                                   ),
                                 );
                               }),
@@ -470,7 +470,7 @@ class _SplashScreenState extends State<SplashScreen>
                                   child: LinearProgressIndicator(
                                     value: _progressController.value,
                                     minHeight: 3.5,
-                                    backgroundColor: Colors.white.withOpacity(0.2),
+                                    backgroundColor: Colors.white.withValues(alpha: 0.2),
                                     valueColor: const AlwaysStoppedAnimation<Color>(
                                       Colors.green,
                                     ),
@@ -480,7 +480,7 @@ class _SplashScreenState extends State<SplashScreen>
                                 Text(
                                   "${(_progressController.value * 100).toInt()}%",
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.5),
+                                    color: Colors.white.withValues(alpha: 0.5),
                                     fontSize: 11,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 1,

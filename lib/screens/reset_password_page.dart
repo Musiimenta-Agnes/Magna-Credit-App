@@ -497,9 +497,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 child: Container(
                   padding: const EdgeInsets.all(22),
                   decoration: BoxDecoration(
-                    color: _blue.withOpacity(0.07),
+                    color: _blue.withValues(alpha: 0.07),
                     shape: BoxShape.circle,
-                    border: Border.all(color: _blue.withOpacity(0.2)),
+                    border: Border.all(color: _blue.withValues(alpha: 0.2)),
                   ),
                   child: const Icon(
                     Icons.lock_open_rounded,
@@ -571,7 +571,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     borderRadius: BorderRadius.circular(14),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.green.withOpacity(0.28),
+                        color: Colors.green.withValues(alpha: 0.28),
                         blurRadius: 16,
                         offset: const Offset(0, 6),
                       ),
@@ -680,7 +680,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: bgColor.withOpacity(0.3),
+                  color: bgColor.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),

@@ -945,7 +945,7 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
+                  color: Colors.black.withValues(alpha: 0.15),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -1314,7 +1314,7 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.green.withOpacity(0.28),
+                        color: Colors.green.withValues(alpha: 0.28),
                         blurRadius: 16,
                         offset: const Offset(0, 6),
                       ),
@@ -1477,7 +1477,7 @@ class _DocumentLabel extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
             decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.15),
+              color: Colors.green.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
@@ -1522,7 +1522,7 @@ class _UploadBox extends StatelessWidget {
         border: Border.all(
           color: isEmpty
               ? const Color(0xFFD0E4FF)
-              : Colors.green.withOpacity(0.4),
+              : Colors.green.withValues(alpha: 0.4),
           width: 1.5,
         ),
       ),
@@ -1533,7 +1533,7 @@ class _UploadBox extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF007BFF).withOpacity(0.08),
+                    color: const Color(0xFF007BFF).withValues(alpha: 0.08),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(emptyIcon,
@@ -1551,7 +1551,7 @@ class _UploadBox extends StatelessWidget {
                 Text(
                   "Tap to browse",
                   style: TextStyle(
-                    color: const Color(0xFF007BFF).withOpacity(0.7),
+                    color: const Color(0xFF007BFF).withValues(alpha: 0.7),
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
                   ),
@@ -1679,10 +1679,10 @@ class _FormCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? Colors.grey[900] : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _blue.withOpacity(0.1)),
+        border: Border.all(color: _blue.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.3 : 0.05),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),

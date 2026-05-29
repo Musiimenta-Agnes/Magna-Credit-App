@@ -65,7 +65,7 @@ class ContactSupportPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: _blue.withOpacity(0.3),
+                    color: _blue.withValues(alpha: 0.3),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -77,7 +77,7 @@ class ContactSupportPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
+                      color: Colors.white.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(Icons.support_agent_rounded,
@@ -96,7 +96,7 @@ class ContactSupportPage extends StatelessWidget {
                   Text(
                     "Reach out to the Magna Credit team through any of the channels below. We typically respond within 24 hours.",
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                       fontSize: 13,
                       height: 1.5,
                     ),
@@ -189,12 +189,12 @@ class ContactSupportPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(
                   color: isDark
-                      ? Colors.white.withOpacity(0.06)
+                      ? Colors.white.withValues(alpha: 0.06)
                       : const Color(0xFFE8EAEE),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 14,
                     offset: const Offset(0, 4),
                   ),
@@ -212,8 +212,8 @@ class ContactSupportPage extends StatelessWidget {
                   Divider(
                     height: 20,
                     color: isDark
-                        ? Colors.white.withOpacity(0.06)
-                        : Colors.black.withOpacity(0.05),
+                        ? Colors.white.withValues(alpha: 0.06)
+                        : Colors.black.withValues(alpha: 0.05),
                   ),
                   _HoursRow(
                     day: "Saturday",
@@ -225,8 +225,8 @@ class ContactSupportPage extends StatelessWidget {
                   Divider(
                     height: 20,
                     color: isDark
-                        ? Colors.white.withOpacity(0.06)
-                        : Colors.black.withOpacity(0.05),
+                        ? Colors.white.withValues(alpha: 0.06)
+                        : Colors.black.withValues(alpha: 0.05),
                   ),
                   _HoursRow(
                     day: "Sunday",
@@ -246,16 +246,16 @@ class ContactSupportPage extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: _green.withOpacity(0.07),
+                color: _green.withValues(alpha: 0.07),
                 borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: _green.withOpacity(0.2)),
+                border: Border.all(color: _green.withValues(alpha: 0.2)),
               ),
               child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: _green.withOpacity(0.12),
+                      color: _green.withValues(alpha: 0.12),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(Icons.chat_bubble_outline_rounded,
@@ -327,7 +327,7 @@ class _SectionLabel extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         Expanded(
-          child: Container(height: 1, color: textSecondary.withOpacity(0.2)),
+          child: Container(height: 1, color: textSecondary.withValues(alpha: 0.2)),
         ),
       ],
     );
@@ -369,10 +369,10 @@ class _ContactCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: accent.withOpacity(0.12)),
+        border: Border.all(color: accent.withValues(alpha: 0.12)),
         boxShadow: [
           BoxShadow(
-            color: accent.withOpacity(0.07),
+            color: accent.withValues(alpha: 0.07),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -383,7 +383,7 @@ class _ContactCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(11),
             decoration: BoxDecoration(
-              color: accent.withOpacity(0.1),
+              color: accent.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Icon(icon, color: accent, size: 22),
@@ -420,7 +420,7 @@ class _ContactCard extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: accent.withOpacity(0.08),
+                color: accent.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(Icons.copy_rounded, color: accent, size: 16),

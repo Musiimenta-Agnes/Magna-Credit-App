@@ -258,15 +258,15 @@ class _ReturningClientLoanPageState extends State<ReturningClientLoanPage> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                    colors: [_blue.withOpacity(0.08), _green.withOpacity(0.06)]),
+                    colors: [_blue.withValues(alpha: 0.08), _green.withValues(alpha: 0.06)]),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: _blue.withOpacity(0.2)),
+                border: Border.all(color: _blue.withValues(alpha: 0.2)),
               ),
               child: Row(children: [
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: _blue.withOpacity(0.1), shape: BoxShape.circle),
+                      color: _blue.withValues(alpha: 0.1), shape: BoxShape.circle),
                   child: const Icon(Icons.person_rounded, color: _blue, size: 22),
                 ),
                 const SizedBox(width: 12),
@@ -283,9 +283,9 @@ class _ReturningClientLoanPageState extends State<ReturningClientLoanPage> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
-                    color: _green.withOpacity(0.12),
+                    color: _green.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: _green.withOpacity(0.3)),
+                    border: Border.all(color: _green.withValues(alpha: 0.3)),
                   ),
                   child: const Text('Auto-filled',
                       style: TextStyle(color: _green, fontSize: 11, fontWeight: FontWeight.w600)),
@@ -431,9 +431,9 @@ class _ReturningClientLoanPageState extends State<ReturningClientLoanPage> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 decoration: BoxDecoration(
-                  color: _isSubmitting ? _green.withOpacity(0.6) : _green,
+                  color: _isSubmitting ? _green.withValues(alpha: 0.6) : _green,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [BoxShadow(color: _green.withOpacity(0.3),
+                  boxShadow: [BoxShadow(color: _green.withValues(alpha: 0.3),
                       blurRadius: 16, offset: const Offset(0, 6))],
                 ),
                 child: _isSubmitting
@@ -539,7 +539,7 @@ class _ReturningClientLoanPageState extends State<ReturningClientLoanPage> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
           decoration: BoxDecoration(
-            color: _green.withOpacity(0.15), borderRadius: BorderRadius.circular(20)),
+            color: _green.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(20)),
           child: Text(badge, style: const TextStyle(color: _green,
               fontSize: 10, fontWeight: FontWeight.w600)),
         ),
@@ -571,8 +571,8 @@ class _FormCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? Colors.grey[900] : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _blue.withOpacity(0.1)),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(isDark ? 0.3 : 0.05),
+        border: Border.all(color: _blue.withValues(alpha: 0.1)),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
             blurRadius: 16, offset: const Offset(0, 4))],
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -618,20 +618,20 @@ class _UploadBox extends StatelessWidget {
         color: isDark ? Colors.grey[850] : const Color(0xFFF5F8FF),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-            color: isEmpty ? const Color(0xFFD0E4FF) : _green.withOpacity(0.4),
+            color: isEmpty ? const Color(0xFFD0E4FF) : _green.withValues(alpha: 0.4),
             width: 1.5),
       ),
       child: isEmpty
           ? Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               Container(padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(color: _blue.withOpacity(0.08), shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: _blue.withValues(alpha: 0.08), shape: BoxShape.circle),
                   child: Icon(emptyIcon, color: _blue, size: 24)),
               const SizedBox(height: 8),
               Text(emptyLabel, style: TextStyle(
                   color: isDark ? Colors.white38 : Colors.black38, fontSize: 13)),
               const SizedBox(height: 4),
               Text('Tap to browse', style: TextStyle(
-                  color: _blue.withOpacity(0.7), fontSize: 11, fontWeight: FontWeight.w500)),
+                  color: _blue.withValues(alpha: 0.7), fontSize: 11, fontWeight: FontWeight.w500)),
             ])
           : child!,
     );

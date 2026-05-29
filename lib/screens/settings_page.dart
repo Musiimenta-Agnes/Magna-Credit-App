@@ -268,9 +268,9 @@ class SettingsPage extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 decoration: BoxDecoration(
-                  color: Colors.redAccent.withOpacity(0.08),
+                  color: Colors.redAccent.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.redAccent.withOpacity(0.3)),
+                  border: Border.all(color: Colors.redAccent.withValues(alpha: 0.3)),
                 ),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -349,7 +349,7 @@ class _SettingsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.3 : 0.06),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.06),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -388,7 +388,7 @@ class _ThemeOption extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: isActive ? _blue.withOpacity(0.05) : Colors.transparent,
+          color: isActive ? _blue.withValues(alpha: 0.05) : Colors.transparent,
           borderRadius: BorderRadius.circular(18),
         ),
         child: Row(
@@ -397,8 +397,8 @@ class _ThemeOption extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: isActive
-                    ? _blue.withOpacity(0.12)
-                    : (isDark ? Colors.white.withOpacity(0.07) : Colors.grey.shade100),
+                    ? _blue.withValues(alpha: 0.12)
+                    : (isDark ? Colors.white.withValues(alpha: 0.07) : Colors.grey.shade100),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: isActive ? _blue : Colors.grey, size: 18),
@@ -466,7 +466,7 @@ class _SettingsTile extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.1),
+                color: iconColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: iconColor, size: 18),
@@ -526,7 +526,7 @@ class _SwitchTileState extends State<_SwitchTile> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: widget.iconColor.withOpacity(0.1),
+              color: widget.iconColor.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(widget.icon, color: widget.iconColor, size: 18),
@@ -576,8 +576,8 @@ class _Divider extends StatelessWidget {
       height: 1,
       margin: const EdgeInsets.symmetric(horizontal: 16),
       color: isDark
-          ? Colors.white.withOpacity(0.06)
-          : Colors.black.withOpacity(0.05),
+          ? Colors.white.withValues(alpha: 0.06)
+          : Colors.black.withValues(alpha: 0.05),
     );
   }
 }

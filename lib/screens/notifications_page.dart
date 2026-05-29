@@ -798,7 +798,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-              color: kBlue.withOpacity(0.07), shape: BoxShape.circle),
+              color: kBlue.withValues(alpha: 0.07), shape: BoxShape.circle),
           child: const Icon(Icons.notifications_none_rounded,
               size: 56, color: kBlue),
         ),
@@ -877,7 +877,7 @@ class _DetailView extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                    color: color.withOpacity(0.12),
+                    color: color.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(16)),
                 child: Icon(icon, color: color, size: 28),
               ),
@@ -887,9 +887,9 @@ class _DetailView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: color.withOpacity(0.25)),
+                    border: Border.all(color: color.withValues(alpha: 0.25)),
                   ),
                   child: Text(
                     notification['type'] == 'repayment'
@@ -924,10 +924,10 @@ class _DetailView extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isDark ? const Color(0xFF111827) : Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: color.withOpacity(0.2)),
+                border: Border.all(color: color.withValues(alpha: 0.2)),
                 boxShadow: [
                   BoxShadow(
-                      color: color.withOpacity(0.08),
+                      color: color.withValues(alpha: 0.08),
                       blurRadius: 16,
                       offset: const Offset(0, 4)),
                 ],
@@ -949,8 +949,8 @@ class _DetailView extends StatelessWidget {
                 Container(
                     height: 1,
                     color: isDark
-                        ? Colors.white.withOpacity(0.07)
-                        : Colors.black.withOpacity(0.07)),
+                        ? Colors.white.withValues(alpha: 0.07)
+                        : Colors.black.withValues(alpha: 0.07)),
                 const SizedBox(height: 12),
                 // Body
                 Text(
@@ -973,10 +973,10 @@ class _DetailView extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 decoration: BoxDecoration(
-                  color: Colors.redAccent.withOpacity(0.08),
+                  color: Colors.redAccent.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(16),
                   border:
-                      Border.all(color: Colors.redAccent.withOpacity(0.3)),
+                      Border.all(color: Colors.redAccent.withValues(alpha: 0.3)),
                 ),
                 child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -1031,20 +1031,20 @@ class _NotificationCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: isUnread
-            ? (isDark ? color.withOpacity(0.12) : color.withOpacity(0.06))
+            ? (isDark ? color.withValues(alpha: 0.12) : color.withValues(alpha: 0.06))
             : (isDark ? const Color(0xFF111827) : Colors.white),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isUnread
-              ? color.withOpacity(0.3)
+              ? color.withValues(alpha: 0.3)
               : (isDark
-                  ? Colors.white.withOpacity(0.06)
-                  : Colors.black.withOpacity(0.06)),
+                  ? Colors.white.withValues(alpha: 0.06)
+                  : Colors.black.withValues(alpha: 0.06)),
           width: isUnread ? 1.5 : 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.04),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -1055,7 +1055,7 @@ class _NotificationCard extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-              color: color.withOpacity(0.12),
+              color: color.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(12)),
           child: Icon(icon, color: color, size: 22),
         ),

@@ -100,9 +100,9 @@ class _AboutPageState extends State<AboutPage> {
                   Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 24, 24, 236).withOpacity(0.15),
+                      color: const Color.fromARGB(255, 24, 24, 236).withValues(alpha: 0.15),
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white.withOpacity(0.3)),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
                     ),
                     child: const Icon(
                       Icons.account_balance_rounded,
@@ -126,7 +126,7 @@ class _AboutPageState extends State<AboutPage> {
                     'A microfinance & digital lending institution committed to providing accessible and affordable financial services to individuals and businesses across the region.',
                     style: TextStyle(
                       fontSize: 13,
-                      color: Colors.black.withOpacity(0.8),
+                      color: Colors.black.withValues(alpha: 0.8),
                       height: 1.6,
                     ),
                     textAlign: TextAlign.center,
@@ -200,7 +200,7 @@ class _AboutPageState extends State<AboutPage> {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.green.withOpacity(0.22),
+                          color: Colors.green.withValues(alpha: 0.22),
                           blurRadius: 18,
                           offset: const Offset(0, 6),
                         ),
@@ -269,16 +269,16 @@ class _MiniCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.07),
+        color: color.withValues(alpha: 0.07),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: color.withOpacity(0.12), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: color.withValues(alpha: 0.12), shape: BoxShape.circle),
             child: Icon(icon, color: color, size: 18),
           ),
           const SizedBox(height: 10),
@@ -328,9 +328,9 @@ class _SectionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? Colors.grey[900] : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.12)),
+        border: Border.all(color: color.withValues(alpha: 0.12)),
         boxShadow: [
-          BoxShadow(color: color.withOpacity(0.07), blurRadius: 16, offset: const Offset(0, 5)),
+          BoxShadow(color: color.withValues(alpha: 0.07), blurRadius: 16, offset: const Offset(0, 5)),
         ],
       ),
       child: Column(
@@ -360,7 +360,7 @@ class _SectionCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                      color: color.withOpacity(0.08), shape: BoxShape.circle),
+                      color: color.withValues(alpha: 0.08), shape: BoxShape.circle),
                   child: Icon(item.icon, color: color, size: 16),
                 ),
                 const SizedBox(width: 12),
@@ -409,9 +409,9 @@ class _ValuesCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? Colors.grey[900] : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _blue.withOpacity(0.12)),
+        border: Border.all(color: _blue.withValues(alpha: 0.12)),
         boxShadow: [
-          BoxShadow(color: _blue.withOpacity(0.07), blurRadius: 16, offset: const Offset(0, 5)),
+          BoxShadow(color: _blue.withValues(alpha: 0.07), blurRadius: 16, offset: const Offset(0, 5)),
         ],
       ),
       child: Column(
@@ -444,9 +444,9 @@ class _ValuesCard extends StatelessWidget {
             children: values.map((v) => Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: v.color.withOpacity(0.07),
+                color: v.color.withValues(alpha: 0.07),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: v.color.withOpacity(0.2)),
+                border: Border.all(color: v.color.withValues(alpha: 0.2)),
               ),
               child: Row(children: [
                 Icon(v.icon, color: v.color, size: 16),
@@ -487,7 +487,7 @@ class _ContactRow extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(7),
           decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2), shape: BoxShape.circle),
+              color: Colors.white.withValues(alpha: 0.2), shape: BoxShape.circle),
           child: Icon(icon, color: Colors.white, size: 15),
         ),
         const SizedBox(width: 12),
