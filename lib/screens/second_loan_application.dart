@@ -866,6 +866,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'success_message.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart' as p;
 
 class LoanApplicationPage2 extends StatefulWidget {
   // ── Data passed from page 1 ──
@@ -1050,16 +1052,37 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
       request.fields['education']      = selectedEducation!;
       request.fields['address']        = addressController.text.trim();
 
+      MediaType mimeTypeForPath(String path) {
+        final ext = p.extension(path).toLowerCase();
+        if (ext == '.png') {
+          return MediaType('image', 'png');
+        } else if (ext == '.jpg' || ext == '.jpeg') {
+          return MediaType('image', 'jpeg');
+        } else if (ext == '.gif') {
+          return MediaType('image', 'gif');
+        } else if (ext == '.webp') {
+          return MediaType('image', 'webp');
+        } else if (ext == '.heic') {
+          return MediaType('image', 'heic');
+        } else if (ext == '.heif') {
+          return MediaType('image', 'heif');
+        }
+        return MediaType('image', 'jpeg');
+      }
+
       // ── National ID image ──
       if (kIsWeb) {
         final bytes = await nationalIdImage!.readAsBytes();
         request.files.add(http.MultipartFile.fromBytes(
           'national_id_image', bytes,
           filename: nationalIdImage!.name,
+          contentType: MediaType('image', 'jpeg'),
         ));
       } else {
         request.files.add(await http.MultipartFile.fromPath(
           'national_id_image', nationalIdImage!.path,
+          filename: p.basename(nationalIdImage!.path),
+          contentType: mimeTypeForPath(nationalIdImage!.path),
         ));
       }
 
@@ -1070,10 +1093,13 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
           request.files.add(http.MultipartFile.fromBytes(
             'collateral_images[]', bytes,
             filename: image.name,
+            contentType: MediaType('image', 'jpeg'),
           ));
         } else {
           request.files.add(await http.MultipartFile.fromPath(
             'collateral_images[]', image.path,
+            filename: p.basename(image.path),
+            contentType: mimeTypeForPath(image.path),
           ));
         }
       }
@@ -1106,6 +1132,20 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
         }
       } else {
         String errorMessage = data['message'] ?? "Submission failed. Please try again.";
+        if (data['errors'] != null && data['errors'] is Map) {
+          final errorsMap = data['errors'] as Map<String, dynamic>;
+          final errList = <String>[];
+          errorsMap.forEach((key, value) {
+            if (value is List) {
+              errList.addAll(value.map((e) => e.toString()));
+            } else {
+              errList.add(value.toString());
+            }
+          });
+          if (errList.isNotEmpty) {
+            errorMessage = errList.join('\n');
+          }
+        }
         _showTopSnackBar(errorMessage, isError: true);
       }
     } catch (e) {

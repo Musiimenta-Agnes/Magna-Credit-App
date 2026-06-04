@@ -11,6 +11,8 @@ import 'returning_loan_application.dart';
 import 'settings_page.dart';
 import 'login_screen.dart';
 import 'notifications_page.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart' as p;
 
 // ─── Theme Colors ───────────────────────────────────────────────
 const Color kBlue  = Color(0xFF0076D6);
@@ -1487,15 +1489,36 @@ class _EditLoanPageState extends State<_EditLoanPage> {
         'address': addressCtrl.text.trim(),
       });
 
+      MediaType mimeTypeForPath(String path) {
+        final ext = p.extension(path).toLowerCase();
+        if (ext == '.png') {
+          return MediaType('image', 'png');
+        } else if (ext == '.jpg' || ext == '.jpeg') {
+          return MediaType('image', 'jpeg');
+        } else if (ext == '.gif') {
+          return MediaType('image', 'gif');
+        } else if (ext == '.webp') {
+          return MediaType('image', 'webp');
+        } else if (ext == '.heic') {
+          return MediaType('image', 'heic');
+        } else if (ext == '.heif') {
+          return MediaType('image', 'heif');
+        }
+        return MediaType('image', 'jpeg');
+      }
+
       for (final img in newCollateralImages) {
         if (kIsWeb) {
           final bytes = await img.readAsBytes();
           request.files.add(http.MultipartFile.fromBytes(
               'collateral_images[]', bytes,
-              filename: img.name));
+              filename: img.name,
+              contentType: MediaType('image', 'jpeg')));
         } else {
           request.files.add(await http.MultipartFile.fromPath(
-              'collateral_images[]', img.path));
+              'collateral_images[]', img.path,
+              filename: p.basename(img.path),
+              contentType: mimeTypeForPath(img.path)));
         }
       }
 
@@ -1513,8 +1536,23 @@ class _EditLoanPageState extends State<_EditLoanPage> {
             backgroundColor: kGreen));
         Navigator.pop(context, true);
       } else {
+        String errMsg = data['message'] ?? 'Update failed';
+        if (data['errors'] != null && data['errors'] is Map) {
+          final errorsMap = data['errors'] as Map<String, dynamic>;
+          final errList = <String>[];
+          errorsMap.forEach((key, value) {
+            if (value is List) {
+              errList.addAll(value.map((e) => e.toString()));
+            } else {
+              errList.add(value.toString());
+            }
+          });
+          if (errList.isNotEmpty) {
+            errMsg = errList.join('\n');
+          }
+        }
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(data['message'] ?? 'Update failed'),
+            content: Text(errMsg),
             backgroundColor: Colors.redAccent));
       }
     } catch (e) {
@@ -2697,44 +2735,55 @@ class _Section extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF111827) : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: kBlue.withValues(alpha: 0.1)),
+        color: isDark ? const Color(0xFF0F172A).withOpacity(0.3) : Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: isDark ? Colors.white.withOpacity(0.06) : Colors.black.withOpacity(0.04),
+        ),
         boxShadow: [
           BoxShadow(
-              color: Colors.black
-                  .withValues(alpha: isDark ? 0.3 : 0.05),
-              blurRadius: 12,
-              offset: const Offset(0, 4))
+            color: Colors.black.withOpacity(isDark ? 0.2 : 0.04),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
         ],
       ),
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(children: [
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
               Container(
-                  width: 4,
-                  height: 20,
-                  decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [kBlue, kGreen]),
-                      borderRadius: BorderRadius.circular(2))),
-              const SizedBox(width: 10),
-              Icon(icon, color: kBlue, size: 18),
-              const SizedBox(width: 6),
-              Text(title,
-                  style: const TextStyle(
-                      color: kBlue,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700)),
-            ]),
-            const SizedBox(height: 18),
-            ...children,
-          ]),
+                width: 4,
+                height: 20,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [kBlue, kGreen],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Icon(icon, color: kBlue, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: TextStyle(
+                  color: isDark ? Colors.white : Colors.black87,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          ...children,
+        ],
+      ),
     );
   }
 }
@@ -2753,44 +2802,90 @@ class _Field extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!editing) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 14),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: kBlue.withOpacity(0.06),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icon ?? Icons.info_rounded, color: kBlue, size: 18),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        label.toUpperCase(),
+                        style: TextStyle(
+                          color: isDark ? Colors.white38 : Colors.black38,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        ctrl.text.isEmpty ? '—' : ctrl.text,
+                        style: TextStyle(
+                          color: isDark ? Colors.white : Colors.black87,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Divider(
+              color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.03),
+              height: 1,
+              thickness: 1,
+            ),
+          ],
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextField(
         controller: ctrl,
-        readOnly: !editing,
         maxLines: maxLines,
         keyboardType: type,
         style: TextStyle(
-            color: isDark ? Colors.white : Colors.black87,
-            fontSize: 14),
+          color: isDark ? Colors.white : Colors.black87,
+          fontSize: 14,
+        ),
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(
-              color: isDark ? Colors.white54 : Colors.black45,
-              fontSize: 13),
-          prefixIcon: icon != null
-              ? Icon(icon, color: kBlue, size: 18)
-              : null,
+            color: isDark ? Colors.white54 : Colors.black45,
+            fontSize: 13,
+          ),
+          prefixIcon: icon != null ? Icon(icon, color: kBlue, size: 18) : null,
           filled: true,
-          fillColor: isDark
-              ? const Color(0xFF1A2235)
-              : (editing
-                  ? const Color(0xFFF5F8FF)
-                  : Colors.grey.shade50),
-          contentPadding: const EdgeInsets.symmetric(
-              vertical: 13, horizontal: 14),
+          fillColor: isDark ? const Color(0xFF1E293B).withOpacity(0.3) : const Color(0xFFF1F5F9),
+          contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
           enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
-                  color: isDark
-                      ? Colors.white12
-                      : (editing
-                          ? const Color(0xFFD0E4FF)
-                          : Colors.black.withValues(alpha: 0.07)))),
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(
+              color: isDark ? Colors.white10 : Colors.black.withOpacity(0.06),
+            ),
+          ),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide:
-                  const BorderSide(color: kBlue, width: 1.5)),
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: kBlue, width: 1.5),
+          ),
         ),
       ),
     );
@@ -2808,45 +2903,94 @@ class _Drop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!editing) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 14),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: kBlue.withOpacity(0.06),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icon, color: kBlue, size: 18),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        label.toUpperCase(),
+                        style: TextStyle(
+                          color: isDark ? Colors.white38 : Colors.black38,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        value.isEmpty ? '—' : value,
+                        style: TextStyle(
+                          color: isDark ? Colors.white : Colors.black87,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Divider(
+              color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.03),
+              height: 1,
+              thickness: 1,
+            ),
+          ],
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: DropdownButtonFormField<String>(
-        initialValue: value,
+        value: value,
         style: TextStyle(
-            color: isDark ? Colors.white : Colors.black87,
-            fontSize: 14),
-        dropdownColor:
-            isDark ? const Color(0xFF1A2235) : Colors.white,
+          color: isDark ? Colors.white : Colors.black87,
+          fontSize: 14,
+        ),
+        dropdownColor: isDark ? const Color(0xFF1E293B) : Colors.white,
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(
-              color: isDark ? Colors.white54 : Colors.black45,
-              fontSize: 13),
+            color: isDark ? Colors.white54 : Colors.black45,
+            fontSize: 13,
+          ),
           prefixIcon: Icon(icon, color: kBlue, size: 18),
           filled: true,
-          fillColor: isDark
-              ? const Color(0xFF1A2235)
-              : (editing
-                  ? const Color(0xFFF5F8FF)
-                  : Colors.grey.shade50),
-          contentPadding: const EdgeInsets.symmetric(
-              vertical: 13, horizontal: 14),
+          fillColor: isDark ? const Color(0xFF1E293B).withOpacity(0.3) : const Color(0xFFF1F5F9),
+          contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
           enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
-                  color: isDark
-                      ? Colors.white12
-                      : Colors.black.withValues(alpha: 0.07))),
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(
+              color: isDark ? Colors.white10 : Colors.black.withOpacity(0.06),
+            ),
+          ),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide:
-                  const BorderSide(color: kBlue, width: 1.5)),
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: kBlue, width: 1.5),
+          ),
         ),
         items: items
-            .map((i) =>
-                DropdownMenuItem(value: i, child: Text(i)))
+            .map((i) => DropdownMenuItem(value: i, child: Text(i)))
             .toList(),
-        onChanged: editing ? onChanged : null,
+        onChanged: onChanged,
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'screens/splash_screen.dart';
 import 'screens/theme_controller.dart';
 
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Color(0xFF007BFF),
           foregroundColor: Colors.white,
         ),
+        textTheme: GoogleFonts.poppinsTextTheme(ThemeData.light().textTheme),
       ),
 
       // 🌙 DARK THEME
@@ -46,6 +48,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.black,
           foregroundColor: Colors.white,
         ),
+        textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
       ),
 
       themeMode: themeController.themeMode,

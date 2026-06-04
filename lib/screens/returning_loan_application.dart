@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'success_message.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart' as p;
 
 class ReturningClientLoanPage extends StatefulWidget {
   const ReturningClientLoanPage({super.key});
@@ -169,14 +171,35 @@ class _ReturningClientLoanPageState extends State<ReturningClientLoanPage> {
       request.fields['education']      = selectedEducation ?? '';
       request.fields['address']        = addressController.text.trim();
 
+      MediaType mimeTypeForPath(String path) {
+        final ext = p.extension(path).toLowerCase();
+        if (ext == '.png') {
+          return MediaType('image', 'png');
+        } else if (ext == '.jpg' || ext == '.jpeg') {
+          return MediaType('image', 'jpeg');
+        } else if (ext == '.gif') {
+          return MediaType('image', 'gif');
+        } else if (ext == '.webp') {
+          return MediaType('image', 'webp');
+        } else if (ext == '.heic') {
+          return MediaType('image', 'heic');
+        } else if (ext == '.heif') {
+          return MediaType('image', 'heif');
+        }
+        return MediaType('image', 'jpeg');
+      }
+
       // ── National ID image ──
       if (kIsWeb) {
         final bytes = await nationalIdImage!.readAsBytes();
         request.files.add(http.MultipartFile.fromBytes(
-            'national_id_image', bytes, filename: nationalIdImage!.name));
+            'national_id_image', bytes, filename: nationalIdImage!.name,
+            contentType: MediaType('image', 'jpeg')));
       } else {
         request.files.add(await http.MultipartFile.fromPath(
-            'national_id_image', nationalIdImage!.path));
+            'national_id_image', nationalIdImage!.path,
+            filename: p.basename(nationalIdImage!.path),
+            contentType: mimeTypeForPath(nationalIdImage!.path)));
       }
 
       // ── Collateral images ──
@@ -184,10 +207,13 @@ class _ReturningClientLoanPageState extends State<ReturningClientLoanPage> {
         if (kIsWeb) {
           final bytes = await img.readAsBytes();
           request.files.add(http.MultipartFile.fromBytes(
-              'collateral_images[]', bytes, filename: img.name));
+              'collateral_images[]', bytes, filename: img.name,
+              contentType: MediaType('image', 'jpeg')));
         } else {
           request.files.add(await http.MultipartFile.fromPath(
-              'collateral_images[]', img.path));
+              'collateral_images[]', img.path,
+              filename: p.basename(img.path),
+              contentType: mimeTypeForPath(img.path)));
         }
       }
 
@@ -207,7 +233,22 @@ class _ReturningClientLoanPageState extends State<ReturningClientLoanPage> {
               MaterialPageRoute(builder: (_) => const ApplicationSuccessPage()));
         }
       } else {
-        _snack(data['message'] ?? 'Submission failed. Please try again.', isError: true);
+        String errMsg = data['message'] ?? 'Submission failed. Please try again.';
+        if (data['errors'] != null && data['errors'] is Map) {
+          final errorsMap = data['errors'] as Map<String, dynamic>;
+          final errList = <String>[];
+          errorsMap.forEach((key, value) {
+            if (value is List) {
+              errList.addAll(value.map((e) => e.toString()));
+            } else {
+              errList.add(value.toString());
+            }
+          });
+          if (errList.isNotEmpty) {
+            errMsg = errList.join('\n');
+          }
+        }
+        _snack(errMsg, isError: true);
       }
     } catch (e) {
       _snack('Something went wrong. Please try again.', isError: true);

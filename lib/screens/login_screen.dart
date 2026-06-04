@@ -839,7 +839,7 @@ class _LoginPageState extends State<LoginPage> {
                   color: isDark ? Colors.white38 : Colors.black38, fontSize: 14),
               filled: true,
               fillColor: isFocused
-                  ? _lightGreen
+                  ? (isDark ? Colors.grey[800] : _lightGreen)
                   : (isDark ? Colors.grey[900] : const Color(0xFFF5F8FF)),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
@@ -882,7 +882,7 @@ class _LoginPageState extends State<LoginPage> {
                   color: isDark ? Colors.white38 : Colors.black38, fontSize: 14),
               filled: true,
               fillColor: isFocused
-                  ? _lightGreen
+                  ? (isDark ? Colors.grey[800] : _lightGreen)
                   : (isDark ? Colors.grey[900] : const Color(0xFFF5F8FF)),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
