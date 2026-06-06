@@ -18,26 +18,26 @@ class ContactSupportPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: _blue,
+        backgroundColor: isDark ? Colors.black : _blue,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: isDark ? _blue : Colors.white, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           "Contact Support",
           style: TextStyle(
             color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-            letterSpacing: 0.4,
+            fontWeight: FontWeight.w800,
+            fontSize: 20,
+            letterSpacing: 0.5,
           ),
         ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(3),
+          preferredSize: const Size.fromHeight(2),
           child: Container(
-            height: 3,
+            height: 2,
             decoration: const BoxDecoration(
               gradient: LinearGradient(colors: [_blue, _green]),
             ),
@@ -123,7 +123,7 @@ class ContactSupportPage extends StatelessWidget {
               textPrimary: textPrimary,
               textSecondary: textSecondary,
               isDark: isDark,
-              onCopy: () => _copy(context, "+256 700 123456"),
+              onCopy: () => _copy(context, "+256 742 443850"),
             ),
 
             const SizedBox(height: 12),

@@ -1143,7 +1143,8 @@ class _NotificationCard extends StatelessWidget {
 //  NotificationBell — add to any AppBar actions
 // ════════════════════════════════════════════════════════════════
 class NotificationBell extends StatefulWidget {
-  const NotificationBell({super.key});
+  final Color? iconColor;
+  const NotificationBell({super.key, this.iconColor});
 
   @override
   State<NotificationBell> createState() => _NotificationBellState();
@@ -1207,8 +1208,8 @@ class _NotificationBellState extends State<NotificationBell>
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            const Icon(Icons.notifications_rounded,
-                color: Colors.white, size: 26),
+             Icon(Icons.notifications_rounded,
+                color: widget.iconColor ?? Colors.white, size: 26),
             if (_unread > 0)
               Positioned(
                 top: -4,

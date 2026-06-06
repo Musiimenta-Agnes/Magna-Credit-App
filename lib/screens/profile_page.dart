@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -65,7 +64,35 @@ class _ProfilePageState extends State<ProfilePage>
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF0A0F1E) : kBg,
-      // ── AppBar REMOVED ──
+      // ── AppBar with back button ──
+      appBar: AppBar(
+        backgroundColor: isDark ? const Color(0xFF0A0F1E) : kBlue,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded,
+              color: Colors.white, size: 20),
+          onPressed: () => Navigator.pop(context),
+          tooltip: 'Back to Home',
+        ),
+        title: const Text(
+          'My Account',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+            fontSize: 18,
+          ),
+        ),
+        centerTitle: true,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(2),
+          child: Container(
+            height: 2,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(colors: [kBlue, kGreen]),
+            ),
+          ),
+        ),
+      ),
       body: TabBarView(
         controller: _tabController,
         children: [
@@ -105,6 +132,11 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 }
+
+
+
+
+
 
 // ════════════════════════════════════════════════════════════════
 //  TAB 1 — OVERVIEW DASHBOARD
@@ -376,6 +408,15 @@ class _DashboardTabState extends State<_DashboardTab> {
 
   String _fmt(dynamic v) => fmtUGX(v);
 }
+
+
+
+
+
+
+
+
+
 
 // ════════════════════════════════════════════════════════════════
 //  TAB 2 — MY LOANS

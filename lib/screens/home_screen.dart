@@ -1,1144 +1,3 @@
-
-
-// // import 'package:flutter/material.dart';
-// // import 'about_screen.dart';
-// // import 'terms_and_policy.dart';
-// // import 'profile_page.dart';
-// // import 'settings_page.dart';
-
-// // class HomePage extends StatefulWidget {
-// //   const HomePage({super.key});
-
-// //   @override
-// //   State<HomePage> createState() => _HomePageState();
-// // }
-
-// // class _HomePageState extends State<HomePage> {
-// //   int _selectedIndex = 0;
-
-// //   void _onItemTapped(int index) {
-// //     setState(() => _selectedIndex = index);
-
-// //     if (index == 1) {
-// //       Navigator.push(
-// //         context,
-// //         MaterialPageRoute(builder: (context) => const AboutPage()),
-// //       );
-// //     } else if (index == 2) {
-// //       Navigator.push(
-// //         context,
-// //         MaterialPageRoute(builder: (context) => const ProfilePage()),
-// //       );
-// //     }
-// //   }
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     final theme = Theme.of(context);
-// //     final isDark = theme.brightness == Brightness.dark;
-
-// //     return Scaffold(
-// //       backgroundColor: isDark ? Colors.black : Colors.white,
-
-// //       appBar: AppBar(
-// //         backgroundColor: const Color(0xFF007BFF),
-// //         elevation: 0,
-// //         centerTitle: true,
-// //         automaticallyImplyLeading: false,
-// //         // ── Logo on the left ──
-// //         leading: Padding(
-// //           padding: const EdgeInsets.all(9),
-// //           child: Container(
-// //             decoration: BoxDecoration(
-// //               shape: BoxShape.circle,
-// //               border: Border.all(color: Colors.white, width: 1.5),
-// //             ),
-// //             child: const CircleAvatar(
-// //               radius: 16,
-// //               backgroundImage: AssetImage('assets/magna_logo.jpeg'),
-// //             ),
-// //           ),
-// //         ),
-// //         title: const Text(
-// //           "MAGNA CREDIT",
-// //           style: TextStyle(
-// //             fontWeight: FontWeight.w800,
-// //             color: Colors.white,
-// //             fontSize: 16,
-// //             letterSpacing: 1.5,
-// //           ),
-// //         ),
-// //         // ── Three-dot menu on the right ──
-// //         actions: [
-// //           PopupMenuButton<String>(
-// //             icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
-// //             color: isDark ? const Color(0xFF1A1A2E) : Colors.white,
-// //             shape: RoundedRectangleBorder(
-// //               borderRadius: BorderRadius.circular(14),
-// //             ),
-// //             offset: const Offset(0, 48),
-// //             onSelected: (value) {
-// //               if (value == 'settings') {
-// //                 Navigator.push(
-// //                   context,
-// //                   MaterialPageRoute(
-// //                     builder: (context) => const SettingsPage(),
-// //                   ),
-// //                 );
-// //               }
-// //             },
-// //             itemBuilder: (_) => [
-// //               PopupMenuItem(
-// //                 value: 'settings',
-// //                 child: Row(
-// //                   children: [
-// //                     Icon(Icons.settings_rounded,
-// //                         color: isDark
-// //                             ? Colors.white70
-// //                             : const Color(0xFF007BFF),
-// //                         size: 18),
-// //                     const SizedBox(width: 10),
-// //                     Text(
-// //                       "Settings",
-// //                       style: TextStyle(
-// //                         color: isDark ? Colors.white : Colors.black87,
-// //                         fontSize: 14,
-// //                         fontWeight: FontWeight.w500,
-// //                       ),
-// //                     ),
-// //                   ],
-// //                 ),
-// //               ),
-// //             ],
-// //           ),
-// //         ],
-// //         bottom: PreferredSize(
-// //           preferredSize: const Size.fromHeight(3),
-// //           child: Container(
-// //             height: 3,
-// //             decoration: const BoxDecoration(
-// //               gradient: LinearGradient(
-// //                 colors: [Color(0xFF007BFF), Colors.green],
-// //               ),
-// //             ),
-// //           ),
-// //         ),
-// //       ),
-
-// //       body: SingleChildScrollView(
-// //         child: Padding(
-// //           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-// //           child: Column(
-// //             crossAxisAlignment: CrossAxisAlignment.start,
-// //             children: [
-// //               // ── Greeting header ──
-// //               Row(
-// //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-// //                 children: [
-// //                   Column(
-// //                     crossAxisAlignment: CrossAxisAlignment.start,
-// //                     children: [
-// //                       Text(
-// //                         "",
-// //                         style: TextStyle(
-// //                           fontSize: 13,
-// //                           color: isDark ? Colors.white54 : Colors.black45,
-// //                         ),
-// //                       ),
-// //                       const SizedBox(height: 2),
-// //                       Text(
-// //                         "Why Choose Magna?",
-// //                         style: TextStyle(
-// //                           fontSize: 15,
-// //                           fontWeight: FontWeight.w800,
-// //                           color: isDark ? Colors.white : const Color(0xFF007BFF),
-// //                           letterSpacing: 0.2,
-// //                         ),
-// //                       ),
-// //                     ],
-// //                   ),
-// //                   Container(
-// //                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-// //                     decoration: BoxDecoration(
-// //                       color: Colors.green.withOpacity(0.1),
-// //                       borderRadius: BorderRadius.circular(20),
-// //                       border: Border.all(color: Colors.green.withOpacity(0.3)),
-// //                     ),
-// //                     child: const Row(
-// //                       children: [
-// //                         Icon(Icons.circle, color: Colors.green, size: 8),
-// //                         SizedBox(width: 5),
-// //                         Text(
-// //                           "Active",
-// //                           style: TextStyle(
-// //                             color: Colors.green,
-// //                             fontSize: 11,
-// //                             fontWeight: FontWeight.w600,
-// //                           ),
-// //                         ),
-// //                       ],
-// //                     ),
-// //                   ),
-// //                 ],
-// //               ),
-
-// //               const SizedBox(height: 22),
-
-// //               Row(
-// //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-// //                 children: [
-// //                   _FeatureItem(
-// //                     icon: Icons.flash_on,
-// //                     label: "Fast Approval",
-// //                     color: const Color(0xFF007BFF),
-// //                     textColor: isDark ? Colors.white : Colors.black87,
-// //                   ),
-// //                   _FeatureItem(
-// //                     icon: Icons.account_balance_wallet,
-// //                     label: "High Limits",
-// //                     color: Colors.green,
-// //                     textColor: isDark ? Colors.white : Colors.black87,
-// //                   ),
-// //                   _FeatureItem(
-// //                     icon: Icons.security,
-// //                     label: "Secure",
-// //                     color: const Color(0xFFFFA000),
-// //                     textColor: isDark ? Colors.white : Colors.black87,
-// //                   ),
-// //                 ],
-// //               ),
-
-// //               const SizedBox(height: 28),
-
-// //               // ── Hero Banner with Max Loan Amount ──
-// //               Container(
-// //                 width: double.infinity,
-// //                 padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 30),
-// //                 decoration: BoxDecoration(
-// //                   color: Colors.green,
-// //                   borderRadius: BorderRadius.circular(20),
-// //                   boxShadow: const [
-// //                     BoxShadow(
-// //                       color: Colors.black12,
-// //                       blurRadius: 10,
-// //                       offset: Offset(0, 6),
-// //                     ),
-// //                   ],
-// //                 ),
-// //                 child: Column(
-// //                   children: [
-// //                     const Text(
-// //                       "Welcome to Magna Credit",
-// //                       textAlign: TextAlign.center,
-// //                       style: TextStyle(
-// //                         color: Colors.white,
-// //                         fontSize: 22,
-// //                         fontWeight: FontWeight.bold,
-// //                       ),
-// //                     ),
-// //                     const SizedBox(height: 6),
-// //                     const Text(
-// //                       "Fast, secure and reliable loans designed for your needs.",
-// //                       textAlign: TextAlign.center,
-// //                       style: TextStyle(
-// //                         color: Colors.white70,
-// //                         fontSize: 15,
-// //                         height: 1.4,
-// //                       ),
-// //                     ),
-
-// //                     // ── Max Loan Amount Badge ──
-// //                     const SizedBox(height: 20),
-// //                     Container(
-// //                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-// //                       decoration: BoxDecoration(
-// //                         color: Colors.white.withOpacity(0.15),
-// //                         borderRadius: BorderRadius.circular(14),
-// //                         border: Border.all(
-// //                           color: Colors.white.withOpacity(0.35),
-// //                           width: 1,
-// //                         ),
-// //                       ),
-// //                       child: Row(
-// //                         mainAxisSize: MainAxisSize.min,
-// //                         children: [
-// //                           Container(
-// //                             padding: const EdgeInsets.all(6),
-// //                             decoration: BoxDecoration(
-// //                               color: Colors.white.withOpacity(0.2),
-// //                               shape: BoxShape.circle,
-// //                             ),
-// //                             child: const Icon(
-// //                               Icons.trending_up_rounded,
-// //                               color: Colors.white,
-// //                               size: 16,
-// //                             ),
-// //                           ),
-// //                           const SizedBox(width: 10),
-// //                           Column(
-// //                             crossAxisAlignment: CrossAxisAlignment.start,
-// //                             children: [
-// //                               const Text(
-// //                                 "Maximum Loan Amount",
-// //                                 style: TextStyle(
-// //                                   color: Colors.white70,
-// //                                   fontSize: 10,
-// //                                   fontWeight: FontWeight.w500,
-// //                                   letterSpacing: 0.5,
-// //                                 ),
-// //                               ),
-// //                               const SizedBox(height: 2),
-// //                               Text(
-// //                                 "UGX 10,000,000",
-// //                                 style: const TextStyle(
-// //                                   color: Colors.white,
-// //                                   fontSize: 18,
-// //                                   fontWeight: FontWeight.w800,
-// //                                   letterSpacing: 0.5,
-// //                                 ),
-// //                               ),
-// //                             ],
-// //                           ),
-// //                         ],
-// //                       ),
-// //                     ),
-// //                     // ── End Max Loan Amount Badge ──
-
-// //                     const SizedBox(height: 16),
-// //                     ElevatedButton(
-// //                       onPressed: () {
-// //                         Navigator.push(
-// //                           context,
-// //                           MaterialPageRoute(
-// //                             builder: (context) => const TermsPoliciesPage(),
-// //                           ),
-// //                         );
-// //                       },
-// //                       style: ElevatedButton.styleFrom(
-// //                         backgroundColor: Colors.white,
-// //                         foregroundColor: Colors.green,
-// //                         padding: const EdgeInsets.symmetric(
-// //                             vertical: 5, horizontal: 30),
-// //                         shape: RoundedRectangleBorder(
-// //                           borderRadius: BorderRadius.circular(14),
-// //                         ),
-// //                       ),
-// //                       child: const Text(
-// //                         "Apply for a Loan",
-// //                         style: TextStyle(
-// //                           fontSize: 15,
-// //                           fontWeight: FontWeight.bold,
-// //                         ),
-// //                       ),
-// //                     ),
-// //                   ],
-// //                 ),
-// //               ),
-
-// //               const SizedBox(height: 32),
-
-// //               // ── PREMIUM LOAN PROCESS ──
-// //               Container(
-// //                 width: double.infinity,
-// //                 padding: const EdgeInsets.symmetric(vertical: 26, horizontal: 20),
-// //                 decoration: BoxDecoration(
-// //                   color: isDark ? Colors.grey[900] : Colors.white,
-// //                   borderRadius: BorderRadius.circular(22),
-// //                   border: Border.all(
-// //                     color: const Color(0xFF007BFF).withOpacity(0.12),
-// //                   ),
-// //                   boxShadow: [
-// //                     BoxShadow(
-// //                       color: const Color(0xFF007BFF).withOpacity(0.07),
-// //                       blurRadius: 18,
-// //                       offset: const Offset(0, 6),
-// //                     ),
-// //                   ],
-// //                 ),
-// //                 child: Column(
-// //                   crossAxisAlignment: CrossAxisAlignment.start,
-// //                   children: [
-// //                     // Section title with accent bar
-// //                     Row(
-// //                       children: [
-// //                         Container(
-// //                           width: 4,
-// //                           height: 22,
-// //                           decoration: BoxDecoration(
-// //                             gradient: const LinearGradient(
-// //                               begin: Alignment.topCenter,
-// //                               end: Alignment.bottomCenter,
-// //                               colors: [Color(0xFF007BFF), Colors.green],
-// //                             ),
-// //                             borderRadius: BorderRadius.circular(2),
-// //                           ),
-// //                         ),
-// //                         const SizedBox(width: 10),
-// //                         const Text(
-// //                           "Loan Process",
-// //                           style: TextStyle(
-// //                             color: Color(0xFF007BFF),
-// //                             fontSize: 17,
-// //                             fontWeight: FontWeight.bold,
-// //                             letterSpacing: 0.3,
-// //                           ),
-// //                         ),
-// //                       ],
-// //                     ),
-
-// //                     const SizedBox(height: 24),
-
-// //                     // Steps row
-// //                     Row(
-// //                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-// //                       children: [
-// //                         _LoanStep(
-// //                           step: "1",
-// //                           icon: Icons.login_rounded,
-// //                           label: "Sign In",
-// //                           color: const Color(0xFF007BFF),
-// //                           isDark: isDark,
-// //                         ),
-// //                         _StepConnector(),
-// //                         _LoanStep(
-// //                           step: "2",
-// //                           icon: Icons.shield_outlined,
-// //                           label: "Verification",
-// //                           color: Colors.green,
-// //                           isDark: isDark,
-// //                         ),
-// //                         _StepConnector(),
-// //                         _LoanStep(
-// //                           step: "3",
-// //                           icon: Icons.payments_rounded,
-// //                           label: "Disbursement",
-// //                           color: const Color(0xFF007BFF),
-// //                           isDark: isDark,
-// //                         ),
-// //                       ],
-// //                     ),
-// //                   ],
-// //                 ),
-// //               ),
-
-// //               const SizedBox(height: 20),
-
-// //               // ── QUICK STATS STRIP ──
-// //               Row(
-// //                 children: [
-// //                   _StatChip(
-// //                     value: "24hrs",
-// //                     label: "Fast Payout",
-// //                     icon: Icons.bolt_rounded,
-// //                     color: Colors.green,
-// //                     isDark: isDark,
-// //                   ),
-// //                   const SizedBox(width: 10),
-// //                   _StatChip(
-// //                     value: "0%",
-// //                     label: "Hidden Fees",
-// //                     icon: Icons.visibility_off_outlined,
-// //                     color: const Color(0xFF007BFF),
-// //                     isDark: isDark,
-// //                   ),
-// //                   const SizedBox(width: 10),
-// //                   _StatChip(
-// //                     value: "100%",
-// //                     label: "Secure",
-// //                     icon: Icons.lock_outline_rounded,
-// //                     color: Colors.green,
-// //                     isDark: isDark,
-// //                   ),
-// //                 ],
-// //               ),
-
-// //               const SizedBox(height: 30),
-// //             ],
-// //           ),
-// //         ),
-// //       ),
-
-// //       bottomNavigationBar: BottomNavigationBar(
-// //         currentIndex: _selectedIndex,
-// //         selectedItemColor: const Color(0xFF007BFF),
-// //         unselectedItemColor: Colors.grey,
-// //         type: BottomNavigationBarType.fixed,
-// //         onTap: _onItemTapped,
-// //         backgroundColor: isDark ? Colors.black : Colors.white,
-// //         items: const [
-// //           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-// //           BottomNavigationBarItem(icon: Icon(Icons.info_outline), label: "About"),
-// //           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-// //         ],
-// //       ),
-// //     );
-// //   }
-// // }
-
-// // // ── Loan Step ──
-// // class _LoanStep extends StatelessWidget {
-// //   final String step;
-// //   final IconData icon;
-// //   final String label;
-// //   final Color color;
-// //   final bool isDark;
-
-// //   const _LoanStep({
-// //     required this.step,
-// //     required this.icon,
-// //     required this.label,
-// //     required this.color,
-// //     required this.isDark,
-// //   });
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return Column(
-// //       children: [
-// //         Container(
-// //           width: 54,
-// //           height: 54,
-// //           decoration: BoxDecoration(
-// //             color: color.withOpacity(0.1),
-// //             shape: BoxShape.circle,
-// //             border: Border.all(color: color.withOpacity(0.3), width: 1.5),
-// //           ),
-// //           child: Icon(icon, color: color, size: 24),
-// //         ),
-// //         const SizedBox(height: 6),
-// //         Text(
-// //           "Step $step",
-// //           style: TextStyle(
-// //             color: color,
-// //             fontSize: 10,
-// //             fontWeight: FontWeight.w700,
-// //             letterSpacing: 1,
-// //           ),
-// //         ),
-// //         const SizedBox(height: 2),
-// //         Text(
-// //           label,
-// //           style: TextStyle(
-// //             color: isDark ? Colors.white : Colors.black87,
-// //             fontSize: 12,
-// //             fontWeight: FontWeight.w600,
-// //           ),
-// //         ),
-// //       ],
-// //     );
-// //   }
-// // }
-
-// // // ── Step Connector (dashed line) ──
-// // class _StepConnector extends StatelessWidget {
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return Row(
-// //       mainAxisSize: MainAxisSize.min,
-// //       children: List.generate(
-// //         4,
-// //         (_) => Container(
-// //           width: 5,
-// //           height: 1.5,
-// //           margin: const EdgeInsets.symmetric(horizontal: 1),
-// //           decoration: BoxDecoration(
-// //             color: const Color(0xFF007BFF).withOpacity(0.3),
-// //             borderRadius: BorderRadius.circular(1),
-// //           ),
-// //         ),
-// //       ),
-// //     );
-// //   }
-// // }
-
-// // // ── Stat Chip ──
-// // class _StatChip extends StatelessWidget {
-// //   final String value;
-// //   final String label;
-// //   final IconData icon;
-// //   final Color color;
-// //   final bool isDark;
-
-// //   const _StatChip({
-// //     required this.value,
-// //     required this.label,
-// //     required this.icon,
-// //     required this.color,
-// //     required this.isDark,
-// //   });
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return Expanded(
-// //       child: Container(
-// //         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
-// //         decoration: BoxDecoration(
-// //           color: color.withOpacity(0.07),
-// //           borderRadius: BorderRadius.circular(16),
-// //           border: Border.all(color: color.withOpacity(0.18)),
-// //         ),
-// //         child: Column(
-// //           children: [
-// //             Icon(icon, color: color, size: 20),
-// //             const SizedBox(height: 6),
-// //             Text(
-// //               value,
-// //               style: TextStyle(
-// //                 color: color,
-// //                 fontSize: 16,
-// //                 fontWeight: FontWeight.w800,
-// //                 letterSpacing: 0.5,
-// //               ),
-// //             ),
-// //             const SizedBox(height: 2),
-// //             Text(
-// //               label,
-// //               textAlign: TextAlign.center,
-// //               style: TextStyle(
-// //                 color: isDark ? Colors.white70 : Colors.black54,
-// //                 fontSize: 10,
-// //                 fontWeight: FontWeight.w500,
-// //               ),
-// //             ),
-// //           ],
-// //         ),
-// //       ),
-// //     );
-// //   }
-// // }
-
-// // // ── Original Feature Item (unchanged) ──
-// // class _FeatureItem extends StatelessWidget {
-// //   final IconData icon;
-// //   final String label;
-// //   final Color color;
-// //   final Color textColor;
-
-// //   const _FeatureItem({
-// //     required this.icon,
-// //     required this.label,
-// //     required this.color,
-// //     required this.textColor,
-// //   });
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return Column(
-// //       children: [
-// //         Container(
-// //           padding: const EdgeInsets.all(14),
-// //           decoration: BoxDecoration(
-// //             color: color.withOpacity(0.12),
-// //             shape: BoxShape.circle,
-// //           ),
-// //           child: Icon(icon, color: color, size: 28),
-// //         ),
-// //         const SizedBox(height: 8),
-// //         Text(
-// //           label,
-// //           style: TextStyle(
-// //             fontSize: 13,
-// //             fontWeight: FontWeight.w500,
-// //             color: textColor,
-// //           ),
-// //         ),
-// //       ],
-// //     );
-// //   }
-// // }
-
-
-
-
-
-
-
-
-
-
-
-// import 'package:flutter/material.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import 'about_screen.dart';
-// import 'terms_and_policy.dart';
-// import 'profile_page.dart';
-// import 'login_screen.dart';
-// import 'settings_page.dart';
-
-// class HomePage extends StatefulWidget {
-//   const HomePage({super.key});
-
-//   @override
-//   State<HomePage> createState() => _HomePageState();
-// }
-
-// class _HomePageState extends State<HomePage> {
-//   int _selectedIndex = 0;
-
-//   void _onItemTapped(int index) async {
-//     setState(() => _selectedIndex = index);
-
-//     if (index == 1) {
-//       Navigator.push(
-//         context,
-//         MaterialPageRoute(builder: (context) => const AboutPage()),
-//       );
-//     } else if (index == 2) {
-//       // ── Check if user is logged in ──
-//       final prefs = await SharedPreferences.getInstance();
-//       final token = prefs.getString('token') ?? '';
-
-//       if (!mounted) return;
-
-//       if (token.isNotEmpty) {
-//         // Token exists → go straight to dashboard
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(builder: (_) => const ProfilePage()),
-//         );
-//       } else {
-//         // No token → prompt login first
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(builder: (_) => const LoginPage()),
-//         );
-//       }
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final theme = Theme.of(context);
-//     final isDark = theme.brightness == Brightness.dark;
-
-//     return Scaffold(
-//       backgroundColor: isDark ? Colors.black : Colors.white,
-
-//       appBar: AppBar(
-//         backgroundColor: const Color(0xFF007BFF),
-//         elevation: 0,
-//         centerTitle: true,
-//         automaticallyImplyLeading: false,
-//         leading: Padding(
-//           padding: const EdgeInsets.all(9),
-//           child: Container(
-//             decoration: BoxDecoration(
-//               shape: BoxShape.circle,
-//               border: Border.all(color: Colors.white, width: 1.5),
-//             ),
-//             child: const CircleAvatar(
-//               radius: 16,
-//               backgroundImage: AssetImage('assets/magna_logo.jpeg'),
-//             ),
-//           ),
-//         ),
-//         title: const Text(
-//           "MAGNA CREDIT",
-//           style: TextStyle(
-//             fontWeight: FontWeight.w800,
-//             color: Colors.white,
-//             fontSize: 16,
-//             letterSpacing: 1.5,
-//           ),
-//         ),
-//         actions: [
-//           PopupMenuButton<String>(
-//             icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
-//             color: isDark ? const Color(0xFF1A1A2E) : Colors.white,
-//             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-//             offset: const Offset(0, 48),
-//             onSelected: (value) {
-//               if (value == 'settings') {
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(builder: (context) => const SettingsPage()),
-//                 );
-//               }
-//             },
-//             itemBuilder: (_) => [
-//               PopupMenuItem(
-//                 value: 'settings',
-//                 child: Row(children: [
-//                   Icon(Icons.settings_rounded,
-//                       color: isDark ? Colors.white70 : const Color(0xFF007BFF),
-//                       size: 18),
-//                   const SizedBox(width: 10),
-//                   Text("Settings",
-//                       style: TextStyle(
-//                           color: isDark ? Colors.white : Colors.black87,
-//                           fontSize: 14,
-//                           fontWeight: FontWeight.w500)),
-//                 ]),
-//               ),
-//             ],
-//           ),
-//         ],
-//         bottom: PreferredSize(
-//           preferredSize: const Size.fromHeight(3),
-//           child: Container(
-//             height: 3,
-//             decoration: const BoxDecoration(
-//               gradient: LinearGradient(colors: [Color(0xFF007BFF), Colors.green]),
-//             ),
-//           ),
-//         ),
-//       ),
-
-//       body: SingleChildScrollView(
-//         child: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               // ── Greeting header ──
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Text("",
-//                           style: TextStyle(
-//                               fontSize: 13,
-//                               color: isDark ? Colors.white54 : Colors.black45)),
-//                       const SizedBox(height: 2),
-//                       Text("Why Choose Magna?",
-//                           style: TextStyle(
-//                               fontSize: 15,
-//                               fontWeight: FontWeight.w800,
-//                               color: isDark
-//                                   ? Colors.white
-//                                   : const Color(0xFF007BFF),
-//                               letterSpacing: 0.2)),
-//                     ],
-//                   ),
-//                   Container(
-//                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-//                     decoration: BoxDecoration(
-//                       color: Colors.green.withOpacity(0.1),
-//                       borderRadius: BorderRadius.circular(20),
-//                       border: Border.all(color: Colors.green.withOpacity(0.3)),
-//                     ),
-//                     child: const Row(children: [
-//                       Icon(Icons.circle, color: Colors.green, size: 8),
-//                       SizedBox(width: 5),
-//                       Text("Active",
-//                           style: TextStyle(
-//                               color: Colors.green,
-//                               fontSize: 11,
-//                               fontWeight: FontWeight.w600)),
-//                     ]),
-//                   ),
-//                 ],
-//               ),
-
-//               const SizedBox(height: 22),
-
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   _FeatureItem(
-//                       icon: Icons.flash_on,
-//                       label: "Fast Approval",
-//                       color: const Color(0xFF007BFF),
-//                       textColor: isDark ? Colors.white : Colors.black87),
-//                   _FeatureItem(
-//                       icon: Icons.account_balance_wallet,
-//                       label: "High Limits",
-//                       color: Colors.green,
-//                       textColor: isDark ? Colors.white : Colors.black87),
-//                   _FeatureItem(
-//                       icon: Icons.security,
-//                       label: "Secure",
-//                       color: const Color(0xFFFFA000),
-//                       textColor: isDark ? Colors.white : Colors.black87),
-//                 ],
-//               ),
-
-//               const SizedBox(height: 28),
-
-//               // ── Hero Banner ──
-//               Container(
-//                 width: double.infinity,
-//                 padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 30),
-//                 decoration: BoxDecoration(
-//                   color: Colors.green,
-//                   borderRadius: BorderRadius.circular(20),
-//                   boxShadow: const [
-//                     BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, 6))
-//                   ],
-//                 ),
-//                 child: Column(children: [
-//                   const Text("Welcome to Magna Credit",
-//                       textAlign: TextAlign.center,
-//                       style: TextStyle(
-//                           color: Colors.white,
-//                           fontSize: 22,
-//                           fontWeight: FontWeight.bold)),
-//                   const SizedBox(height: 6),
-//                   const Text(
-//                       "Fast, secure and reliable loans designed for your needs.",
-//                       textAlign: TextAlign.center,
-//                       style: TextStyle(color: Colors.white70, fontSize: 15, height: 1.4)),
-//                   const SizedBox(height: 20),
-//                   Container(
-//                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-//                     decoration: BoxDecoration(
-//                       color: Colors.white.withOpacity(0.15),
-//                       borderRadius: BorderRadius.circular(14),
-//                       border: Border.all(color: Colors.white.withOpacity(0.35), width: 1),
-//                     ),
-//                     child: Row(mainAxisSize: MainAxisSize.min, children: [
-//                       Container(
-//                         padding: const EdgeInsets.all(6),
-//                         decoration: BoxDecoration(
-//                             color: Colors.white.withOpacity(0.2),
-//                             shape: BoxShape.circle),
-//                         child: const Icon(Icons.trending_up_rounded,
-//                             color: Colors.white, size: 16),
-//                       ),
-//                       const SizedBox(width: 10),
-//                       const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-//                         Text("Maximum Loan Amount",
-//                             style: TextStyle(
-//                                 color: Colors.white70,
-//                                 fontSize: 10,
-//                                 fontWeight: FontWeight.w500,
-//                                 letterSpacing: 0.5)),
-//                         SizedBox(height: 2),
-//                         Text("UGX 10,000,000",
-//                             style: TextStyle(
-//                                 color: Colors.white,
-//                                 fontSize: 18,
-//                                 fontWeight: FontWeight.w800,
-//                                 letterSpacing: 0.5)),
-//                       ]),
-//                     ]),
-//                   ),
-//                   const SizedBox(height: 16),
-//                   ElevatedButton(
-//                     onPressed: () => Navigator.push(context,
-//                         MaterialPageRoute(builder: (_) => const TermsPoliciesPage())),
-//                     style: ElevatedButton.styleFrom(
-//                       backgroundColor: Colors.white,
-//                       foregroundColor: Colors.green,
-//                       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
-//                       shape: RoundedRectangleBorder(
-//                           borderRadius: BorderRadius.circular(14)),
-//                     ),
-//                     child: const Text("Apply for a Loan",
-//                         style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-//                   ),
-//                 ]),
-//               ),
-
-//               const SizedBox(height: 32),
-
-//               // ── Loan Process ──
-//               Container(
-//                 width: double.infinity,
-//                 padding: const EdgeInsets.symmetric(vertical: 26, horizontal: 20),
-//                 decoration: BoxDecoration(
-//                   color: isDark ? Colors.grey[900] : Colors.white,
-//                   borderRadius: BorderRadius.circular(22),
-//                   border: Border.all(color: const Color(0xFF007BFF).withOpacity(0.12)),
-//                   boxShadow: [
-//                     BoxShadow(
-//                         color: const Color(0xFF007BFF).withOpacity(0.07),
-//                         blurRadius: 18,
-//                         offset: const Offset(0, 6))
-//                   ],
-//                 ),
-//                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-//                   Row(children: [
-//                     Container(
-//                       width: 4,
-//                       height: 22,
-//                       decoration: BoxDecoration(
-//                         gradient: const LinearGradient(
-//                             begin: Alignment.topCenter,
-//                             end: Alignment.bottomCenter,
-//                             colors: [Color(0xFF007BFF), Colors.green]),
-//                         borderRadius: BorderRadius.circular(2),
-//                       ),
-//                     ),
-//                     const SizedBox(width: 10),
-//                     const Text("Loan Process",
-//                         style: TextStyle(
-//                             color: Color(0xFF007BFF),
-//                             fontSize: 17,
-//                             fontWeight: FontWeight.bold,
-//                             letterSpacing: 0.3)),
-//                   ]),
-//                   const SizedBox(height: 24),
-//                   Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                     children: [
-//                       _LoanStep(step: "1", icon: Icons.login_rounded,
-//                           label: "Sign In", color: const Color(0xFF007BFF), isDark: isDark),
-//                       _StepConnector(),
-//                       _LoanStep(step: "2", icon: Icons.shield_outlined,
-//                           label: "Verification", color: Colors.green, isDark: isDark),
-//                       _StepConnector(),
-//                       _LoanStep(step: "3", icon: Icons.payments_rounded,
-//                           label: "Disbursement", color: const Color(0xFF007BFF), isDark: isDark),
-//                     ],
-//                   ),
-//                 ]),
-//               ),
-
-//               const SizedBox(height: 20),
-
-//               // ── Quick Stats ──
-//               Row(children: [
-//                 _StatChip(value: "24hrs", label: "Fast Payout",
-//                     icon: Icons.bolt_rounded, color: Colors.green, isDark: isDark),
-//                 const SizedBox(width: 10),
-//                 _StatChip(value: "0%", label: "Hidden Fees",
-//                     icon: Icons.visibility_off_outlined,
-//                     color: const Color(0xFF007BFF), isDark: isDark),
-//                 const SizedBox(width: 10),
-//                 _StatChip(value: "100%", label: "Secure",
-//                     icon: Icons.lock_outline_rounded, color: Colors.green, isDark: isDark),
-//               ]),
-
-//               const SizedBox(height: 30),
-//             ],
-//           ),
-//         ),
-//       ),
-
-//       bottomNavigationBar: BottomNavigationBar(
-//         currentIndex: _selectedIndex,
-//         selectedItemColor: const Color(0xFF007BFF),
-//         unselectedItemColor: Colors.grey,
-//         type: BottomNavigationBarType.fixed,
-//         onTap: _onItemTapped,
-//         backgroundColor: isDark ? Colors.black : Colors.white,
-//         items: const [
-//           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-//           BottomNavigationBarItem(icon: Icon(Icons.info_outline), label: "About"),
-//           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-// class _LoanStep extends StatelessWidget {
-//   final String step;
-//   final IconData icon;
-//   final String label;
-//   final Color color;
-//   final bool isDark;
-//   const _LoanStep({required this.step, required this.icon, required this.label, required this.color, required this.isDark});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(children: [
-//       Container(
-//         width: 54, height: 54,
-//         decoration: BoxDecoration(
-//           color: color.withOpacity(0.1),
-//           shape: BoxShape.circle,
-//           border: Border.all(color: color.withOpacity(0.3), width: 1.5),
-//         ),
-//         child: Icon(icon, color: color, size: 24),
-//       ),
-//       const SizedBox(height: 6),
-//       Text("Step $step",
-//           style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 1)),
-//       const SizedBox(height: 2),
-//       Text(label,
-//           style: TextStyle(
-//               color: isDark ? Colors.white : Colors.black87,
-//               fontSize: 12, fontWeight: FontWeight.w600)),
-//     ]);
-//   }
-// }
-
-// class _StepConnector extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       mainAxisSize: MainAxisSize.min,
-//       children: List.generate(4, (_) => Container(
-//         width: 5, height: 1.5,
-//         margin: const EdgeInsets.symmetric(horizontal: 1),
-//         decoration: BoxDecoration(
-//           color: const Color(0xFF007BFF).withOpacity(0.3),
-//           borderRadius: BorderRadius.circular(1),
-//         ),
-//       )),
-//     );
-//   }
-// }
-
-// class _StatChip extends StatelessWidget {
-//   final String value, label;
-//   final IconData icon;
-//   final Color color;
-//   final bool isDark;
-//   const _StatChip({required this.value, required this.label, required this.icon, required this.color, required this.isDark});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Expanded(
-//       child: Container(
-//         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
-//         decoration: BoxDecoration(
-//           color: color.withOpacity(0.07),
-//           borderRadius: BorderRadius.circular(16),
-//           border: Border.all(color: color.withOpacity(0.18)),
-//         ),
-//         child: Column(children: [
-//           Icon(icon, color: color, size: 20),
-//           const SizedBox(height: 6),
-//           Text(value,
-//               style: TextStyle(color: color, fontSize: 16,
-//                   fontWeight: FontWeight.w800, letterSpacing: 0.5)),
-//           const SizedBox(height: 2),
-//           Text(label,
-//               textAlign: TextAlign.center,
-//               style: TextStyle(
-//                   color: isDark ? Colors.white70 : Colors.black54,
-//                   fontSize: 10, fontWeight: FontWeight.w500)),
-//         ]),
-//       ),
-//     );
-//   }
-// }
-
-// class _FeatureItem extends StatelessWidget {
-//   final IconData icon;
-//   final String label;
-//   final Color color, textColor;
-//   const _FeatureItem({required this.icon, required this.label, required this.color, required this.textColor});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(children: [
-//       Container(
-//         padding: const EdgeInsets.all(14),
-//         decoration: BoxDecoration(color: color.withOpacity(0.12), shape: BoxShape.circle),
-//         child: Icon(icon, color: color, size: 28),
-//       ),
-//       const SizedBox(height: 8),
-//       Text(label,
-//           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: textColor)),
-//     ]);
-//   }
-// }
-
-
-
-
-
-
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'about_screen.dart';
@@ -1147,6 +6,7 @@ import 'profile_page.dart';
 import 'login_screen.dart';
 import 'settings_page.dart';
 import 'notifications_page.dart';
+import 'contact_support_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -1157,6 +17,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  double _currentLoanAmount = 2500000.0;
+
+  static const Color _primaryBlue = Color(0xFF1565C0);
+  static const Color _accentGreen = Color(0xFF2E7D32);
 
   Future<void> _onItemTapped(int index) async {
     setState(() => _selectedIndex = index);
@@ -1186,28 +50,45 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  String _formatCurrency(double amount) {
+    final int val = amount.toInt();
+    final str = val.toString();
+    final buffer = StringBuffer();
+    for (int i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) {
+        buffer.write(',');
+      }
+      buffer.write(str[i]);
+    }
+    return buffer.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme  = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final weeklyInterest = _currentLoanAmount * 0.05;
+    final totalRepayment = _currentLoanAmount + weeklyInterest;
 
     return Scaffold(
-      backgroundColor: isDark ? Colors.black : Colors.white,
+      backgroundColor: isDark ? const Color(0xFF0D0D0D) : const Color(0xFFF5F6FA),
 
       appBar: AppBar(
-        backgroundColor: const Color(0xFF007BFF),
+        backgroundColor: isDark ? Colors.black : _primaryBlue,
         elevation: 0,
         centerTitle: true,
         automaticallyImplyLeading: false,
         leading: Padding(
-          padding: const EdgeInsets.all(9),
+          padding: const EdgeInsets.all(10),
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 1.5),
+              border: Border.all(
+                color: isDark ? _primaryBlue : Colors.white.withOpacity(0.6),
+                width: 1.5,
+              ),
             ),
             child: const CircleAvatar(
-              radius: 16,
+              radius: 14,
               backgroundImage: AssetImage('assets/magna_logo.jpeg'),
             ),
           ),
@@ -1215,18 +96,16 @@ class _HomePageState extends State<HomePage> {
         title: const Text(
           'MAGNA CREDIT',
           style: TextStyle(
-            fontWeight: FontWeight.w800,
             color: Colors.white,
-            fontSize: 16,
-            letterSpacing: 1.5,
+            fontWeight: FontWeight.w800,
+            fontSize: 20,
+            letterSpacing: 0.5,
           ),
         ),
         actions: [
-          // ── Notification Bell ──
-          const NotificationBell(),
-          // ── Settings menu ──
+          NotificationBell(iconColor: isDark ? _primaryBlue : Colors.white),
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
+            icon: Icon(Icons.more_vert_rounded, color: isDark ? _primaryBlue : Colors.white),
             color: isDark ? const Color(0xFF1A1A2E) : Colors.white,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
             offset: const Offset(0, 48),
@@ -1243,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                 value: 'settings',
                 child: Row(children: [
                   Icon(Icons.settings_rounded,
-                      color: isDark ? Colors.white70 : const Color(0xFF007BFF),
+                      color: isDark ? Colors.white70 : _primaryBlue,
                       size: 18),
                   const SizedBox(width: 10),
                   Text('Settings',
@@ -1257,269 +136,348 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(3),
+          preferredSize: const Size.fromHeight(2),
           child: Container(
-            height: 3,
+            height: 2,
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Color(0xFF007BFF), Colors.green]),
+              gradient: LinearGradient(colors: [_primaryBlue, _accentGreen]),
             ),
           ),
         ),
       ),
 
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── Greeting header ──
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('',
-                        style: TextStyle(
-                            fontSize: 13,
-                            color: isDark ? Colors.white54 : Colors.black45)),
-                    const SizedBox(height: 2),
-                    Text('Why Choose Magna?',
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w800,
-                            color: isDark ? Colors.white : const Color(0xFF007BFF),
-                            letterSpacing: 0.2)),
-                  ]),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
-                    ),
-                    child: const Row(children: [
-                      Icon(Icons.circle, color: Colors.green, size: 8),
-                      SizedBox(width: 5),
-                      Text('Active',
-                          style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600)),
-                    ]),
+              // ── Header / Intro ──
+              Text(
+                "KAMPALA'S TRUSTED LENDER",
+                style: TextStyle(
+                  fontSize: 11,
+                  letterSpacing: 1.5,
+                  fontWeight: FontWeight.w800,
+                  color: isDark ? _accentGreen : _primaryBlue,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Instant Digital Credit',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w900,
+                  color: isDark ? Colors.white : const Color(0xFF1E293B),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // ── Interactive Loan Calculator Card ──
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(22),
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF121212) : Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: isDark ? Colors.white.withOpacity(0.05) : _primaryBlue.withOpacity(0.1),
+                    width: 1.5,
                   ),
-                ],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(isDark ? 0.3 : 0.05),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'How much do you need?',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: _accentGreen.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Text(
+                            '5% Monthly Rate',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: _accentGreen,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'UGX ${_formatCurrency(_currentLoanAmount)}',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
+                        color: isDark ? Colors.white : _primaryBlue,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        trackHeight: 6,
+                        activeTrackColor: _primaryBlue,
+                        inactiveTrackColor: isDark ? Colors.grey[800] : Colors.grey[200],
+                        thumbColor: _accentGreen,
+                        overlayColor: _accentGreen.withOpacity(0.12),
+                        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
+                      ),
+                      child: Slider(
+                        min: 100000.0,
+                        max: 10000000.0,
+                        divisions: 99,
+                        value: _currentLoanAmount,
+                        onChanged: (val) {
+                          setState(() => _currentLoanAmount = val);
+                        },
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('UGX 100K', style: TextStyle(fontSize: 10, color: Colors.grey[500], fontWeight: FontWeight.bold)),
+                        Text('UGX 10M', style: TextStyle(fontSize: 10, color: Colors.grey[500], fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      height: 1,
+                      color: isDark ? Colors.white.withOpacity(0.06) : Colors.black.withOpacity(0.04),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Monthly Interest (5%)',
+                              style: TextStyle(fontSize: 11, color: Colors.grey[500], fontWeight: FontWeight.w500),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'UGX ${_formatCurrency(weeklyInterest)}',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: isDark ? Colors.white70 : const Color(0xFF1E293B),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Total Repayment',
+                              style: TextStyle(fontSize: 11, color: Colors.grey[500], fontWeight: FontWeight.w500),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'UGX ${_formatCurrency(totalRepayment)}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: _accentGreen,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    // FIX 1: Removed `const` from Row since children are not all const
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const TermsPoliciesPage()),
+                      ),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(colors: [_primaryBlue, _accentGreen]),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: _primaryBlue.withOpacity(0.25),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text(
+                              'Apply Now',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 15,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 18),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
 
-              const SizedBox(height: 22),
+              const SizedBox(height: 28),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // ── Quick Actions Grid ──
+              Text(
+                'Quick Actions',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: isDark ? Colors.white : const Color(0xFF1E293B),
+                ),
+              ),
+              const SizedBox(height: 14),
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 14,
+                mainAxisSpacing: 14,
+                childAspectRatio: 1.15,
                 children: [
-                  _FeatureItem(
-                      icon: Icons.flash_on,
-                      label: 'Fast Approval',
-                      color: const Color(0xFF007BFF),
-                      textColor: isDark ? Colors.white : Colors.black87),
-                  _FeatureItem(
-                      icon: Icons.account_balance_wallet,
-                      label: 'High Limits',
-                      color: Colors.green,
-                      textColor: isDark ? Colors.white : Colors.black87),
-                  _FeatureItem(
-                      icon: Icons.security,
-                      label: 'Secure',
-                      color: const Color(0xFFFFA000),
-                      textColor: isDark ? Colors.white : Colors.black87),
+                  QuickActionCard(
+                    icon: Icons.add_circle_outline_rounded,
+                    title: 'Request Loan',
+                    subtitle: 'Apply for a new limit',
+                    gradientColors: const [Color(0xFF007BFF), Color(0xFF0056B3)],
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const TermsPoliciesPage()),
+                    ),
+                  ),
+                  QuickActionCard(
+                    icon: Icons.payment_rounded,
+                    title: 'Repay Loan',
+                    subtitle: 'Clear active balance',
+                    gradientColors: const [Color(0xFF1BBE6D), Color(0xFF0F9F56)],
+                    onTap: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      final token = prefs.getString('token') ?? '';
+                      if (!mounted) return;
+                      if (token.isNotEmpty) {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfilePage()));
+                      } else {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginPage()));
+                      }
+                    },
+                  ),
+                  QuickActionCard(
+                    icon: Icons.track_changes_rounded,
+                    title: 'Check Status',
+                    subtitle: 'View active applications',
+                    // FIX 2: Replaced non-existent Colors.orangeDarker with a valid deep orange color
+                    gradientColors: const [Colors.orange, Color(0xFFE65100)],
+                    onTap: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      final token = prefs.getString('token') ?? '';
+                      if (!mounted) return;
+                      if (token.isNotEmpty) {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfilePage()));
+                      } else {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginPage()));
+                      }
+                    },
+                  ),
+                  QuickActionCard(
+                    icon: Icons.support_agent_rounded,
+                    title: 'Live Support',
+                    subtitle: 'Talk to an agent',
+                    gradientColors: const [Colors.deepPurple, Colors.deepPurpleAccent],
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ContactSupportPage()),
+                    ),
+                  ),
                 ],
               ),
 
               const SizedBox(height: 28),
 
-              // ── Hero Banner ──
+              // ── Trust & Compliance Banner ──
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 30),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: const [
-                    BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 10,
-                        offset: Offset(0, 6))
-                  ],
-                ),
-                child: Column(children: [
-                  const Text('Welcome to Magna Credit',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 6),
-                  const Text(
-                      'Fast, secure and reliable loans designed for your needs.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white70, fontSize: 15, height: 1.4)),
-                  const SizedBox(height: 20),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.35), width: 1),
-                    ),
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            shape: BoxShape.circle),
-                        child: const Icon(Icons.trending_up_rounded,
-                            color: Colors.white, size: 16),
-                      ),
-                      const SizedBox(width: 10),
-                      const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Maximum Loan Amount',
-                                style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: 0.5)),
-                            SizedBox(height: 2),
-                            Text('UGX 10,000,000',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w800,
-                                    letterSpacing: 0.5)),
-                          ]),
-                    ]),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const TermsPoliciesPage())),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.green,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 30),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14)),
-                    ),
-                    child: const Text('Apply for a Loan',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold)),
-                  ),
-                ]),
-              ),
-
-              const SizedBox(height: 32),
-
-              // ── Loan Process ──
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 26, horizontal: 20),
-                decoration: BoxDecoration(
-                  color: isDark ? Colors.grey[900] : Colors.white,
-                  borderRadius: BorderRadius.circular(22),
+                  color: isDark ? const Color(0xFF112211).withOpacity(0.3) : const Color(0xFFE8F5E9),
+                  borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                      color: const Color(0xFF007BFF).withValues(alpha: 0.12)),
-                  boxShadow: [
-                    BoxShadow(
-                        color: const Color(0xFF007BFF).withValues(alpha: 0.07),
-                        blurRadius: 18,
-                        offset: const Offset(0, 6))
-                  ],
+                    color: isDark ? Colors.green.withOpacity(0.15) : Colors.green.withOpacity(0.25),
+                  ),
                 ),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                  Row(children: [
+                child: Row(
+                  children: [
                     Container(
-                      width: 4,
-                      height: 22,
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Color(0xFF007BFF), Colors.green]),
-                        borderRadius: BorderRadius.circular(2),
+                        color: _accentGreen.withOpacity(0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.verified_user_rounded, color: _accentGreen, size: 22),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Licensed by UMRA',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.green[300] : const Color(0xFF1B5E20),
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Fully compliant microfinance lender. Secured with bank-grade 256-bit encryption.',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: isDark ? Colors.grey[400] : const Color(0xFF2E7D32),
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    const Text('Loan Process',
-                        style: TextStyle(
-                            color: Color(0xFF007BFF),
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.3)),
-                  ]),
-                  const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _LoanStep(
-                          step: '1',
-                          icon: Icons.login_rounded,
-                          label: 'Sign In',
-                          color: const Color(0xFF007BFF),
-                          isDark: isDark),
-                      _StepConnector(),
-                      _LoanStep(
-                          step: '2',
-                          icon: Icons.shield_outlined,
-                          label: 'Verification',
-                          color: Colors.green,
-                          isDark: isDark),
-                      _StepConnector(),
-                      _LoanStep(
-                          step: '3',
-                          icon: Icons.payments_rounded,
-                          label: 'Disbursement',
-                          color: const Color(0xFF007BFF),
-                          isDark: isDark),
-                    ],
-                  ),
-                ]),
+                  ],
+                ),
               ),
-
-              const SizedBox(height: 20),
-
-              // ── Quick Stats ──
-              Row(children: [
-                _StatChip(
-                    value: '24hrs',
-                    label: 'Fast Payout',
-                    icon: Icons.bolt_rounded,
-                    color: Colors.green,
-                    isDark: isDark),
-                const SizedBox(width: 10),
-                _StatChip(
-                    value: '0%',
-                    label: 'Hidden Fees',
-                    icon: Icons.visibility_off_outlined,
-                    color: const Color(0xFF007BFF),
-                    isDark: isDark),
-                const SizedBox(width: 10),
-                _StatChip(
-                    value: '100%',
-                    label: 'Secure',
-                    icon: Icons.lock_outline_rounded,
-                    color: Colors.green,
-                    isDark: isDark),
-              ]),
-
-              const SizedBox(height: 30),
+              const SizedBox(height: 16),
             ],
           ),
         ),
@@ -1527,158 +485,123 @@ class _HomePageState extends State<HomePage> {
 
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color(0xFF007BFF),
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: _primaryBlue,
+        unselectedItemColor: Colors.grey[500],
         type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,
-        backgroundColor: isDark ? Colors.black : Colors.white,
+        backgroundColor: isDark ? const Color(0xFF0F0F0F) : Colors.white,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+        unselectedLabelStyle: const TextStyle(fontSize: 12),
+        elevation: 8,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home),         label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.info_outline), label: 'About'),
-          BottomNavigationBarItem(icon: Icon(Icons.person),       label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.info_outline_rounded), label: 'About'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: 'Profile'),
         ],
       ),
     );
   }
 }
 
-// ── Loan Step ───────────────────────────────────────────────────
-class _LoanStep extends StatelessWidget {
-  final String step, label;
+class QuickActionCard extends StatefulWidget {
   final IconData icon;
-  final Color color;
-  final bool isDark;
-  const _LoanStep({
-    required this.step,
+  final String title;
+  final String subtitle;
+  final List<Color> gradientColors;
+  final VoidCallback onTap;
+
+  const QuickActionCard({
+    super.key,
     required this.icon,
-    required this.label,
-    required this.color,
-    required this.isDark,
+    required this.title,
+    required this.subtitle,
+    required this.gradientColors,
+    required this.onTap,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      Container(
-        width: 54, height: 54,
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          shape: BoxShape.circle,
-          border: Border.all(color: color.withValues(alpha: 0.3), width: 1.5),
-        ),
-        child: Icon(icon, color: color, size: 24),
-      ),
-      const SizedBox(height: 6),
-      Text('Step $step',
-          style: TextStyle(
-              color: color,
-              fontSize: 10,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1)),
-      const SizedBox(height: 2),
-      Text(label,
-          style: TextStyle(
-              color: isDark ? Colors.white : Colors.black87,
-              fontSize: 12,
-              fontWeight: FontWeight.w600)),
-    ]);
-  }
+  State<QuickActionCard> createState() => _QuickActionCardState();
 }
 
-// ── Step Connector ──────────────────────────────────────────────
-class _StepConnector extends StatelessWidget {
+class _QuickActionCardState extends State<QuickActionCard> {
+  double _scale = 1.0;
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(
-        4,
-        (_) => Container(
-          width: 5, height: 1.5,
-          margin: const EdgeInsets.symmetric(horizontal: 1),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _scale = 0.95),
+      onTapUp: (_) => setState(() => _scale = 1.0),
+      onTapCancel: () => setState(() => _scale = 1.0),
+      onTap: widget.onTap,
+      child: AnimatedScale(
+        scale: _scale,
+        duration: const Duration(milliseconds: 150),
+        child: Container(
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF007BFF).withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(1),
+            color: isDark ? const Color(0xFF161616) : Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: isDark ? Colors.white.withOpacity(0.06) : Colors.black.withOpacity(0.04),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(isDark ? 0.2 : 0.04),
+                blurRadius: 15,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: widget.gradientColors,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(widget.icon, color: Colors.white, size: 22),
+              ),
+              const SizedBox(height: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                      color: isDark ? Colors.white : const Color(0xFF1E293B),
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    widget.subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 9,
+                      fontWeight: FontWeight.w500,
+                      color: isDark ? Colors.white38 : Colors.black38,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
     );
-  }
-}
-
-// ── Stat Chip ───────────────────────────────────────────────────
-class _StatChip extends StatelessWidget {
-  final String value, label;
-  final IconData icon;
-  final Color color;
-  final bool isDark;
-  const _StatChip({
-    required this.value,
-    required this.label,
-    required this.icon,
-    required this.color,
-    required this.isDark,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.07),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withValues(alpha: 0.18)),
-        ),
-        child: Column(children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(height: 6),
-          Text(value,
-              style: TextStyle(
-                  color: color,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.5)),
-          const SizedBox(height: 2),
-          Text(label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: isDark ? Colors.white70 : Colors.black54,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w500)),
-        ]),
-      ),
-    );
-  }
-}
-
-// ── Feature Item ────────────────────────────────────────────────
-class _FeatureItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color, textColor;
-  const _FeatureItem({
-    required this.icon,
-    required this.label,
-    required this.color,
-    required this.textColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.12), shape: BoxShape.circle),
-        child: Icon(icon, color: color, size: 28),
-      ),
-      const SizedBox(height: 8),
-      Text(label,
-          style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: textColor)),
-    ]);
   }
 }
