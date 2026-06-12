@@ -43,7 +43,7 @@ class _ReturningClientLoanPageState extends State<ReturningClientLoanPage> {
   String? selectedLoanType;
   String? selectedEducation;
 
-  XFile?       nationalIdImage;
+  List<XFile>  nationalIdImages = [];
   List<XFile>  collateralImages = [];
   bool         _isSubmitting    = false;
 
@@ -114,8 +114,10 @@ class _ReturningClientLoanPageState extends State<ReturningClientLoanPage> {
   }
 
   Future<void> _pickNationalId() async {
-    final picked = await _picker.pickImage(source: ImageSource.gallery);
-    if (picked != null) setState(() => nationalIdImage = picked);
+    final pickedFiles = await _picker.pickMultiImage();
+    if (pickedFiles.isNotEmpty) {
+      setState(() => nationalIdImages = pickedFiles);
+    }
   }
 
   Future<void> _pickCollateral() async {
@@ -128,14 +130,31 @@ class _ReturningClientLoanPageState extends State<ReturningClientLoanPage> {
     return Image.file(File(image.path), fit: BoxFit.cover);
   }
 
+  String getSafeFilename(String path) {
+    final ext = p.extension(path).toLowerCase();
+    if (ext == '.jpg' || ext == '.jpeg' || ext == '.png') {
+      return p.basename(path);
+    }
+    final baseWithoutExt = p.basenameWithoutExtension(path);
+    return '$baseWithoutExt.jpg';
+  }
+
+  MediaType getSafeMediaType(String path) {
+    final ext = p.extension(path).toLowerCase();
+    if (ext == '.png') {
+      return MediaType('image', 'png');
+    }
+    return MediaType('image', 'jpeg');
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    if (nationalIdImage == null) {
+    if (nationalIdImages.isEmpty) {
       _snack('Please upload your National ID', isError: true);
       return;
     }
     if (collateralImages.isEmpty) {
-      _snack('Please upload your National ID', isError: true);
+      _snack('Please upload collateral images', isError: true);
       return;
     }
     if (_token.isEmpty) {
@@ -171,49 +190,45 @@ class _ReturningClientLoanPageState extends State<ReturningClientLoanPage> {
       request.fields['education']      = selectedEducation ?? '';
       request.fields['address']        = addressController.text.trim();
 
-      MediaType mimeTypeForPath(String path) {
-        final ext = p.extension(path).toLowerCase();
-        if (ext == '.png') {
-          return MediaType('image', 'png');
-        } else if (ext == '.jpg' || ext == '.jpeg') {
-          return MediaType('image', 'jpeg');
-        } else if (ext == '.gif') {
-          return MediaType('image', 'gif');
-        } else if (ext == '.webp') {
-          return MediaType('image', 'webp');
-        } else if (ext == '.heic') {
-          return MediaType('image', 'heic');
-        } else if (ext == '.heif') {
-          return MediaType('image', 'heif');
-        }
-        return MediaType('image', 'jpeg');
-      }
+      // ── National ID images ──
+      for (var image in nationalIdImages) {
+        final safeName = getSafeFilename(image.path);
+        final safeMime = getSafeMediaType(image.path);
 
-      // ── National ID image ──
-      if (kIsWeb) {
-        final bytes = await nationalIdImage!.readAsBytes();
-        request.files.add(http.MultipartFile.fromBytes(
-            'national_id_image', bytes, filename: nationalIdImage!.name,
-            contentType: MediaType('image', 'jpeg')));
-      } else {
-        request.files.add(await http.MultipartFile.fromPath(
-            'national_id_image', nationalIdImage!.path,
-            filename: p.basename(nationalIdImage!.path),
-            contentType: mimeTypeForPath(nationalIdImage!.path)));
+        if (kIsWeb) {
+          final bytes = await image.readAsBytes();
+          request.files.add(http.MultipartFile.fromBytes(
+            'national_id_image[]', bytes,
+            filename: safeName,
+            contentType: safeMime,
+          ));
+        } else {
+          request.files.add(await http.MultipartFile.fromPath(
+            'national_id_image[]', image.path,
+            filename: safeName,
+            contentType: safeMime,
+          ));
+        }
       }
 
       // ── Collateral images ──
       for (final img in collateralImages) {
+        final safeName = getSafeFilename(img.path);
+        final safeMime = getSafeMediaType(img.path);
+
         if (kIsWeb) {
           final bytes = await img.readAsBytes();
           request.files.add(http.MultipartFile.fromBytes(
-              'collateral_images[]', bytes, filename: img.name,
-              contentType: MediaType('image', 'jpeg')));
+            'collateral_images[]', bytes,
+            filename: safeName,
+            contentType: safeMime,
+          ));
         } else {
           request.files.add(await http.MultipartFile.fromPath(
-              'collateral_images[]', img.path,
-              filename: p.basename(img.path),
-              contentType: mimeTypeForPath(img.path)));
+            'collateral_images[]', img.path,
+            filename: safeName,
+            contentType: safeMime,
+          ));
         }
       }
 
@@ -418,18 +433,27 @@ class _ReturningClientLoanPageState extends State<ReturningClientLoanPage> {
                 children: [
 
                   // National ID
-                  _docLabel('National ID *', Icons.badge_rounded, isDark),
+                  _docLabel('National ID *', Icons.badge_rounded, isDark,
+                      badge: nationalIdImages.isNotEmpty
+                          ? '${nationalIdImages.length} uploaded' : null),
                   const SizedBox(height: 8),
                   GestureDetector(
                     onTap: _pickNationalId,
                     child: _UploadBox(
                       isDark: isDark,
-                      isEmpty: nationalIdImage == null,
-                      emptyLabel: 'Tap to upload National ID',
+                      isEmpty: nationalIdImages.isEmpty,
+                      emptyLabel: 'Tap to upload National ID(s)',
                       emptyIcon: Icons.badge_rounded,
-                      child: nationalIdImage != null
-                          ? ClipRRect(borderRadius: BorderRadius.circular(12),
-                              child: _imagePreview(nationalIdImage!))
+                      child: nationalIdImages.isNotEmpty
+                          ? ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: nationalIdImages.map((img) => Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: ClipRRect(borderRadius: BorderRadius.circular(10),
+                                    child: SizedBox(width: 110, height: 110,
+                                        child: _imagePreview(img))),
+                              )).toList(),
+                            )
                           : null,
                     ),
                   ),

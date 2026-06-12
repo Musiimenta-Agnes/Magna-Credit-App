@@ -907,7 +907,7 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
   String? selectedLoanType;
   String? selectedEducation;
 
-  XFile? nationalIdImage;
+  List<XFile> nationalIdImages = [];
   List<XFile> collateralImages = [];
   bool _isSubmitting = false;
 
@@ -917,8 +917,7 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
   static const Color _green = Colors.green;
 
   String getBaseUrl() {
-    if (kIsWeb) return 'http://localhost:8000';
-    return 'http://10.0.2.2:8000';
+    return 'https://admin.magnacredited.com';
   }
 
   @override
@@ -982,8 +981,10 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
   }
 
   Future<void> pickNationalIdImage() async {
-    final picked = await picker.pickImage(source: ImageSource.gallery);
-    if (picked != null) setState(() => nationalIdImage = picked);
+    final pickedFiles = await picker.pickMultiImage();
+    if (pickedFiles.isNotEmpty) {
+      setState(() => nationalIdImages = pickedFiles);
+    }
   }
 
   Future<void> pickCollateralImages() async {
@@ -1001,16 +1002,33 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
     }
   }
 
+  String getSafeFilename(String path) {
+    final ext = p.extension(path).toLowerCase();
+    if (ext == '.jpg' || ext == '.jpeg' || ext == '.png') {
+      return p.basename(path);
+    }
+    final baseWithoutExt = p.basenameWithoutExtension(path);
+    return '$baseWithoutExt.jpg';
+  }
+
+  MediaType getSafeMediaType(String path) {
+    final ext = p.extension(path).toLowerCase();
+    if (ext == '.png') {
+      return MediaType('image', 'png');
+    }
+    return MediaType('image', 'jpeg');
+  }
+
   // ── Get Sanctum token from SharedPreferences ──
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('auth_token');
+    return prefs.getString('token');
   }
 
   Future<void> submitApplication() async {
     if (!_formKey.currentState!.validate()) return;
 
-    if (nationalIdImage == null) {
+    if (nationalIdImages.isEmpty) {
       _showTopSnackBar("Please upload your National ID", isError: true);
       return;
     }
@@ -1052,54 +1070,44 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
       request.fields['education']      = selectedEducation!;
       request.fields['address']        = addressController.text.trim();
 
-      MediaType mimeTypeForPath(String path) {
-        final ext = p.extension(path).toLowerCase();
-        if (ext == '.png') {
-          return MediaType('image', 'png');
-        } else if (ext == '.jpg' || ext == '.jpeg') {
-          return MediaType('image', 'jpeg');
-        } else if (ext == '.gif') {
-          return MediaType('image', 'gif');
-        } else if (ext == '.webp') {
-          return MediaType('image', 'webp');
-        } else if (ext == '.heic') {
-          return MediaType('image', 'heic');
-        } else if (ext == '.heif') {
-          return MediaType('image', 'heif');
-        }
-        return MediaType('image', 'jpeg');
-      }
+      // ── National ID images ──
+      for (var image in nationalIdImages) {
+        final safeName = getSafeFilename(image.path);
+        final safeMime = getSafeMediaType(image.path);
 
-      // ── National ID image ──
-      if (kIsWeb) {
-        final bytes = await nationalIdImage!.readAsBytes();
-        request.files.add(http.MultipartFile.fromBytes(
-          'national_id_image', bytes,
-          filename: nationalIdImage!.name,
-          contentType: MediaType('image', 'jpeg'),
-        ));
-      } else {
-        request.files.add(await http.MultipartFile.fromPath(
-          'national_id_image', nationalIdImage!.path,
-          filename: p.basename(nationalIdImage!.path),
-          contentType: mimeTypeForPath(nationalIdImage!.path),
-        ));
+        if (kIsWeb) {
+          final bytes = await image.readAsBytes();
+          request.files.add(http.MultipartFile.fromBytes(
+            'national_id_image[]', bytes,
+            filename: safeName,
+            contentType: safeMime,
+          ));
+        } else {
+          request.files.add(await http.MultipartFile.fromPath(
+            'national_id_image[]', image.path,
+            filename: safeName,
+            contentType: safeMime,
+          ));
+        }
       }
 
       // ── Collateral images ──
       for (var image in collateralImages) {
+        final safeName = getSafeFilename(image.path);
+        final safeMime = getSafeMediaType(image.path);
+
         if (kIsWeb) {
           final bytes = await image.readAsBytes();
           request.files.add(http.MultipartFile.fromBytes(
             'collateral_images[]', bytes,
-            filename: image.name,
-            contentType: MediaType('image', 'jpeg'),
+            filename: safeName,
+            contentType: safeMime,
           ));
         } else {
           request.files.add(await http.MultipartFile.fromPath(
             'collateral_images[]', image.path,
-            filename: p.basename(image.path),
-            contentType: mimeTypeForPath(image.path),
+            filename: safeName,
+            contentType: safeMime,
           ));
         }
       }
@@ -1285,19 +1293,38 @@ class _LoanApplicationPage2State extends State<LoanApplicationPage2> {
                 icon: Icons.upload_file_rounded,
                 subtitle: "Upload required documents for verification.",
                 children: [
-                  _DocumentLabel(label: "National ID", icon: Icons.badge_rounded, isDark: isDark),
+                  _DocumentLabel(
+                    label: "National ID",
+                    icon: Icons.badge_rounded,
+                    isDark: isDark,
+                    badge: nationalIdImages.isNotEmpty
+                        ? "${nationalIdImages.length} uploaded"
+                        : null,
+                  ),
                   const SizedBox(height: 8),
                   GestureDetector(
                     onTap: pickNationalIdImage,
                     child: _UploadBox(
                       isDark: isDark,
-                      isEmpty: nationalIdImage == null,
-                      emptyLabel: "Tap to upload National ID",
+                      isEmpty: nationalIdImages.isEmpty,
+                      emptyLabel: "Tap to upload National ID(s)",
                       emptyIcon: Icons.badge_rounded,
-                      child: nationalIdImage != null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: buildImagePreview(nationalIdImage!),
+                      child: nationalIdImages.isNotEmpty
+                          ? ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: nationalIdImages
+                                  .map((img) => Padding(
+                                        padding: const EdgeInsets.all(4),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(10),
+                                          child: SizedBox(
+                                            width: 110,
+                                            height: 110,
+                                            child: buildImagePreview(img),
+                                          ),
+                                        ),
+                                      ))
+                                  .toList(),
                             )
                           : null,
                     ),
