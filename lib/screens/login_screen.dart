@@ -615,7 +615,16 @@ class _LoginPageState extends State<LoginPage> {
         centerTitle: true,
         leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pop(context)),
+            onPressed: () {
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              } else {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const HomePage()),
+                );
+              }
+            }),
         title: const Text("Login",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,
                 fontSize: 18, letterSpacing: 0.4)),

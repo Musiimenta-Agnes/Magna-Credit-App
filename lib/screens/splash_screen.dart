@@ -129,7 +129,10 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'onboarding_screen.dart';
+import 'profile_page.dart';
+import 'login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -230,11 +233,27 @@ class _SplashScreenState extends State<SplashScreen>
     });
 
     // Navigate after 4 seconds
-    Timer(const Duration(seconds: 4), () {
-      if (mounted) {
+    Timer(const Duration(seconds: 4), () async {
+      if (!mounted) return;
+      final prefs = await SharedPreferences.getInstance();
+      final seenOnboarding = prefs.getBool('seen_onboarding') ?? false;
+      final token = prefs.getString('token') ?? '';
+
+      if (!mounted) return;
+      if (!seenOnboarding) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+        );
+      } else if (token.isNotEmpty) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ProfilePage()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
         );
       }
     });

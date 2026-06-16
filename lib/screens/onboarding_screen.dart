@@ -440,6 +440,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:magna_credit_app/screens/login_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -630,10 +631,11 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
               child: currentPage == 2
                   ? GestureDetector(
-                      onTap: () {
-                        // ── Changed: Go to LoginPage instead of HomePage ──
-                        Navigator.pushReplacement(
-                          context,
+                      onTap: () async {
+                        final navigator = Navigator.of(context);
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setBool('seen_onboarding', true);
+                        navigator.pushReplacement(
                           MaterialPageRoute(
                               builder: (_) => const LoginPage()),
                         );

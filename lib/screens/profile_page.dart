@@ -10,6 +10,7 @@ import 'returning_loan_application.dart';
 import 'settings_page.dart';
 import 'login_screen.dart';
 import 'notifications_page.dart';
+import 'home_screen.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
@@ -71,7 +72,16 @@ class _ProfilePageState extends State<ProfilePage>
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded,
               color: Colors.white, size: 20),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const HomePage()),
+              );
+            }
+          },
           tooltip: 'Back to Home',
         ),
         title: const Text(
