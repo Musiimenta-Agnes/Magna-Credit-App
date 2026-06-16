@@ -2689,19 +2689,20 @@ class _LoanCard extends StatelessWidget {
     );
   }
 
-  Widget _det(String label, String value) =>
-      RichText(text: TextSpan(children: [
-        TextSpan(
-            text: '$label: ',
-            style: const TextStyle(
-                color: Colors.grey, fontSize: 12)),
-        TextSpan(
-            text: value,
-            style: const TextStyle(
-                color: Colors.black87,
-                fontSize: 12,
-                fontWeight: FontWeight.w600)),
-      ]));
+  Widget _det(String label, String value) {
+    return RichText(
+        text: TextSpan(children: [
+      TextSpan(
+          text: '$label: ',
+          style: const TextStyle(color: Colors.grey, fontSize: 12)),
+      TextSpan(
+          text: value,
+          style: TextStyle(
+              color: isDark ? Colors.white : Colors.black87,
+              fontSize: 12,
+              fontWeight: FontWeight.w600)),
+    ]));
+  }
 }
 
 class _RepaymentCard extends StatelessWidget {
